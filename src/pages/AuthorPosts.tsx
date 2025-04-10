@@ -96,7 +96,7 @@ function AuthorPosts() {
             <PostItem post={post} key={post.cid} />
           ))}
           <div ref={notifyRef} 
-          className="fixed top-[50vh] z-10 bg-gray-400 opacity-0 rounded w-[90%] text-center">Notify</div>
+          className="fixed bottom-[10vh] px-4 py-3 z-10 bg-gray-400 opacity-0 rounded text-center">Notify</div>
         </div> : 'No posts'}
       </main>
   </>)

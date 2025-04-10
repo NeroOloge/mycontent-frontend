@@ -113,7 +113,7 @@ function CreatePost() {
           <button onClick={() => handlePost()} className="w-full cursor-pointer bg-blue-500 rounded px-2 py-1">Publish</button>
         </div>
         <div ref={notifyRef} 
-          className="fixed top-[50vh] z-10 bg-gray-500 opacity-0 rounded w-[90%] text-center">Notify</div>
+          className="fixed bottom-[10vh] px-4 py-3 z-10 bg-gray-400 opacity-0 rounded text-center">Notify</div>
       </main>
     </>
   )
