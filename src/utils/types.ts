@@ -1,10 +1,3 @@
-// import { COMMENTS, POSTS } from "../server";
-
-// export type FormattedComment = typeof COMMENTS[0] & {
-//   postCid: string;
-//   post?: typeof POSTS[0]
-// }
-
 export type PostComment = {
   [key: string]: PopulatedComment[]
 }
@@ -13,7 +6,6 @@ export type SolidityComment = {
   cid: string;
   postCid: string;
   commenter: string;
-  // timestamp: Date;
 }
 
 export type PinataComment = {
@@ -29,8 +21,6 @@ export type PopulatedComment = SolidityComment & PinataComment & {
 
 export type SolidityPost = {
   cid: string;
-  // author: string;
-  // timestamp: Date;
 }
 
 export type PinataPost = {

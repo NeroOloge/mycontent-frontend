@@ -56,7 +56,6 @@ function AuthorPosts() {
 
     (async () => { 
       if (authorPosts && postCommentsLength && likesNumber) {
-        // const sortedPosts = sortPosts(authorPosts as unknown as Posts)
         const populatedPosts = await populatePosts(authorPosts as unknown as Posts)
         setPosts(
           populatedPosts.map((post, index) => ({ ...post, 
