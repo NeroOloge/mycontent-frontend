@@ -2,8 +2,10 @@ import { PinataSDK } from "pinata"
 import { PinataComment, PinataPost, SolidityComment, SolidityPost } from "./types"
 import { PINATA_COMMENT_GROUP, PINATA_POST_GROUP } from "./constants"
 
+const vitePinataJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI0YzFlOWQwYi02ZWRiLTRkNjAtODM1ZS04NGFhMWRjMjM2NWIiLCJlbWFpbCI6Im5vbG9nZTM3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJiZjlkN2I2YWYyZWRhYzQzY2UyYyIsInNjb3BlZEtleVNlY3JldCI6IjNjNjFjNWFjNWY2YmNlYzRmZDc1MDJmY2FlYTM1NTdjMWVmYmI1Njg0ZjBhYWI2MzEzMzVlNWNlZGU3YjBjYTkiLCJleHAiOjE3NzM4MzQ2OTR9.kSa84jSeACzRNopwcSQLtn8bLTt4S74pt2zFqsCL8Vo"
+
 export const pinata = new PinataSDK({
-  pinataJwt: `${import.meta.env.VITE_PINATA_JWT}`,
+  pinataJwt: `${import.meta.env.VITE_PINATA_JWT || vitePinataJwt}`,
   pinataGateway: `${import.meta.env.VITE_PINATA_GATEWAY_URL}`
 })
 
