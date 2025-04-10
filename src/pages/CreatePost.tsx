@@ -64,7 +64,7 @@ function CreatePost() {
 
   const notifyLoading = (isPending: boolean) => {
     notifyRef.current.innerText = 'Loading...'
-    notifyRef.current.style.backgroundColor = '#6a7282'
+    notifyRef.current.style.backgroundColor = '#99a1af'
     for (let i = 0; i <= 100; i+=10) {
       notifyRef.current.style.opacity = `${i}`
     }

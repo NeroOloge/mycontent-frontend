@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router"
 import { useAccount, useReadContracts } from "wagmi"
 import { FormattedPost, Posts } from "../utils/types"
@@ -15,7 +15,9 @@ function AuthorPosts() {
   const account = useAccount()
   const [posts, setPosts] = useState<FormattedPost[]>(null!)
 
-  const { data: authorPosts } = useReadContract({
+  const notifyRef = useRef<HTMLDivElement>(null!)
+
+  const { data: authorPosts, isLoading: authorPostsLoading } = useReadContract({
     ...wagmiContractConfig,
     functionName: 'getPostsByAuthor',
     args: [account.address!],
@@ -64,8 +66,25 @@ function AuthorPosts() {
           }))
         )
       }
+      if (authorPostsLoading) {
+        notifyLoading(authorPostsLoading)
+      }
     })()
-  }, [authorPosts, postCommentsLength, likesNumber])
+  }, [authorPosts, postCommentsLength, likesNumber, authorPostsLoading])
+
+  const notifyLoading = (isPending: boolean) => {
+    notifyRef.current.innerText = 'Loading...'
+    notifyRef.current.style.backgroundColor = '#99a1af'
+    for (let i = 0; i <= 100; i+=10) {
+      notifyRef.current.style.opacity = `${i}`
+    }
+
+    if (!isPending) {
+      for (let i = 100; i >= 0; i-=10) {
+        notifyRef.current.style.opacity = `${i}`
+      }
+    }
+  }
 
   return (
     <>
@@ -76,6 +95,8 @@ function AuthorPosts() {
           {posts?.map(post => (
             <PostItem post={post} key={post.cid} />
           ))}
+          <div ref={notifyRef} 
+          className="fixed top-[50vh] z-10 bg-gray-400 opacity-0 rounded w-[90%] text-center">Notify</div>
         </div> : 'No posts'}
       </main>
   </>)
