@@ -1,0 +1,2 @@
+export const PINATA_POST_GROUP = "a53c2323-9ae6-471e-a6fc-b65625fa1c31"
+export const PINATA_COMMENT_GROUP = "10605235-8040-4490-9b6b-c8e1709d5f8c"
