@@ -82,7 +82,7 @@ function CreatePost() {
     for (let i = 0; i <= 100; i+=10) {
       notifyRef.current.style.opacity = `${i}`
     }
-    const removeNotify = setTimeout(() => {
+    setTimeout(() => {
       for (let i = 100; i >= 0; i--) {
         notifyRef.current.style.opacity = `${i}`
       }
@@ -95,7 +95,7 @@ function CreatePost() {
     for (let i = 0; i <= 100; i+=10) {
       notifyRef.current.style.opacity = `${i}`
     }
-    const removeNotify = setTimeout(() => {
+    setTimeout(() => {
       for (let i = 100; i >= 0; i--) {
         notifyRef.current.style.opacity = `${i}`
       }

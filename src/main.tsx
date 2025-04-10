@@ -15,7 +15,7 @@ import Explore from './pages/Explore.tsx'
 import Post from './pages/Post.tsx'
 import CreatePost from './pages/CreatePost.tsx'
 
-globalThis.Buffer = Buffer
+(globalThis as any).Buffer = Buffer
 
 const queryClient = new QueryClient()
 

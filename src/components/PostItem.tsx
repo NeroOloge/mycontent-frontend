@@ -42,7 +42,7 @@ function PostItem({ post }: { post: FormattedPost }) {
       functionName: 'like',
       args: [post.cid, post.author]
     }, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         notifySuccess('Successfully added like.')
       },
       onError: (error) => {
@@ -60,7 +60,7 @@ function PostItem({ post }: { post: FormattedPost }) {
       functionName: 'unlike',
       args: [post.cid, post.author]
     }, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         notifySuccess('Successfully removed like.')
       },
       onError: (error) => {
@@ -110,7 +110,7 @@ function PostItem({ post }: { post: FormattedPost }) {
     for (let i = 0; i <= 100; i+=10) {
       notifyRef.current.style.opacity = `${i}`
     }
-    const removeNotify = setTimeout(() => {
+    setTimeout(() => {
       for (let i = 100; i >= 0; i--) {
         notifyRef.current.style.opacity = `${i}`
       }
@@ -123,7 +123,7 @@ function PostItem({ post }: { post: FormattedPost }) {
     for (let i = 0; i <= 100; i+=10) {
       notifyRef.current.style.opacity = `${i}`
     }
-    const removeNotify = setTimeout(() => {
+    setTimeout(() => {
       for (let i = 100; i >= 0; i--) {
         notifyRef.current.style.opacity = `${i}`
       }

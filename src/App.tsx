@@ -10,8 +10,6 @@ function App() {
   const connectionsRef = useRef<HTMLDivElement>(null!)
 
   useEffect(() => {
-    const accountStatus = localStorage.getItem("status") || 'disconnected'
-    /*account.status === 'connected' || accountStatus === 'connected'*/
     if (account.isConnected) {
       navigate("/profile")
     }

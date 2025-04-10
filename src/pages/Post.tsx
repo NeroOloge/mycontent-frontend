@@ -113,7 +113,7 @@ function Post() {
       functionName: 'like',
       args: [params.cid!, post.author],
     }, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         notifySuccess('Successfully added like.')
       },
       onError: (error) => {
@@ -131,7 +131,7 @@ function Post() {
       functionName: 'unlike',
       args: [params.cid!, post.author],
     }, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         notifySuccess('Successfully removed like.')
       },
       onError: (error) => {
@@ -248,7 +248,7 @@ function Post() {
     for (let i = 0; i <= 100; i+=10) {
       notifyRef.current.style.opacity = `${i}`
     }
-    const removeNotify = setTimeout(() => {
+    setTimeout(() => {
       for (let i = 100; i >= 0; i--) {
         notifyRef.current.style.opacity = `${i}`
       }
@@ -261,7 +261,7 @@ function Post() {
     for (let i = 0; i <= 100; i+=10) {
       notifyRef.current.style.opacity = `${i}`
     }
-    const removeNotify = setTimeout(() => {
+    setTimeout(() => {
       for (let i = 100; i >= 0; i--) {
         notifyRef.current.style.opacity = `${i}`
       }
