@@ -71,6 +71,7 @@ function Profile() {
         notifyLoading(postsLoading)
       }
       if (paginatedPosts && userComments && userLikes) {
+        console.log(paginatedPosts)
         const populatedPosts = await populatePosts(paginatedPosts as unknown as Posts)
         setPosts(populatedPosts)
         notifySuccess('Successfully loaded posts.')
@@ -100,7 +101,6 @@ function Profile() {
   const notifyLoading = (isPending: boolean) => {
     notifyRef.current.innerText = 'Loading...'
     notifyRef.current.style.backgroundColor = '#99a1af'
-    console.log("isPending", isPending)
     for (let i = 0; i <= 100; i+=10) {
       notifyRef.current.style.opacity = `${i}`
     }

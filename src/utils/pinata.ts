@@ -57,7 +57,6 @@ export const uploadComment = async ({ commenter, timestamp, content, postCid }: 
 
 export const getFileId = async (fileName: string) => {
   const { files } = await pinata.files.public.list().name(fileName)
-  console.log(fileName, files)
   return files?.[0].id
 }
 

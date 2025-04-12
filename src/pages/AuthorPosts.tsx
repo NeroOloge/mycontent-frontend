@@ -54,10 +54,13 @@ function AuthorPosts() {
       alert("No wallet connected")
       navigate("/")
    }
-    
 
     (async () => { 
+      if (authorPostsLoading && notifyRef.current) {
+        notifyLoading(authorPostsLoading)
+      }
       if (authorPosts && postCommentsLength && likesNumber) {
+        console.log(authorPosts)
         const populatedPosts = await populatePosts(authorPosts as unknown as Posts)
         setPosts(
           populatedPosts.map((post, index) => ({ ...post, 
@@ -67,9 +70,7 @@ function AuthorPosts() {
         )
         notifySuccess('Successfully loaded posts.')
       }
-      if (authorPostsLoading && notifyRef.current) {
-        notifyLoading(authorPostsLoading)
-      }
+      
     })()
   }, [notifyRef, authorPosts, postCommentsLength, likesNumber, authorPostsLoading])
 
