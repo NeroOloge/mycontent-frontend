@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router"
 import { useAccount, useBalance, useReadContract, useEnsName } from "wagmi"
 import { 
@@ -16,6 +16,9 @@ function Profile() {
   const account = useAccount()
   const [posts, setPosts] = useState<PopulatedPost[]>()
   const [totalAuthorComments, setTotalAuthorComments] = useState(0)
+
+  const notifyRef = useRef<HTMLDivElement>(null!)
+
   const [likedPosts, setLikedPosts] = useState<PopulatedPost[]>()
   const [postComments, setPostComments] = useState<PostComment>(null!)
 
@@ -26,7 +29,7 @@ function Profile() {
     }
   })
 
-  const { data: paginatedPosts } = useReadContract({
+  const { data: paginatedPosts, isLoading: postsLoading } = useReadContract({
     ...wagmiContractConfig,
     functionName: 'paginatePosts',
     args: [BigInt(1), BigInt(5), account.address!],
@@ -64,10 +67,13 @@ function Profile() {
       navigate("/")
     }
     (async () => {
+      if (postsLoading && notifyRef.current) {
+        notifyLoading(postsLoading)
+      }
       if (paginatedPosts && userComments && userLikes) {
         const populatedPosts = await populatePosts(paginatedPosts as unknown as Posts)
         setPosts(populatedPosts)
-        
+        notifySuccess('Successfully loaded posts.')
         const usersLiked = (userLikes as string[]).map(postCid => ({ cid: postCid })) as unknown as SolidityPost[]
         
         const populatedLikedPosts = await populatePosts(usersLiked)
@@ -85,11 +91,39 @@ function Profile() {
         setPostComments(formattedComments)
       }
     })()
-  }, [paginatedPosts, userComments, userLikes, paginatedPosts])
+  }, [notifyRef, paginatedPosts, userComments, userLikes, postsLoading])
 
   const { data: balance } = useBalance({
     address: account.address
   })
+
+  const notifyLoading = (isPending: boolean) => {
+    notifyRef.current.innerText = 'Loading...'
+    notifyRef.current.style.backgroundColor = '#99a1af'
+    console.log("isPending", isPending)
+    for (let i = 0; i <= 100; i+=10) {
+      notifyRef.current.style.opacity = `${i}`
+    }
+
+    if (!isPending) {
+      for (let i = 100; i >= 0; i-=10) {
+        notifyRef.current.style.opacity = `${i}`
+      }
+    }
+  }
+
+  const notifySuccess = (success: string) => {
+    notifyRef.current.innerText = success
+    notifyRef.current.style.backgroundColor = '#00c951'
+    for (let i = 0; i <= 100; i+=10) {
+      notifyRef.current.style.opacity = `${i}`
+    }
+    setTimeout(() => {
+      for (let i = 100; i >= 0; i--) {
+        notifyRef.current.style.opacity = `${i}`
+      }
+    }, 2000)
+  }
 
   return (
     <>
@@ -156,6 +190,10 @@ function Profile() {
             )): '' : ''}
           </div>
         </section>
+        <div ref={notifyRef} 
+          className="fixed bottom-[10vh] px-4 py-3 z-10 bg-gray-400 opacity-0 rounded text-center">
+            Notify
+        </div>
       </main>
     </>
   )

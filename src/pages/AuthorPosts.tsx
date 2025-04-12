@@ -65,12 +65,13 @@ function AuthorPosts() {
             comments: Number(postCommentsLength?.[index]?.result) || 0,
           }))
         )
+        notifySuccess('Successfully loaded posts.')
       }
-      if (authorPostsLoading) {
+      if (authorPostsLoading && notifyRef.current) {
         notifyLoading(authorPostsLoading)
       }
     })()
-  }, [authorPosts, postCommentsLength, likesNumber, authorPostsLoading])
+  }, [notifyRef, authorPosts, postCommentsLength, likesNumber, authorPostsLoading])
 
   const notifyLoading = (isPending: boolean) => {
     notifyRef.current.innerText = 'Loading...'
@@ -84,6 +85,19 @@ function AuthorPosts() {
         notifyRef.current.style.opacity = `${i}`
       }
     }
+  }
+
+  const notifySuccess = (success: string) => {
+    notifyRef.current.innerText = success
+    notifyRef.current.style.backgroundColor = '#00c951'
+    for (let i = 0; i <= 100; i+=10) {
+      notifyRef.current.style.opacity = `${i}`
+    }
+    setTimeout(() => {
+      for (let i = 100; i >= 0; i--) {
+        notifyRef.current.style.opacity = `${i}`
+      }
+    }, 2000)
   }
 
   return (

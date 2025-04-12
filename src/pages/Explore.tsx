@@ -14,8 +14,9 @@ function Explore() {
   const [posts, setPosts] = useState<FormattedPost[]>([])
   const [selectedAuthor, setSelectedAuthor] = useState<`0x${string}`>()
   const authorRef = useRef<HTMLSelectElement>(null!)
+  const notifyRef = useRef<HTMLDivElement>(null!)
 
-  const { data: authorPosts } = useReadContract({
+  const { data: authorPosts, isLoading: authorPostsLoading } = useReadContract({
     ...wagmiContractConfig,
     functionName: 'getPostsByAuthor',
     args: [selectedAuthor!],
@@ -63,6 +64,9 @@ function Explore() {
       if (authors && authors.length > 0 && !selectedAuthor) {
         setSelectedAuthor(authors[0])
       }
+      if (authorPostsLoading && notifyRef.current) {
+        notifyLoading(authorPostsLoading)
+      }
       if (authorPosts && postCommentsLength && likesNumber) {
         const populatedPosts = await populatePosts(authorPosts as unknown as Posts)
         setPosts(
@@ -71,12 +75,40 @@ function Explore() {
             comments: Number(postCommentsLength?.[index]?.result) || 0
           }))
         )
+        notifySuccess('Successfully loaded posts.')
       }
     })()
   }, [authors, authorPosts, postCommentsLength, likesNumber])
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedAuthor(e.target.value as `0x${string}`)
+  }
+
+  const notifyLoading = (isPending: boolean) => {
+    notifyRef.current.innerText = 'Loading...'
+    notifyRef.current.style.backgroundColor = '#99a1af'
+    for (let i = 0; i <= 100; i+=10) {
+      notifyRef.current.style.opacity = `${i}`
+    }
+
+    if (!isPending) {
+      for (let i = 100; i >= 0; i-=10) {
+        notifyRef.current.style.opacity = `${i}`
+      }
+    }
+  }
+
+  const notifySuccess = (success: string) => {
+    notifyRef.current.innerText = success
+    notifyRef.current.style.backgroundColor = '#00c951'
+    for (let i = 0; i <= 100; i+=10) {
+      notifyRef.current.style.opacity = `${i}`
+    }
+    setTimeout(() => {
+      for (let i = 100; i >= 0; i--) {
+        notifyRef.current.style.opacity = `${i}`
+      }
+    }, 2000)
   }
 
   return (
@@ -100,6 +132,8 @@ function Explore() {
               <PostItem key={post.cid} post={post} />
             ))}
           </div>
+          <div ref={notifyRef} 
+          className="fixed bottom-[10vh] px-4 py-3 z-10 bg-gray-400 opacity-0 rounded text-center">Notify</div>
         </div> : 'No posts'}
       </main>
   </>)
