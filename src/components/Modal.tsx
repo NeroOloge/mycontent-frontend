@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 function Modal(
     { isOpen, onClose, children }: {isOpen: boolean; onClose: any; children: any}
   ) {

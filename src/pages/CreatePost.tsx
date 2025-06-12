@@ -49,7 +49,6 @@ function CreatePost() {
       // Upload to cloudinary
       // editor.chain().focus().setImage({ src: imageUrl }).run();
     } else {
-      const reader = new FileReader()
       const base64: string = await new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result as string);

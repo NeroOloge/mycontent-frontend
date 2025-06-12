@@ -1,10 +1,9 @@
 import { useLocation, useNavigate } from "react-router"
-import { Connector, useAccount, useConnect } from "wagmi"
+import { Connector, useConnect } from "wagmi"
 import { Pages } from "../utils/enums"
 
 function ModalContent({ onClose }: { onClose: any }) {
   const navigate = useNavigate()
-  const account = useAccount()
   const location = useLocation()
   const { connectors, connect } = useConnect()
 

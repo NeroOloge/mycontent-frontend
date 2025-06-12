@@ -4,7 +4,6 @@ import Header from "../components/Header"
 import { useEffect, useRef, useState } from "react"
 import { useToast } from "../providers/ToastProvider"
 import { ToastType } from "../utils/enums"
-import EmptyPersonImage from "../icons/EmptyPersonImage"
 import { useAccount, useEnsName } from "wagmi"
 import { displayAddress } from "../utils/functions"
 

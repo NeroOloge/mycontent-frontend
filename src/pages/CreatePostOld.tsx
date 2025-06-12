@@ -2,22 +2,19 @@ import { useEffect, useRef } from "react"
 import { QueryClient } from "@tanstack/react-query"
 import Header from "../components/Header"
 import { useAccount, useWriteContract } from "wagmi"
-import { useLocation, useNavigate } from "react-router"
+import { useNavigate } from "react-router"
 import { wagmiContractConfig } from "../utils/contracts"
 import { uploadPost } from "../utils/pinata"
-import { useToast } from "../providers/ToastProvider"
-import { Pages, ToastType } from "../utils/enums"
+import { Pages } from "../utils/enums"
 
 function CreatePost() {
   const account = useAccount()
   const navigate = useNavigate()
-  const location = useLocation()
-  const { addToast } = useToast()
 
   const titleRef = useRef<HTMLInputElement>(null!)
   const contentRef = useRef<HTMLTextAreaElement>(null!)
 
-  const { writeContract: addPost, isPending: addPostPending } = useWriteContract()
+  const { writeContract: addPost } = useWriteContract()
 
   useEffect(() => {
     // if (!account.isConnected) {

@@ -17,7 +17,7 @@ function Explore() {
   const authorRef = useRef<HTMLSelectElement>(null!)
   const loadingToastId = useRef<number | null>(null)
 
-  const { data: authorPosts, isLoading: authorPostsLoading } = useReadContract({
+  const { data: authorPosts } = useReadContract({
     ...wagmiContractConfig,
     functionName: 'getPostsByAuthor',
     args: [selectedAuthor!],

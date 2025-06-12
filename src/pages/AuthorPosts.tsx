@@ -14,7 +14,7 @@ import { Pages, ToastType } from "../utils/enums"
 function AuthorPosts() {
   const navigate = useNavigate()
   const account = useAccount()
-  const { addToast, removeToast } = useToast()
+  const { addToast } = useToast()
   const [posts, setPosts] = useState<FormattedPost[]>(null!)
 
   const { data: authorPosts, isLoading: authorPostsLoading } = useReadContract({

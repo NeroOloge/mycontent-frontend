@@ -7,7 +7,7 @@ import {
  } from '../utils/functions'
 import { Comments, PopulatedPost, PostComment, Posts, SolidityPost } from "../utils/types"
 import Header from "../components/Header"
-import { formatComments, populateComments, populatePost, populatePosts } from "../utils/pinata"
+import { formatComments, populateComments, populatePosts } from "../utils/pinata"
 import { wagmiContractConfig } from "../utils/contracts"
 import { useToast } from "../providers/ToastProvider"
 import { Pages, ToastType } from "../utils/enums"
@@ -17,7 +17,6 @@ function Dashboard() {
   const account = useAccount()
   const { addToast, removeToast } = useToast()
   const [posts, setPosts] = useState<PopulatedPost[]>()
-  const [isLoading, setIsLoading] = useState(false);
   const [totalAuthorComments, setTotalAuthorComments] = useState(0)  
 
   const [likedPosts, setLikedPosts] = useState<PopulatedPost[]>()
@@ -32,7 +31,7 @@ function Dashboard() {
     }
   })
 
-  const { data: paginatedPosts, isLoading: postsLoading } = useReadContract({
+  const { data: paginatedPosts } = useReadContract({
     ...wagmiContractConfig,
     functionName: 'paginatePosts',
     args: [BigInt(1), BigInt(5), account.address!],
@@ -74,7 +73,6 @@ function Dashboard() {
         removeToast(loadingToastId.current)
       }
 
-      setIsLoading(true)
       loadingToastId.current = 
         addToast("Loading posts...", { type: ToastType.INFO })
 
@@ -114,7 +112,6 @@ function Dashboard() {
           addToast("Failed to load posts.", 
             { type: ToastType.ERROR, duration: 3000 })
         } finally {
-          setIsLoading(false);
           if (loadingToastId.current) {
             removeToast(loadingToastId.current)
             loadingToastId.current = null
