@@ -1,20 +1,21 @@
 import { useEffect, useRef, useState } from "react"
-import { useNavigate } from "react-router"
-import { useAccount, useReadContract, useReadContracts } from "wagmi"
+import { useReadContract, useReadContracts } from "wagmi"
 import { FormattedPost, Posts } from "../utils/types"
 import PostItem from "../components/PostItem"
 import Header from "../components/Header"
-import { Pages } from "../utils/enums"
 import { populatePosts } from "../utils/pinata"
 import { wagmiContractConfig } from "../utils/contracts"
+import { ToastType } from "../utils/enums"
+import { useToast } from "../providers/ToastProvider"
 
 function Explore() {
-  const navigate = useNavigate()
-  const account = useAccount()
+  const { addToast, removeToast } = useToast()
   const [posts, setPosts] = useState<FormattedPost[]>([])
   const [selectedAuthor, setSelectedAuthor] = useState<`0x${string}`>()
+  const [isLoading, setIsLoading] = useState(false);
+  
   const authorRef = useRef<HTMLSelectElement>(null!)
-  const notifyRef = useRef<HTMLDivElement>(null!)
+  const loadingToastId = useRef<number | null>(null)
 
   const { data: authorPosts, isLoading: authorPostsLoading } = useReadContract({
     ...wagmiContractConfig,
@@ -53,30 +54,52 @@ function Explore() {
     }
   })
 
-  useEffect(() => {
-    if (!account.isConnected) {
-     localStorage.setItem("status", "disconnected")
-     alert("No wallet connected")
-     navigate("/")
-   }
-   
+  useEffect(() => {   
    (async () => {
+      if (loadingToastId.current) {
+        removeToast(loadingToastId.current)
+      }
+
       if (authors && authors.length > 0 && !selectedAuthor) {
         setSelectedAuthor(authors[0])
       }
-      if (authorPostsLoading && notifyRef.current) {
-        notifyLoading(authorPostsLoading)
+
+      setIsLoading(true)
+      loadingToastId.current = 
+        addToast("Loading posts...", { type: ToastType.INFO })
+
+      try {
+        if (authorPosts && postCommentsLength && likesNumber) {
+          const populatedPosts = await populatePosts(authorPosts as unknown as Posts)
+          setPosts(
+            populatedPosts.map((post, index) => ({ ...post, 
+              likes: Number(likesNumber?.[index]?.result) || 0, 
+              comments: Number(postCommentsLength?.[index]?.result) || 0
+            }))
+          )
+          if (loadingToastId.current) {
+            removeToast(loadingToastId.current)
+            loadingToastId.current = null
+          }
+  
+          addToast("Successfully loaded posts.", 
+            { type: ToastType.SUCCESS, duration: 3000 })
+        }
+      } catch (error) {
+        if (loadingToastId.current) {
+          removeToast(loadingToastId.current)
+          loadingToastId.current = null
+        }
+        addToast("Failed to load posts.", 
+          { type: ToastType.ERROR, duration: 3000 })
+      } finally {
+        setIsLoading(false)
+        if (loadingToastId.current) {
+          removeToast(loadingToastId.current)
+          loadingToastId.current = null
+        }
       }
-      if (authorPosts && postCommentsLength && likesNumber) {
-        const populatedPosts = await populatePosts(authorPosts as unknown as Posts)
-        setPosts(
-          populatedPosts.map((post, index) => ({ ...post, 
-            likes: Number(likesNumber?.[index]?.result) || 0, 
-            comments: Number(postCommentsLength?.[index]?.result) || 0
-          }))
-        )
-        notifySuccess('Successfully loaded posts.')
-      }
+      
     })()
   }, [authors, authorPosts, postCommentsLength, likesNumber])
 
@@ -84,36 +107,9 @@ function Explore() {
     setSelectedAuthor(e.target.value as `0x${string}`)
   }
 
-  const notifyLoading = (isPending: boolean) => {
-    notifyRef.current.innerText = 'Loading...'
-    notifyRef.current.style.backgroundColor = '#99a1af'
-    for (let i = 0; i <= 100; i+=10) {
-      notifyRef.current.style.opacity = `${i}`
-    }
-
-    if (!isPending) {
-      for (let i = 100; i >= 0; i-=10) {
-        notifyRef.current.style.opacity = `${i}`
-      }
-    }
-  }
-
-  const notifySuccess = (success: string) => {
-    notifyRef.current.innerText = success
-    notifyRef.current.style.backgroundColor = '#00c951'
-    for (let i = 0; i <= 100; i+=10) {
-      notifyRef.current.style.opacity = `${i}`
-    }
-    setTimeout(() => {
-      for (let i = 100; i >= 0; i--) {
-        notifyRef.current.style.opacity = `${i}`
-      }
-    }, 2000)
-  }
-
   return (
     <>
-      <Header active={Pages.EXPLORE} />
+      <Header />
       <main className="mt-10">
         <h1 className="text-3xl font-bold text-center">Explore</h1>
         {authors && authors.length > 0 ? <div>
@@ -127,13 +123,12 @@ function Explore() {
               {authors?.map(author => <option value={author} key={author}>{author.slice(0, 5)}...{author?.slice(author.length-3)}</option>)}
             </select>
           </div>
+          {isLoading ? <div></div> : 
           <div className="flex flex-col items-center justify-center">
             {posts.map(post => (
               <PostItem key={post.cid} post={post} />
             ))}
-          </div>
-          <div ref={notifyRef} 
-          className="fixed bottom-[10vh] px-4 py-3 z-10 bg-gray-400 opacity-0 rounded text-center">Notify</div>
+          </div>}
         </div> : 'No posts'}
       </main>
   </>)

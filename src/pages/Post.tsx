@@ -8,14 +8,13 @@ import { deleteFile, populateComments, populatePost, uploadComment } from "../ut
 import { wagmiContractConfig } from "../utils/contracts"
 import { QueryClient } from "@tanstack/react-query"
 import { useReadContract } from "wagmi"
+import { Pages } from "../utils/enums"
 
 function Post() {
   const params = useParams()
   const [searchParams, _] = useSearchParams()
   const navigate = useNavigate()
   const account = useAccount()
-
-  const notifyRef = useRef<HTMLDivElement>(null!)
 
   const [post, setPost] = useState<PostDetail>(null!)
   const commentRef = useRef<HTMLInputElement>(null!)
@@ -69,8 +68,8 @@ function Post() {
   useEffect(() => {
     if (!account.isConnected) {
       localStorage.setItem("status", "disconnected")
-      alert("No wallet connected")
-      navigate("/")
+      navigate(Pages.HOME, { state: { loggedIn: false } })
+      return;
    }
    (async () => {
       if (comments && likesNumber != undefined) {
@@ -87,19 +86,19 @@ function Post() {
         setPost(postObject)
       }
       if (addCommentPending) {
-        notifyLoading(addCommentPending)
+        // notifyLoading(addCommentPending)
       }
       if (likePending) {
-        notifyLoading(likePending)
+        // notifyLoading(likePending)
       }
       if (unlikePending) {
-        notifyLoading(unlikePending)
+        // notifyLoading(unlikePending)
       }
       if (deleteCommentPending) {
-        notifyLoading(deleteCommentPending)
+        // notifyLoading(deleteCommentPending)
       }
       if (deletePostPending) {
-        notifyLoading(deletePostPending)
+        // notifyLoading(deletePostPending)
       }
    })()
   }, [
@@ -114,11 +113,11 @@ function Post() {
       args: [params.cid!, post.author],
     }, {
       onSuccess: () => {
-        notifySuccess('Successfully added like.')
+        // notifySuccess('Successfully added like.')
       },
       onError: (error) => {
         console.error(error)
-        notifyError(error.message.split("\n")[0])
+        // notifyError(error.message.split("\n")[0])
       }
     })
     new QueryClient()
@@ -132,11 +131,11 @@ function Post() {
       args: [params.cid!, post.author],
     }, {
       onSuccess: () => {
-        notifySuccess('Successfully removed like.')
+        // notifySuccess('Successfully removed like.')
       },
       onError: (error) => {
         console.error(error)
-        notifyError(error.message.split("\n")[0])
+        // notifyError(error.message.split("\n")[0])
       }
     })
     new QueryClient()
@@ -158,7 +157,7 @@ function Post() {
         args: [post.cid, data.cid, post.author, BigInt(timestamp)],
       }, {
         onSuccess: (data) => {
-          notifySuccess('Successfully added comment.')
+          // notifySuccess('Successfully added comment.')
           console.log("addComment data: ", data)
           new QueryClient()
             .invalidateQueries({ queryKey: ['readContract'] })
@@ -166,7 +165,7 @@ function Post() {
         },
         onError: (error) => {
           console.error(error)
-          notifyError(error.message.split("\n")[0])
+          // notifyError(error.message.split("\n")[0])
         }
       })
     })()
@@ -183,14 +182,14 @@ function Post() {
       args: [post.cid, post.author]
     }, {
       onSuccess: async () => {
-        notifySuccess('Successfully deleted post.')
+        // notifySuccess('Successfully deleted post.')
         const fileName = account.address + " " + post.timestamp
         await deleteFile(fileName)
-        navigate("/posts")
+        navigate(Pages.POSTS)
       },
       onError: (error) => {
         console.error(error)
-        notifyError(error.message.split("\n")[0])
+        // notifyError(error.message.split("\n")[0])
       }
     })
     new QueryClient()
@@ -204,13 +203,13 @@ function Post() {
       args: [post.cid, comment.cid, post.author, comment.commenter]
     }, {
       onSuccess: async () => {
-        notifySuccess('Successfully deleted comment.')
+        // notifySuccess('Successfully deleted comment.')
         const fileName = comment.commenter + " " + post.timestamp
         await deleteFile(fileName)
       },
       onError: (error) => {
         console.error(error)
-        notifyError(error.message.split("\n")[0])
+        // notifyError(error.message.split("\n")[0])
       }
     })
     new QueryClient()
@@ -226,46 +225,6 @@ function Post() {
 
   const isAuthor = (author: string) => {
     return account.address === author
-  }
-
-  const notifyLoading = (isPending: boolean) => {
-    notifyRef.current.innerText = 'Loading...'
-    notifyRef.current.style.backgroundColor = '#99a1af'
-    for (let i = 0; i <= 100; i+=10) {
-      notifyRef.current.style.opacity = `${i}`
-    }
-
-    if (!isPending) {
-      for (let i = 100; i >= 0; i-=10) {
-        notifyRef.current.style.opacity = `${i}`
-      }
-    }
-  }
-
-  const notifyError = (error: string) => {
-    notifyRef.current.innerText = error
-    notifyRef.current.style.backgroundColor = '#fb2c36'
-    for (let i = 0; i <= 100; i+=10) {
-      notifyRef.current.style.opacity = `${i}`
-    }
-    setTimeout(() => {
-      for (let i = 100; i >= 0; i--) {
-        notifyRef.current.style.opacity = `${i}`
-      }
-    }, 2000)
-  }
-
-  const notifySuccess = (success: string) => {
-    notifyRef.current.innerText = success
-    notifyRef.current.style.backgroundColor = '#00c951'
-    for (let i = 0; i <= 100; i+=10) {
-      notifyRef.current.style.opacity = `${i}`
-    }
-    setTimeout(() => {
-      for (let i = 100; i >= 0; i--) {
-        notifyRef.current.style.opacity = `${i}`
-      }
-    }, 2000)
   }
 
   return (
@@ -338,8 +297,6 @@ function Post() {
             <button onClick={() => handleComment()} className="cursor-pointer bg-blue-500 rounded px-2 py-1">Comment</button>
           </div>
         </div>
-        <div ref={notifyRef} 
-          className="fixed bottom-[10vh] px-4 py-3 z-10 bg-gray-400 opacity-0 rounded text-center">Notify</div>
       </main> : 'Loading...'}
     </>
   )

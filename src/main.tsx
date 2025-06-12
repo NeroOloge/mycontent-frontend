@@ -9,11 +9,20 @@ import App from './App.tsx'
 import { config } from './wagmi.ts'
 
 import './index.css'
-import Profile from './pages/Profile.tsx'
+
+import Dashboard from './pages/Dashboard.tsx'
 import AuthorPosts from './pages/AuthorPosts.tsx'
 import Explore from './pages/Explore.tsx'
 import Post from './pages/Post.tsx'
 import CreatePost from './pages/CreatePost.tsx'
+import About from './pages/About.tsx'
+import Profile from './pages/Profile.tsx'
+import Connect from './components/Connect.tsx'
+import { ToastProvider } from './providers/ToastProvider.tsx'
+
+import { Pages } from "./utils/enums"
+import EditProfile from './pages/EditProfile.tsx'
+import Drafts from './pages/Drafts.tsx'
 
 (globalThis as any).Buffer = Buffer
 
@@ -23,17 +32,24 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Routes>
-            <Route path='/' element={<App />} />
-            <Route path='/profile' element={<Profile />} />
-            <Route path='/posts' element={<AuthorPosts />} />
-            <Route path='/explore' element={<Explore />} />
-            <Route path='/create-post' element={<CreatePost />} />
-            <Route path='/post/:cid' element={<Post />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </BrowserRouter>
+        <ToastProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path='/' element={<App />} />
+              <Route path={Pages.ABOUT} element={<About />} />
+              <Route path={Pages.CONNECT} element={<Connect />} />
+              <Route path={Pages.DASHBOARD} element={<Dashboard />} />
+              <Route path={Pages.POSTS} element={<AuthorPosts />} />
+              <Route path={Pages.EXPLORE} element={<Explore />} />
+              <Route path={Pages.CREATE_POST} element={<CreatePost />} />
+              <Route path={Pages.DRAFTS} element={<Drafts />} />
+              <Route path={Pages.EDIT_PROFILE} element={<EditProfile />} />
+              <Route path={Pages.PROFILE+"/:authorAddress"} element={<Profile />} />
+              <Route path={Pages.POST_DETAIL+"/:cid"} element={<Post />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </BrowserRouter>
+        </ToastProvider>
       </QueryClientProvider>
     </WagmiProvider>
   </React.StrictMode>,

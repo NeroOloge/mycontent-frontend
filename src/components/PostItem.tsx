@@ -1,18 +1,18 @@
 import 'primeicons/primeicons.css';
-import { useNavigate } from "react-router"
+import { useLocation, useNavigate } from "react-router"
 import { displayTime } from "../utils/functions"
 import { FormattedPost } from "../utils/types"
 import { useAccount, useWriteContract } from 'wagmi';
 import { useReadContract } from 'wagmi';
 import { wagmiContractConfig } from '../utils/contracts';
 import { QueryClient } from '@tanstack/react-query';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import { Pages } from '../utils/enums';
 
 function PostItem({ post }: { post: FormattedPost }) {
   const navigate = useNavigate()
+  const location = useLocation()
   const account = useAccount()
-
-  const notifyRef = useRef<HTMLDivElement>(null!)
 
   const { data: userLikes } = useReadContract({
     ...wagmiContractConfig,
@@ -29,25 +29,30 @@ function PostItem({ post }: { post: FormattedPost }) {
 
   useEffect(() => {
     if (likePending) {
-      notifyLoading(likePending)
+      // notifyLoading(likePending)
     }
     if (unlikePending) {
-      notifyLoading(unlikePending)
+      // notifyLoading(unlikePending)
     }
   }, [likePending, unlikePending])
 
   const handleLike = () => {
+    if (!account.isConnected) {
+      navigate(Pages.CONNECT, 
+        { state: { from: location.pathname } })
+      return;
+    }
     like({
       ...wagmiContractConfig,
       functionName: 'like',
       args: [post.cid, post.author]
     }, {
       onSuccess: () => {
-        notifySuccess('Successfully added like.')
+        // notifySuccess('Successfully added like.')
       },
       onError: (error) => {
         console.error(error)
-        notifyError(error.message.split("\n")[0])
+        // notifyError(error.message.split("\n")[0])
       }
     })
     new QueryClient()
@@ -55,17 +60,22 @@ function PostItem({ post }: { post: FormattedPost }) {
   }
 
   const handleUnlike = () => {
+    if (!account.isConnected) {
+      navigate(Pages.CONNECT, 
+        { state: { from: location.pathname } })
+      return;
+    }
     unlike({
       ...wagmiContractConfig,
       functionName: 'unlike',
       args: [post.cid, post.author]
     }, {
       onSuccess: () => {
-        notifySuccess('Successfully removed like.')
+        // notifySuccess('Successfully removed like.')
       },
       onError: (error) => {
         console.error(error)
-        notifyError(error.message.split("\n")[0])
+        // notifyError(error.message.split("\n")[0])
       }
     })
     new QueryClient()
@@ -88,46 +98,6 @@ function PostItem({ post }: { post: FormattedPost }) {
 
   const isAuthor = (author: string) => {
     return account.address === author
-  }
-
-  const notifyLoading = (isPending: boolean) => {
-    notifyRef.current.innerText = 'Loading...'
-    notifyRef.current.style.backgroundColor = '#99a1af'
-    for (let i = 0; i <= 100; i+=10) {
-      notifyRef.current.style.opacity = `${i}`
-    }
-
-    if (!isPending) {
-      for (let i = 100; i >= 0; i-=10) {
-        notifyRef.current.style.opacity = `${i}`
-      }
-    }
-  }
-
-  const notifyError = (error: string) => {
-    notifyRef.current.innerText = error
-    notifyRef.current.style.backgroundColor = '#fb2c36'
-    for (let i = 0; i <= 100; i+=10) {
-      notifyRef.current.style.opacity = `${i}`
-    }
-    setTimeout(() => {
-      for (let i = 100; i >= 0; i--) {
-        notifyRef.current.style.opacity = `${i}`
-      }
-    }, 2000)
-  }
-
-  const notifySuccess = (success: string) => {
-    notifyRef.current.innerText = success
-    notifyRef.current.style.backgroundColor = '#00c951'
-    for (let i = 0; i <= 100; i+=10) {
-      notifyRef.current.style.opacity = `${i}`
-    }
-    setTimeout(() => {
-      for (let i = 100; i >= 0; i--) {
-        notifyRef.current.style.opacity = `${i}`
-      }
-    }, 2000)
   }
 
   return (
@@ -166,8 +136,6 @@ function PostItem({ post }: { post: FormattedPost }) {
             </button>
         </div>}
       </div>
-      <div ref={notifyRef} 
-          className="fixed bottom-[10vh] px-4 py-3 z-10 bg-gray-400 opacity-0 rounded text-center">Notify</div>
     </div>
   )
 }

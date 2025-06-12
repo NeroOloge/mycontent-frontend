@@ -1,42 +1,66 @@
-import { NavLink, useNavigate } from "react-router"
+import { NavLink, useLocation, useNavigate } from "react-router"
 import { useAccount, useDisconnect } from "wagmi"
 import { Pages } from "../utils/enums"
+import Hamburger from "../icons/Hamburger"
+import { useState } from "react"
+import useDraft from "../hooks/useDraft"
 
-function Header({ active }: { active?: Pages }) {
+function Header() {
   const navigate = useNavigate()
+  const location = useLocation()
   const account = useAccount()
   const { disconnect } = useDisconnect()
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  const drafts = useDraft()
+
+  const openMenu = () => {
+    setMenuOpen(prev => !prev)
+  }
   
-  const handleClick = () => {
+  const handleDisconnect = () => {
     disconnect({}, {
       onSuccess: function() {
         localStorage.setItem("status", "disconnected")
-        navigate("/")
+        navigate(Pages.HOME, { state: { loggedOut: true } })
       }
     })
   }
 
   return (
-    <header className="space-y-5 ">
-        {account.status === 'connected' && <nav className="flex flex-col md:flex-row rounded-md justify-between items-center bg-gray-700 px-3 py-3 sticky text-center top-0 w-[100%]">
-          <div className="block md:hidden">
-            <button className="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
-              <svg className="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
-            </button>
+    <header className="space-y-5 mb-5">
+      <nav className="md:text-sm w-[100%] flex justify-between">
+        <div onClick={openMenu} className="md:hidden self-start"><Hamburger /></div>
+        <div className={`${menuOpen ? "flex" : "hidden"} md:flex md:space-x-10 space-x-2`}>
+          <div className="md:space-x-5 grid grid-cols-1 gap-2 md:flex">
+            <NavLink to={Pages.HOME} state={{ from: location.pathname }} 
+              className={({ isActive }) => (isActive ? 'active' : 'header-link')}>Home</NavLink>
+            <NavLink to={Pages.ABOUT} state={{ from: location.pathname }} 
+              className="header-link">About</NavLink>
+            <NavLink to={Pages.EXPLORE} state={{ from: location.pathname }} 
+              className="header-link">Explore</NavLink>
+            <NavLink to={Pages.CREATE_POST} state={{ from: location.pathname }} 
+              className="header-link">Create</NavLink>
+            {drafts.length > 0 && <NavLink to={Pages.DRAFTS} state={{ from: location.pathname }} 
+              className="header-link">Drafts ({drafts.length})</NavLink>}
           </div>
-          <div className="block flex-grow md:flex md:items-center">
-            <div className="text-sm md:flex-grow md:space-x-6">
-              <NavLink to={"/posts"}><a className={`${active === Pages.POSTS && "text-blue-500"} header-link`}>Posts</a></NavLink>
-              <NavLink to={"/explore"}><a className={`${active === Pages.EXPLORE && "text-blue-500"} header-link`}>Explore</a></NavLink>
-              <NavLink to={"/create-post"}><a className={`${active === Pages.CREATE_POST && "text-blue-500"} header-link`}>Create Post</a></NavLink>
-              <NavLink to={"/profile"}><a className={`${active === Pages.PROFILE && "text-blue-500"} header-link`}>Profile</a></NavLink>
-            </div>
-          </div>
-          <button onClick={() => handleClick()} className="bg-blue-500 cursor-pointer text-white px-3 py-2 mr-2 rounded-md">
-            Disconnect
-          </button>
-        </nav>}
-      </header>
+          {account.isConnected && <div className="md:space-x-5 grid grid-cols-1 gap-2 md:flex">
+            <NavLink to={`${Pages.PROFILE}/${account.address!}`} state={{ from: location.pathname }} 
+              className="header-link">Profile</NavLink>
+            <NavLink to={Pages.DASHBOARD} state={{ from: location.pathname }} 
+              className="header-link">Dashboard</NavLink>
+          </div>}
+        </div>
+        {account.isConnected ? 
+        <button className="button button-connect" onClick={() => handleDisconnect()}>
+          Disconnect
+        </button> : 
+        <button className="button button-connect" onClick={() => navigate(Pages.CONNECT)}>
+          Connect Wallet
+        </button>}
+      </nav>
+      <hr className="text-secondary" />
+    </header>
   )
 }
 

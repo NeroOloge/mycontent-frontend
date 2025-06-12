@@ -1,30 +1,99 @@
 @import "tailwindcss";
 
-/* :root {
-  background-color: #181818;
-  color: rgba(255, 255, 255, 0.87);
-  color-scheme: light dark;
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  font-synthesis: none;
-  font-weight: 400;
-  line-height: 1.5;
-  text-rendering: optimizeLegibility;
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+@theme {
+  --color-primary: rgb(11, 11, 12);
+  --color-accent: rgb(0, 194, 255);
+  --color-primary-foreground: rgba(255, 255, 255, .87);
+  --color-accent-foreground: rgb(0, 255, 255);
+  --color-secondary: rgb(28, 29, 32);
+  --color-secondary-foreground: rgb(from var(--color-primary-foreground) r g b / 70%);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    background-color: #f8f8f8;
-    color: #181818;
-  }
-} */
-
-
 @layer base {
+  body {
+    @apply bg-primary text-primary-foreground font-[Inter] 
+    font-[400] px-5 md:px-20 py-10 leading-[1.5]
+  }
+
   .header-link {
-    @apply block cursor-pointer md:inline-block md:mt-0
+    @apply cursor-pointer text-secondary-foreground
+    hover:text-primary-foreground
+  }
+
+  .active {
+    @apply text-primary-foreground font-semibold
+  }
+
+  .button {
+    @apply bg-accent/10 text-accent-foreground px-3 py-2 rounded-lg
+    self-center cursor-pointer text-sm
+  }
+
+  .button-dark {
+    @apply bg-accent/7 text-[#00CFFF]
+  }
+
+  .button-connections {
+    @apply text-primary-foreground bg-primary hover:bg-primary/90
+  }
+
+  .button-gray {
+    @apply bg-secondary text-secondary-foreground
+  }
+
+  .icons {
+    @apply w-12 h-12 md:w-18 md:h-18 stroke-1
+  }
+
+  .icons-item-options {
+    @apply w-5 h-5
+  }
+
+  .icons-menu {
+    
+  }
+
+  .icons-arrow {
+    @apply w-8 h-8 md:w-12 md:h-12
+  }
+
+  .icons-image {
+    @apply w-6 h-6
+  }
+
+  .image {
+    @apply md:w-[10%] w-[80%] rounded-[50%] text-secondary-foreground bg-secondary
+  }
+
+  .image-profile {
+    @apply w-[40%] md:w-[10%]
+  }
+
+  .stats {
+    @apply text-xl
+  }
+
+  .stats-title {
+    @apply text-secondary-foreground uppercase text-sm
+  }
+
+  .tabs {
+    @apply text-xl py-2 cursor-pointer text-secondary-foreground
+    hover:text-primary-foreground hover:border-b hover:border-accent
+  }
+
+  .tabs-active {
+    @apply border-b border-accent text-primary-foreground
+  }
+
+  .ProseMirror {
+    @apply bg-secondary w-full rounded-lg p-2 outline-none resize-none h-[30vh] overflow-y-scroll
+  }
+
+  .ProseMirror img {
+    @apply max-w-[100%] h-auto object-contain;
+    &.resized {
+      display: inline-block;
+    }
   }
 }

@@ -1,21 +1,21 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import { useAccount, useReadContracts } from "wagmi"
 import { FormattedPost, Posts } from "../utils/types"
 import PostItem from "../components/PostItem"
 import Header from "../components/Header"
-import { Pages } from "../utils/enums"
 import { populatePosts } from "../utils/pinata"
 import { wagmiContractConfig } from "../utils/contracts"
 import { useReadContract } from "wagmi"
+import { useToast } from "../providers/ToastProvider"
+import { Pages, ToastType } from "../utils/enums"
 
 
 function AuthorPosts() {
   const navigate = useNavigate()
   const account = useAccount()
+  const { addToast, removeToast } = useToast()
   const [posts, setPosts] = useState<FormattedPost[]>(null!)
-
-  const notifyRef = useRef<HTMLDivElement>(null!)
 
   const { data: authorPosts, isLoading: authorPostsLoading } = useReadContract({
     ...wagmiContractConfig,
@@ -51,13 +51,14 @@ function AuthorPosts() {
   useEffect(() => {
     if (!account.isConnected) {
       localStorage.setItem("status", "disconnected")
-      alert("No wallet connected")
-      navigate("/")
+      navigate(Pages.HOME, { state: { loggedIn: false } })
+      return;
    }
 
     (async () => { 
-      if (authorPostsLoading && notifyRef.current) {
-        notifyLoading(authorPostsLoading)
+      if (authorPostsLoading) {
+        // notifyLoading(authorPostsLoading)
+        addToast("Loading posts...", { type: ToastType.INFO })
       }
       if (authorPosts && postCommentsLength && likesNumber) {
         console.log(authorPosts)
@@ -68,50 +69,23 @@ function AuthorPosts() {
             comments: Number(postCommentsLength?.[index]?.result) || 0,
           }))
         )
-        notifySuccess('Successfully loaded posts.')
+        // notifySuccess('Successfully loaded posts.')
+        addToast("Successfully loaded posts.", 
+          { type: ToastType.SUCCESS, duration: 3000 })
       }
       
     })()
-  }, [notifyRef, authorPosts, postCommentsLength, likesNumber, authorPostsLoading])
-
-  const notifyLoading = (isPending: boolean) => {
-    notifyRef.current.innerText = 'Loading...'
-    notifyRef.current.style.backgroundColor = '#99a1af'
-    for (let i = 0; i <= 100; i+=10) {
-      notifyRef.current.style.opacity = `${i}`
-    }
-
-    if (!isPending) {
-      for (let i = 100; i >= 0; i-=10) {
-        notifyRef.current.style.opacity = `${i}`
-      }
-    }
-  }
-
-  const notifySuccess = (success: string) => {
-    notifyRef.current.innerText = success
-    notifyRef.current.style.backgroundColor = '#00c951'
-    for (let i = 0; i <= 100; i+=10) {
-      notifyRef.current.style.opacity = `${i}`
-    }
-    setTimeout(() => {
-      for (let i = 100; i >= 0; i--) {
-        notifyRef.current.style.opacity = `${i}`
-      }
-    }, 2000)
-  }
+  }, [authorPosts, postCommentsLength, likesNumber, authorPostsLoading])
 
   return (
     <>
-      <Header active={Pages.POSTS} />
+      <Header />
       <main className="mt-10">
         <h1 className="text-3xl font-bold text-center">Your Posts</h1>
         {posts && posts.length > 0 ? <div className="flex flex-col items-center justify-center">
           {posts?.map(post => (
             <PostItem post={post} key={post.cid} />
           ))}
-          <div ref={notifyRef} 
-          className="fixed bottom-[10vh] px-4 py-3 z-10 bg-gray-400 opacity-0 rounded text-center">Notify</div>
         </div> : 'No posts'}
       </main>
   </>)

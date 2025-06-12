@@ -1,26 +1,19 @@
-import { useEffect, useRef, useState } from "react"
-import { useNavigate } from "react-router"
-import { useAccount, useBalance, useReadContract, useEnsName } from "wagmi"
-import { 
-  displayAddress,
-  displayTime,
- } from '../utils/functions'
-import { Comments, PopulatedPost, PostComment, Posts, SolidityPost } from "../utils/types"
-import { Pages } from "../utils/enums"
+import { useLocation } from "react-router"
+import makeBlockie from 'ethereum-blockies-base64';
 import Header from "../components/Header"
-import { populateComments, populatePost, populatePosts } from "../utils/pinata"
-import { wagmiContractConfig } from "../utils/contracts"
+import { useEffect, useRef, useState } from "react"
+import { useToast } from "../providers/ToastProvider"
+import { ToastType } from "../utils/enums"
+import EmptyPersonImage from "../icons/EmptyPersonImage"
+import { useAccount, useEnsName } from "wagmi"
+import { displayAddress } from "../utils/functions"
 
 function Profile() {
-  const navigate = useNavigate()
+  const location = useLocation()
   const account = useAccount()
-  const [posts, setPosts] = useState<PopulatedPost[]>()
-  const [totalAuthorComments, setTotalAuthorComments] = useState(0)
-
-  const notifyRef = useRef<HTMLDivElement>(null!)
-
-  const [likedPosts, setLikedPosts] = useState<PopulatedPost[]>()
-  const [postComments, setPostComments] = useState<PostComment>(null!)
+  const { addToast } = useToast()
+  const tabsContainerRef = useRef<HTMLDivElement>(null!)
+  const [currentTab, setCurrentTab] = useState<string>("posts")
 
   const { data: ensName } = useEnsName({
     address: account.address!,
@@ -29,171 +22,60 @@ function Profile() {
     }
   })
 
-  const { data: paginatedPosts, isLoading: postsLoading } = useReadContract({
-    ...wagmiContractConfig,
-    functionName: 'paginatePosts',
-    args: [BigInt(1), BigInt(5), account.address!],
-    query: {
-      enabled: !!account.address,
-    },
-  })
-
-  const { data: userComments } = useReadContract({
-    ...wagmiContractConfig,
-    functionName: 'getCommentsByUser',
-    args: [account.address!],
-    query: {
-      enabled: !!account.address,
-    },
-  })
-
-  const { data: userLikes } = useReadContract({
-    ...wagmiContractConfig,
-    functionName: 'getLikesByUser',
-    args: [account.address!],
-    query: {
-      enabled: !!account.address,
-    },
-  })
-
-  const handleClick = (postCid: string) => {
-    navigate(`/post/${postCid}`)
-  }
-
   useEffect(() => {
-    if (!account.isConnected) {
-      localStorage.setItem("status", "disconnected")
-      alert("No wallet connected")
-      navigate("/")
+    if (location.state?.loggedIn === true) {
+      addToast("Welcome! Customize your profile so others can find and follow you.", {
+        type: ToastType.SUCCESS, duration: 3000
+      })
     }
-    (async () => {
-      if (postsLoading && notifyRef.current) {
-        notifyLoading(postsLoading)
-      }
-      if (paginatedPosts && userComments && userLikes) {
-        console.log(paginatedPosts)
-        const populatedPosts = await populatePosts(paginatedPosts as unknown as Posts)
-        setPosts(populatedPosts)
-        notifySuccess('Successfully loaded posts.')
-        const usersLiked = (userLikes as string[]).map(postCid => ({ cid: postCid })) as unknown as SolidityPost[]
-        
-        const populatedLikedPosts = await populatePosts(usersLiked)
-        setLikedPosts(populatedLikedPosts)
-        const populatedComments = await populateComments(userComments as unknown as Comments)
-        setTotalAuthorComments(populatedComments.length)
-        const formattedComments: PostComment = {}
-        
-        await Promise.all(populatedComments.map(async (comment) => {
-          const currPostComments = (formattedComments[comment.postCid] || [])
-          const populatedPost = await populatePost({cid: comment.postCid})
-          currPostComments.push({ ...comment, post: populatedPost })
-          formattedComments[comment.postCid] = currPostComments
-        }))
-        setPostComments(formattedComments)
-      }
-    })()
-  }, [notifyRef, paginatedPosts, userComments, userLikes, postsLoading])
+  }, [])
 
-  const { data: balance } = useBalance({
-    address: account.address
-  })
-
-  const notifyLoading = (isPending: boolean) => {
-    notifyRef.current.innerText = 'Loading...'
-    notifyRef.current.style.backgroundColor = '#99a1af'
-    for (let i = 0; i <= 100; i+=10) {
-      notifyRef.current.style.opacity = `${i}`
-    }
-
-    if (!isPending) {
-      for (let i = 100; i >= 0; i-=10) {
-        notifyRef.current.style.opacity = `${i}`
-      }
-    }
-  }
-
-  const notifySuccess = (success: string) => {
-    notifyRef.current.innerText = success
-    notifyRef.current.style.backgroundColor = '#00c951'
-    for (let i = 0; i <= 100; i+=10) {
-      notifyRef.current.style.opacity = `${i}`
-    }
-    setTimeout(() => {
-      for (let i = 100; i >= 0; i--) {
-        notifyRef.current.style.opacity = `${i}`
-      }
-    }, 2000)
+  const switchTabs = (e: any) => {
+    const tabs = Array.from(tabsContainerRef.current.children)
+    tabs.forEach(tab => {
+      tab.className = "tabs"
+    })
+    e.target.className = "tabs tabs-active"
+    setCurrentTab(e.target.id)
   }
 
   return (
     <>
-      <Header active={Pages.PROFILE} />
-      <main className="space-y-5 grid grid-cols-1 md:grid-cols-3">
-        <section className="px-2 pb-3">
-          <div className="mt-10">
-            <h2 className="text-lg font-semibold">User Stats</h2>
-            <p>Posts: {posts?.length}</p>
-            <p>Comments: {totalAuthorComments}</p>
-            <p>Likes: {likedPosts ? likedPosts.length : 0}</p>
+      <Header />
+      <main className="relative mt-16 flex flex-col items-center mx-auto px-4 space-y-8">
+        <p className="md:absolute relative top-0 -right-10 md:right-0">Member since [date]</p>
+        <img src={makeBlockie(account.address!)} className="image image-profile" />
+        <div className="text-center space-y-4">
+          <div>
+            <h1 className="text-4xl">{ensName || "John Doe"}</h1>
+            <p>{displayAddress(account.address!)}</p>
           </div>
-          <div className="mt-10">
-            <h2 className="text-lg font-semibold">Wallet Information</h2>
-            <p>Your wallet address: {displayAddress(account.address!)}</p>
-            {ensName && <p>ENS name: {ensName}</p>}
-            <p>Your wallet balance: {balance ? 
-            Number(balance.value)/Math.pow(10, balance.decimals)+" ETH" : "Loading"}</p>
-          </div>
-        </section>
-        <section className="col-span-2 px-4 py-3 space-y-5">
-          <div className="space-y-2 px-4">
-            <h2 className="text-xl font-[700]">Posts</h2>
-            {posts?.map(post => (
-              <div key={post.cid} onClick={() => handleClick(post.cid)} className="cursor-pointer mb-3 justify-between flex">
-                <div className="max-w-[calc(100%-120px)]">
-                  <h3 className="font-[500] text-lg">{post.title}</h3>
-                  <p className="text-sm w-full overflow-hidden text-ellipsis whitespace-nowrap">{post.content}</p>
-                </div>
-                <p className="text-xs">{displayTime(post.timestamp)}</p>
-              </div>
-            ))}
-            {posts && posts.length > 4 && <button onClick={() => navigate("/posts")} className="bg-blue-500 cursor-pointer text-white px-3 py-2 mr-2">Load More</button>}
-          </div>
-          <div className="scroll-smooth space-y-2 overflow-auto h-30 px-4">
-            <h2 className="text-xl font-[700]">Likes</h2>
-            {likedPosts?.map(post => (
-              <div key={post.cid} onClick={() => handleClick(post.cid)} className="cursor-pointer mb-3 justify-between flex">
-                <div className="max-w-[calc(100%-120px)]">
-                  <h3 className="font-[500] text-lg">{post.title}</h3>
-                  <p className="text-sm w-full overflow-hidden text-ellipsis whitespace-nowrap">{post.content}</p>
-                </div>
-                <p className="text-xs">{displayTime(post.timestamp)}</p>
-              </div>
-            ))}
-          </div>
-          <div className="space-y-2 scroll-smooth overflow-auto h-30 px-4">
-            <h2 className="text-xl font-[700]">Comments</h2>
-            {postComments ? Object.keys(postComments).length > 0 ? 
-              Object.keys(postComments).map(postCid => (
-                <div key={postCid} onClick={() => handleClick(postCid)} className="cursor-pointer mb-3">
-                  <div className="flex justify-between">
-                    <h3 className="font-[500] text-lg">{postComments[postCid][0].post?.title}</h3>
-                    <p className="text-xs">{displayTime(postComments[postCid][0].post!.timestamp)}</p>
-                  </div>
-                  {postComments[postCid].map(comment => (
-                    <div key={comment.cid} className="flex items-center justify-between max-w-[calc(100%)]">
-                      <p className="text-sm overflow-hidden text-ellipsis whitespace-nowrap">- {comment.content}</p>
-                      <p className="text-xs">{displayTime(comment.timestamp)}</p>
-                    </div>
-                  ))}
-                </div> 
-
-            )): '' : ''}
-          </div>
-        </section>
-        <div ref={notifyRef} 
-          className="fixed bottom-[10vh] px-4 py-3 z-10 bg-gray-400 opacity-0 rounded text-center">
-            Notify
+          <p title="Click 'Edit Profile' to add a bio and photo" className="text-xl md:text-lg text-secondary-foreground">Enter bio</p>
         </div>
+        <div className="flex justify-between w-full md:max-w-xs">
+          <div className="flex flex-col items-center">
+            <span className="stats">0</span>
+            <span className="stats stats-title">posts</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="stats">0</span>
+            <span className="stats stats-title">followers</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="stats">0</span>
+            <span className="stats stats-title">following</span>
+          </div>
+        </div>
+        <button className="button button-dark text-xl">Edit profile</button>
+        <div ref={tabsContainerRef}
+          className="flex justify-between w-full md:max-w-xs">
+          <span onClick={switchTabs} id="posts" className="tabs tabs-active">Posts</span>
+          <span onClick={switchTabs} id="replies" className="tabs">Replies</span>
+          <span onClick={switchTabs} id="bookmarks" className="tabs">Bookmarks</span>
+        </div>
+        <div className={currentTab === "posts" ? "visible" : "hidden"}>Posts</div>
+        <div className={currentTab === "replies" ? "visible" : "hidden"}>Replies</div>
+        <div className={currentTab === "bookmarks" ? "visible" : "hidden"}>Bookmarks</div>
       </main>
     </>
   )
