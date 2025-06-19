@@ -1,3 +1,9 @@
+import { doc, setDoc } from "firebase/firestore"
+import { db, Draft } from "./db"
+import { convertToURL, uploadBase64 } from "./pinata"
+import { firestore } from "./firebase"
+import { Tags } from "./types"
+
 const getAMPM = (hour: number) => {
   if (hour === 0) return "AM"
   else if (hour === 12) return "PM"
@@ -25,4 +31,57 @@ export const displayTime = (timestamp: number) => {
 
 export const displayAddress = (address: `0x${string}`) => {
   return `${address?.slice(0, 5)}...${address?.slice(address?.length-3)}`
+}
+
+export const syncLocalDrafts = async (localDrafts: Draft[], address: `0x${string}`) => {
+  const localDraftIds = []
+  for (const draft of localDrafts) {
+    let updatedContent = draft.content
+    const updatedImages = []
+    for (const image of draft.images) {
+      const draftImageUpload = await uploadBase64("", image)
+      if (draftImageUpload) {
+        const draftImageUrl = await convertToURL(draftImageUpload.cid)
+        updatedContent = draft.content.replace(image, draftImageUrl)
+        updatedImages.push(draftImageUrl)
+      }
+    }
+    
+    await setDoc(doc(firestore, "drafts", `${draft.id}`), {
+      ...draft,
+      author: address,
+      content: updatedContent,
+      images: updatedImages,
+      id: draft.id,
+    })
+    localDraftIds.push(draft.id)
+  }
+  db.drafts.bulkDelete(localDraftIds)
+}
+
+export const getPreview = (html: string) => {
+  const regex = /<p>(.*?)<\/p>/g
+  const matches = Array.from(html.matchAll(regex))
+  
+  const paragraphs = matches.map(match => match[1]).filter(p => p.length > 0)
+  return paragraphs.length > 0 ? paragraphs[0] : ""
+}
+
+export const formatTags = (tags: Tags) => {
+  const formattedTags: string[] = []
+  Object.keys(tags).forEach(tag => {
+    if (tags[tag]) {
+      // if (tag.charAt(0) !== "#") formattedTags.push(`#${tag}`)
+      formattedTags.push(tag)
+    }
+  })
+  return formattedTags
+}
+
+export const unformatTags = (formattedTags: string[]) => {
+  const tags: Tags = {}
+  formattedTags.forEach(tag => {
+    tags[tag] = true
+  })
+  return tags
 }

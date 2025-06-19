@@ -1,42 +1,35 @@
-import { useAccount, useWriteContract } from "wagmi"
-import { useEditor, EditorContent } from "@tiptap/react"
-import StarterKit from "@tiptap/starter-kit"
+import { useEffect, useState } from "react";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import ImageExtension from "@tiptap/extension-image"
 import ImageResize from "tiptap-extension-resize-image"
 import Header from "../components/Header"
-import { useToast } from "../providers/ToastProvider"
-import { Pages, ToastType } from "../utils/enums"
 import Image from "../icons/Image"
-import Checkbox from "../components/Checkbox"
-import { useState } from "react"
-import { db } from "../utils/db"
-import { convertToURL, uploadDraftImage } from "../utils/pinata"
-import { collection, doc, getDocs, setDoc } from "firebase/firestore"
-import { firestore } from "../utils/firebase"
-import useDrafts from "../hooks/useDrafts"
-import { formatTags, getPreview } from "../utils/functions"
-import { Tags } from "../utils/types"
-import { wagmiContractConfig } from "../utils/contracts"
-import { QueryClient } from "@tanstack/react-query"
-import { useNavigate } from "react-router"
+import { useNavigate, useParams } from "react-router";
+import { useAccount } from "wagmi";
+import useDraft from "../hooks/useDraft";
+import { useToast } from "../providers/ToastProvider";
+import { Pages, ToastType } from "../utils/enums";
+import { formatTags, getPreview, unformatTags } from "../utils/functions";
+import { Tags } from "../utils/types";
+import Checkbox from "../components/Checkbox";
+import { doc, setDoc } from "firebase/firestore";
+import { firestore } from "../utils/firebase";
+import { convertToURL, uploadDraftImage } from "../utils/pinata";
+import { db } from "../utils/db";
 
-function CreatePost() {
+function EditDraft() {
+  const params = useParams()
   const navigate = useNavigate()
   const account = useAccount()
+  const { draft, isLoading } = useDraft(params.draftId!)
   const { addToast } = useToast()
   const [title, setTitle] = useState("")
-  const defaultTags = {
-    "#blockchain": true,
-    "#web3": true,
-    "#decentralised": true
-  }
-  const [tags, setTags] = useState<Tags>(defaultTags)
-  const [inputTag, setInputTag] = useState('')
+  const [tags, setTags] = useState<Tags>({})
   const [addNewTag, setAddNewTag] = useState(false)
-  const drafts = useDrafts(true)
-  
-  const { writeContract: createPost } = useWriteContract()
-  
+  const [inputTag, setInputTag] = useState('')
+  const [initialLoad, setInitialLoad] = useState(true)
+
   const editor = useEditor({
     extensions: [
       StarterKit, 
@@ -46,19 +39,40 @@ function CreatePost() {
       }),
       ImageResize
     ],
-    content: "",
+    content: draft?.content || "",
   })
 
+  useEffect(() => {
+    // console.log(draft)
+    if (isLoading) return;
+    if (draft === undefined) {
+      addToast("Draft does not exist", {
+        type: ToastType.ERROR,
+        duration: 3000
+      })
+      navigate(`${Pages.DRAFTS}`)
+      return;
+    }
+    if (initialLoad) {
+      console.log("times")
+      setTitle(draft.title)
+      editor?.commands?.insertContent(draft.content)
+      setTags(unformatTags(draft.tags))
+      setInitialLoad(false)
+    }
+  }, [draft, initialLoad])
+
+  
   const handleKeyDown = (e: any) => {
     if ((e.key === 'Enter' || e.key === ',') && inputTag.trim()) {
       e.preventDefault();
-      const newTag = inputTag.trim()
+      const newTag = inputTag.trim();
       if (!tags[newTag]) {
-        setTags((prev) => ({ ...prev, [`#${newTag}`]: true }));
+        setTags((prev) => ({ ...prev, [newTag]: true }));
       }
       setInputTag('');
     }
-  }
+  };
 
   const removeTag = (tag: string) => {
     setTags((prev) => ({ ...prev, [tag]: false }))
@@ -95,7 +109,7 @@ function CreatePost() {
     const urlRegex = /\<img.+src\=(?:\"|\')(.+?)(?:\"|\')(?:.+?)\>/g
     const content = editor.getHTML()
     const preview = getPreview(content)
-    const draft = {
+    const draftObj = {
       title,
       content,
       preview,
@@ -105,10 +119,9 @@ function CreatePost() {
     }
     if (account.isConnected) {
       const matches = Array.from(content.matchAll(urlRegex))
-      const querySnapshot = await getDocs(collection(firestore, "drafts"))
       
-      await setDoc(doc(firestore, "drafts", `${drafts.length+querySnapshot.size+1}`), {
-        ...draft,
+      await setDoc(doc(firestore, "drafts", `${params.draftId!}`), {
+        ...draftObj,
         images: matches.map(match => match[1]),
       })
       addToast("Draft saved to DB.", {
@@ -116,16 +129,13 @@ function CreatePost() {
       })
     } else {
       const matches = Array.from(content.matchAll(base64Regex))
-      const id = await db.drafts.add({
-        ...draft, 
-        images: matches.map(match => match[1])
-      })
-      console.log(id)
+      db.drafts.update(Number(params.draftId!), 
+        { ...draftObj, images: matches.map(match => match[1]) })
       addToast("Draft saved locally! Connect wallet to save to DB!", {
         duration: 3000, type: ToastType.SUCCESS
       })
     }
-    setTimeout(() => window.location.reload(), 3000)
+    setTimeout(() => navigate(`${Pages.DRAFT_DETAIL}/${params.draftId!}`), 3000)
   }
 
   const handlePublish = () => {
@@ -136,38 +146,6 @@ function CreatePost() {
       return;
     }
     // TODO: publish to blockchain
-    (async () => {
-      // TODO: upload to pinata
-      // const title = titleRef.current.value
-      // const content = contentRef.current.value
-      // const timestamp = Date.now()
-      // const fileName = account.address + " " + timestamp
-      // const data = await uploadPost({
-      //   title, content, author: account.address!, timestamp
-      // }, fileName)
-      
-      createPost({
-        ...wagmiContractConfig,
-        functionName: 'createPost',
-        args: ["cid1", [], []]
-      }, {
-        onSuccess: (data) => {
-          addToast("Successfully published post!", {
-            duration: 3000, type: ToastType.SUCCESS
-          })
-          console.log("createPost data: ", data)
-          new QueryClient()
-            .invalidateQueries({ queryKey: ['readContract'] });
-          navigate(Pages.DASHBOARD)
-        },
-        onError: (error) => {
-          console.error(error)
-          addToast(error.message, {
-            duration: 3000, type: ToastType.ERROR
-          })
-        }
-      })
-    })()
   }
 
   return (
@@ -194,9 +172,9 @@ function CreatePost() {
               <input type="file" hidden id="image-upload" accept="image/*" onChange={handleImageUpload} />
             </div>
             <div className="flex flex-col items-end md:items-center space-y-1 md:space-y-0 md:flex-row md:space-x-2">
-              {formatTags(tags)
+            {formatTags(tags)
                 .map(tag => <Checkbox removeTag={removeTag} 
-                  label={tag} isChecked={true} />)}
+                  label={tag} isChecked={tags[tag]} />)}
               <Checkbox removeTag={removeTag} 
                 setAddNewTag={setAddNewTag} label="..." more={true} />
               {addNewTag && <input
@@ -221,4 +199,4 @@ function CreatePost() {
   )
 }
 
-export default CreatePost
+export default EditDraft

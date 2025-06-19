@@ -54,7 +54,7 @@ function Toast({ message, type = ToastType.INFO, duration, onClose }: Props) {
             setIsVisible(false);
             onClose();
           }}
-          className="ml-auto -mx-1.5 -my-1.5 p-1.5 inline-flex rounded-md focus:outline-none"
+          className="ml-auto -mx-1.5 -my-1.5 p-1.5 inline-flex rounded-md focus:outline-none cursor-pointer"
         >
           <span className="sr-only">Close</span>
           <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">

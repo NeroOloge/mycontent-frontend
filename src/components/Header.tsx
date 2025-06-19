@@ -3,7 +3,7 @@ import { useAccount, useDisconnect } from "wagmi"
 import { Pages } from "../utils/enums"
 import Hamburger from "../icons/Hamburger"
 import { useState } from "react"
-import useDraft from "../hooks/useDraft"
+import useDrafts from "../hooks/useDrafts"
 
 function Header() {
   const navigate = useNavigate()
@@ -12,7 +12,7 @@ function Header() {
   const { disconnect } = useDisconnect()
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const drafts = useDraft()
+  const drafts = useDrafts()
 
   const openMenu = () => {
     setMenuOpen(prev => !prev)
@@ -21,8 +21,11 @@ function Header() {
   const handleDisconnect = () => {
     disconnect({}, {
       onSuccess: function() {
-        localStorage.setItem("status", "disconnected")
+        console.log("navigating to home")
         navigate(Pages.HOME, { state: { loggedOut: true } })
+      },
+      onError: function(error) {
+        console.log(error)
       }
     })
   }

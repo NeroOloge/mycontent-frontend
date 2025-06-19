@@ -67,7 +67,6 @@ function Post() {
 
   useEffect(() => {
     if (!account.isConnected) {
-      localStorage.setItem("status", "disconnected")
       navigate(Pages.HOME, { state: { loggedIn: false } })
       return;
    }

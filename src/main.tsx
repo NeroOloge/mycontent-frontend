@@ -23,6 +23,8 @@ import { ToastProvider } from './providers/ToastProvider.tsx'
 import { Pages } from "./utils/enums"
 import EditProfile from './pages/EditProfile.tsx'
 import Drafts from './pages/Drafts.tsx'
+import Draft from './pages/Draft.tsx'
+import EditDraft from './pages/EditDraft.tsx'
 
 (globalThis as any).Buffer = Buffer
 
@@ -45,6 +47,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path={Pages.DRAFTS} element={<Drafts />} />
               <Route path={Pages.EDIT_PROFILE} element={<EditProfile />} />
               <Route path={Pages.PROFILE+"/:authorAddress"} element={<Profile />} />
+              <Route path={Pages.EDIT_DRAFT+"/:draftId"} element={<EditDraft />} />
+              <Route path={Pages.DRAFT_DETAIL+"/:draftId"} element={<Draft />} />
               <Route path={Pages.POST_DETAIL+"/:cid"} element={<Post />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

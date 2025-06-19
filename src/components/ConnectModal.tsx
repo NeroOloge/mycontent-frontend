@@ -1,18 +1,31 @@
 import { useLocation, useNavigate } from "react-router"
 import { Connector, useConnect } from "wagmi"
 import { Pages } from "../utils/enums"
+import useDraft from "../hooks/useDrafts";
 
-function ModalContent({ onClose }: { onClose: any }) {
+type Props = {
+  onClose: any;
+  setIsConnectOpen: any;
+  setIsSyncOpen: any;
+}
+
+function ConnectModal({ onClose, setIsConnectOpen, setIsSyncOpen }: Props) {
   const navigate = useNavigate()
   const location = useLocation()
   const { connectors, connect } = useConnect()
 
+  const drafts = useDraft(true)
+
   const connectToBlockchain = (connector: Connector) => {
     connect({ connector }, {
-      onSuccess: function(data) {
-        localStorage.setItem("status", "connected")
-        const page = location.state?.from || `${Pages.PROFILE}/${data.accounts[0]}`
-        navigate(page, { state: { from: 'connect', loggedIn: true } })
+      onSuccess: function() {
+        console.log(drafts)
+        if (drafts.length > 0) {
+          setIsConnectOpen(false)
+          setIsSyncOpen(true)
+        } else {
+          onClose()
+        }
       }
     })
   }
@@ -51,4 +64,4 @@ function ModalContent({ onClose }: { onClose: any }) {
   )
 }
 
-export default ModalContent
+export default ConnectModal

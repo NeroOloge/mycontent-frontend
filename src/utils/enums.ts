@@ -9,6 +9,8 @@ export enum Pages {
   EXPLORE = '/explore',
   CREATE_POST = '/create',
   DRAFTS = '/drafts',
+  EDIT_DRAFT = '/edit-draft',
+  DRAFT_DETAIL = '/draft',
   POST_DETAIL = '/post'
 }
 

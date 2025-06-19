@@ -1,0 +1,3 @@
+{
+  "7fd085973cdb3c9cac305b09aeb8dcf094324aa7420281e6fe25ac793dd3c8a1": "query GetPostById($id: ID!) {\n  post(id: $id) {\n    id\n    author\n    cid\n  }\n}\n\nquery GetPostsByAuthor($author: Bytes!) {\n  posts(where: {author: $author}) {\n    id\n    author\n    cid\n  }\n}\n\nquery GetPosts {\n  posts(first: 5) {\n    id\n    author\n    cid\n  }\n}"
+}

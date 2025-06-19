@@ -1,4 +1,4 @@
-export const wagmiContractConfig = {
+export const wagmiContractConfigOld = {
   address: `${import.meta.env.VITE_CONTRACT_ADDRESS as `0x${string}`}`,
   abi: [
     {
@@ -224,4 +224,21 @@ export const wagmiContractConfig = {
       outputs: [],
     }
   ],
+} as const
+
+export const wagmiContractConfig = {
+  address: `${import.meta.env.VITE_CONTRACT_ADDRESS as `0x${string}`}`,
+  abi: [
+    {
+      type: 'function',
+      name: 'createPost',
+      stateMutability: 'nonpayable',
+      inputs: [
+        { name: 'cid', type: 'string' }, 
+        { name: 'tags', type: 'string[]' },
+        { name: 'imageCIDs', type: 'string[]' }
+      ],
+      outputs: [],
+    },
+  ]
 } as const

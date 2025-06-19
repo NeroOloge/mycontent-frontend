@@ -52,3 +52,7 @@ export type Comments = {
   timestamp: BigInt;
   commenter: string;
 }[]
+
+export interface Tags {
+  [tag: string]: boolean;
+}

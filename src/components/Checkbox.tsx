@@ -1,21 +1,18 @@
-import { useState } from "react"
-
-interface Tags {
-  [tag: string]: boolean;
-}
-
 type Props = {
-  setTags: React.Dispatch<React.SetStateAction<Tags>>
+  setAddNewTag?: React.Dispatch<React.SetStateAction<boolean>>
+  removeTag: (tag: string) => void
   label: string;
   more?: boolean;
+  isChecked?: boolean;
 }
 
-function Checkbox({ setTags, label, more = false }: Props) {
-  const [checked, setChecked] = useState<boolean>(false)
-
+function Checkbox({ removeTag, label, setAddNewTag, more = false, isChecked = false }: Props) {
   const handleCheck = (e: any) => {
-    setTags(prev => ({ ...prev, [e.target.id]: !checked }))
-    setChecked(prev => !prev)
+    if (more && setAddNewTag) {
+      setAddNewTag(prev => !prev)
+    } else {
+      removeTag(e.target.id)
+    }
   }
 
   return (
@@ -25,8 +22,8 @@ function Checkbox({ setTags, label, more = false }: Props) {
       className={`
         px-3 py-2
         cursor-pointer w-fit
-        rounded-3xl ${more ? '' : ''}
-        ${checked && !more ? 'bg-accent/10 text-accent-foreground' : 'bg-secondary'}
+        rounded-3xl 
+        ${isChecked && !more ? 'bg-accent/10 text-accent-foreground' : 'bg-secondary'}
       `}
     >
       {label}

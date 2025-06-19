@@ -1,11 +1,9 @@
 import { PinataSDK } from "pinata"
 import { PinataComment, PinataPost, PopulatedComment, PostComment, SolidityComment, SolidityPost } from "./types"
-import { PINATA_COMMENT_GROUP, PINATA_POST_GROUP } from "./constants"
-
-const vitePinataJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI0YzFlOWQwYi02ZWRiLTRkNjAtODM1ZS04NGFhMWRjMjM2NWIiLCJlbWFpbCI6Im5vbG9nZTM3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJiZjlkN2I2YWYyZWRhYzQzY2UyYyIsInNjb3BlZEtleVNlY3JldCI6IjNjNjFjNWFjNWY2YmNlYzRmZDc1MDJmY2FlYTM1NTdjMWVmYmI1Njg0ZjBhYWI2MzEzMzVlNWNlZGU3YjBjYTkiLCJleHAiOjE3NzM4MzQ2OTR9.kSa84jSeACzRNopwcSQLtn8bLTt4S74pt2zFqsCL8Vo"
+import { PINATA_COMMENT_GROUP, PINATA_DRAFT_IMAGE_GROUP, PINATA_POST_GROUP } from "./constants"
 
 export const pinata = new PinataSDK({
-  pinataJwt: `${import.meta.env.VITE_PINATA_JWT || vitePinataJwt}`,
+  pinataJwt: `${import.meta.env.VITE_PINATA_JWT!}`,
   pinataGateway: `${import.meta.env.VITE_PINATA_GATEWAY_URL}`
 })
 
@@ -74,4 +72,50 @@ export const getFileId = async (fileName: string) => {
 export const deleteFile = async (fileName: string) => {
   const fileId = await getFileId(fileName)
   return await pinata.files.public.delete([fileId])
+}
+
+const generateSignedUrl = async (fileName: string) => {
+  try {
+    const url = await pinata.upload.public.createSignedURL({
+      expires: 30,
+      name: fileName,
+      groupId: PINATA_DRAFT_IMAGE_GROUP
+    })
+    return url
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const uploadDraftImage = async (fileName: string, file: File) => {
+  try {
+    const url = await generateSignedUrl(fileName)
+
+    if (url) {
+      const upload = await pinata.upload.public.file(file).url(url)
+      return upload
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const uploadBase64 = async (fileName: string, base64: string) => {
+  try {
+    const url = await generateSignedUrl(fileName)
+
+    if (url) {
+      const upload = await pinata.upload.public.base64(base64).url(url)
+      return upload
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const convertToURL = async (cid: string) => {
+  const url = await pinata.gateways.public.convert(
+    cid
+  )
+  return url
 }
