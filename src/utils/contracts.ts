@@ -240,5 +240,12 @@ export const wagmiContractConfig = {
       ],
       outputs: [],
     },
+    {
+      type: 'function',
+      name: 'deletePost',
+      stateMutability: 'nonpayable',
+      inputs: [{ name: 'postId', type: 'uint256' }],
+      outputs: [],
+    },
   ]
 } as const

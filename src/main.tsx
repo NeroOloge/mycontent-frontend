@@ -49,7 +49,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path={Pages.PROFILE+"/:authorAddress"} element={<Profile />} />
               <Route path={Pages.EDIT_DRAFT+"/:draftId"} element={<EditDraft />} />
               <Route path={Pages.DRAFT_DETAIL+"/:draftId"} element={<Draft />} />
-              <Route path={Pages.POST_DETAIL+"/:cid"} element={<Post />} />
+              <Route path={Pages.POST_DETAIL+"/:postId"} element={<Post />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BrowserRouter>

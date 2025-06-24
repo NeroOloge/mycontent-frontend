@@ -1,4 +1,4 @@
-import { PinataSDK } from "pinata"
+import { PinataSDK, UploadResponse } from "pinata"
 import { PinataComment, PinataPost, PopulatedComment, PostComment, SolidityComment, SolidityPost } from "./types"
 import { PINATA_COMMENT_GROUP, PINATA_DRAFT_IMAGE_GROUP, PINATA_POST_GROUP } from "./constants"
 
@@ -7,15 +7,15 @@ export const pinata = new PinataSDK({
   pinataGateway: `${import.meta.env.VITE_PINATA_GATEWAY_URL}`
 })
 
-export const populatePost = async (post: SolidityPost) => {
-  return (await pinata.gateways.public.get(post.cid)).data as unknown as PinataPost
+export const populatePost = async (postCid: string) => {
+  return (await pinata.gateways.public.get(postCid)).data as unknown as PinataPost
 }
 
 export const populatePosts = async (posts: SolidityPost[]) => {
   const populatedPosts = []
   for (let post of posts) {
-    const postJSON = await populatePost(post)
-    populatedPosts.push({...postJSON, cid: post.cid})
+    const postJSON = await populatePost(post.cid)
+    populatedPosts.push({...postJSON, cid: post.cid, id: post.id})
   }
   return populatedPosts
 }
@@ -37,20 +37,16 @@ export const formatComments = async (populatedComments: PopulatedComment[]) => {
   const formattedComments: PostComment = {}
   await Promise.all(populatedComments.map(async (comment) => {
     const currPostComments = (formattedComments[comment.postCid] || [])
-    const populatedPost = await populatePost({cid: comment.postCid})
+    const populatedPost = await populatePost(comment.postCid)
     currPostComments.push({ ...comment, post: populatedPost })
     formattedComments[comment.postCid] = currPostComments
   }))
   return formattedComments
 }
 
-export const uploadPost = async ({ title, content, author, timestamp }: PinataPost, fileName: string) => {
-  const data = await pinata.upload.public.json({
-    timestamp,
-    title,
-    content,
-    author
-  }).group(PINATA_POST_GROUP).name(fileName)
+export const uploadPost = async (post: PinataPost, fileName: string): Promise<UploadResponse> => {
+  const data = await pinata.upload.public.json(post)
+    .group(PINATA_POST_GROUP).name(fileName)
   return data
 }
 

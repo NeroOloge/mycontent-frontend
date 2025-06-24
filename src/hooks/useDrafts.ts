@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db, Draft } from "../utils/db"
 import { useAccount } from "wagmi"
-import { collection, onSnapshot, query, where } from "firebase/firestore"
+import { collection, limit, onSnapshot, query, where } from "firebase/firestore"
 import { firestore } from "../utils/firebase"
 
 function useDrafts(local?: boolean) {
@@ -15,7 +15,7 @@ function useDrafts(local?: boolean) {
         setDrafts(localDrafts?.sort((a, b) => Number(b.timestamp) - Number(a.timestamp)) || [])
       }
       else {
-        const q = query(collection(firestore, "drafts"), where("author", "==", account.address!))
+        const q = query(collection(firestore, "drafts"), where("author", "==", account.address!), limit(6))
         const unsub = onSnapshot(q, (querySnapshot) => {
           if (!querySnapshot.empty) {
             const firestoreDrafts = querySnapshot.docs.map(d => ({...d.data(), id: Number(d.id)}))

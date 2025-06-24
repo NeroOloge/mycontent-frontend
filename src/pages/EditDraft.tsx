@@ -6,17 +6,20 @@ import ImageResize from "tiptap-extension-resize-image"
 import Header from "../components/Header"
 import Image from "../icons/Image"
 import { useNavigate, useParams } from "react-router";
-import { useAccount } from "wagmi";
+import { useAccount, useWriteContract } from "wagmi";
 import useDraft from "../hooks/useDraft";
 import { useToast } from "../providers/ToastProvider";
 import { Pages, ToastType } from "../utils/enums";
-import { formatTags, getPreview, unformatTags } from "../utils/functions";
-import { Tags } from "../utils/types";
+import { appendHash, formatTags, getPreview, unformatTags } from "../utils/functions";
+import { TagDisplayMap, Tags } from "../utils/types";
 import Checkbox from "../components/Checkbox";
-import { doc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
 import { firestore } from "../utils/firebase";
-import { convertToURL, uploadDraftImage } from "../utils/pinata";
+import { convertToURL, uploadDraftImage, uploadPost } from "../utils/pinata";
 import { db } from "../utils/db";
+import { QueryClient } from "@tanstack/react-query";
+import { wagmiContractConfig } from "../utils/contracts";
+import useTagDisplayMap from "../hooks/useTagDisplayMap";
 
 function EditDraft() {
   const params = useParams()
@@ -29,6 +32,10 @@ function EditDraft() {
   const [addNewTag, setAddNewTag] = useState(false)
   const [inputTag, setInputTag] = useState('')
   const [initialLoad, setInitialLoad] = useState(true)
+  const [tagDisplayMap, setTagDisplayMap] = useState<TagDisplayMap>({})
+  const initialTagDisplayMap = useTagDisplayMap()
+
+  const { writeContract: createPost } = useWriteContract()
 
   const editor = useEditor({
     extensions: [
@@ -59,6 +66,7 @@ function EditDraft() {
       editor?.commands?.insertContent(draft.content)
       setTags(unformatTags(draft.tags))
       setInitialLoad(false)
+      setTagDisplayMap(prev => ({ ...prev, ...initialTagDisplayMap }))
     }
   }, [draft, initialLoad])
 
@@ -67,8 +75,9 @@ function EditDraft() {
     if ((e.key === 'Enter' || e.key === ',') && inputTag.trim()) {
       e.preventDefault();
       const newTag = inputTag.trim();
-      if (!tags[newTag]) {
-        setTags((prev) => ({ ...prev, [newTag]: true }));
+      if (!tagDisplayMap[newTag.toLowerCase()]) {
+        setTags((prev) => ({ ...prev, [`${appendHash(newTag.toLowerCase())}`]: true }))
+        setTagDisplayMap((prev) => ({ ...prev, [`${appendHash(newTag.toLowerCase())}`]: `${appendHash(newTag)}` }))
       }
       setInputTag('');
     }
@@ -76,6 +85,21 @@ function EditDraft() {
 
   const removeTag = (tag: string) => {
     setTags((prev) => ({ ...prev, [tag]: false }))
+  }
+
+  const saveTagDisplayMap = async () => {
+    if (account.isConnected) {
+      const docSnap = await getDoc(doc(firestore, "tagDisplayMap", account.address!))
+      if (!docSnap.exists()) {
+        await setDoc(doc(firestore, "tagDisplayMap", `${account.address}`), 
+          tagDisplayMap)
+      } else {
+        await setDoc(doc(firestore, "tagDisplayMap", `${account.address}`), 
+          { ...tagDisplayMap, ...docSnap.data() })
+      }
+    } else {
+      localStorage.setItem("tagDisplayMap", JSON.stringify(tagDisplayMap))
+    }
   }
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -135,6 +159,7 @@ function EditDraft() {
         duration: 3000, type: ToastType.SUCCESS
       })
     }
+    await saveTagDisplayMap()
     setTimeout(() => navigate(`${Pages.DRAFT_DETAIL}/${params.draftId!}`), 3000)
   }
 
@@ -145,14 +170,62 @@ function EditDraft() {
       })
       return;
     }
-    // TODO: publish to blockchain
+    (async () => {
+      if (!editor) return;
+      const urlRegex = /\<img.+src\=(?:\"|\')(.+?)(?:\"|\')(?:.+?)\>/g
+      const content = editor.getHTML()
+      const preview = getPreview(content)
+      const matches = Array.from(content.matchAll(urlRegex))
+      const entity = {
+        title,
+        content,
+        preview,
+        author: account.address!,
+        timestamp: Date.now(),
+        likes: 0,
+        comments: 0,
+        bookmarks: 0,
+        imageCIDs: matches.map(match => match[1]),
+        tags: formatTags(tags),
+        isDeleted: false,
+        exists: true
+      }
+      const fileName = account.address + " " + entity.timestamp
+      const data = await uploadPost(entity, fileName)
+      
+      createPost({
+        ...wagmiContractConfig,
+        functionName: 'createPost',
+        args: [data.cid, entity.tags, entity.imageCIDs]
+      }, {
+        onSuccess: (data) => {
+          addToast("Successfully published post!", {
+            duration: 3000, type: ToastType.SUCCESS
+          })
+          console.log("createPost data: ", data)
+          new QueryClient()
+            .invalidateQueries({ queryKey: ['readContract'] });
+          (async () => {
+            await saveTagDisplayMap()
+            await deleteDoc(doc(firestore, "drafts", `${params.draftId!}`))
+            navigate(Pages.DASHBOARD)
+          })()
+        },
+        onError: (error) => {
+          console.error(error)
+          addToast(error.message, {
+            duration: 3000, type: ToastType.ERROR
+          })
+        }
+      })
+    })()
   }
 
   return (
     <>
       <Header />
       <main className="mt-16 mx-auto px-4 space-y-8">
-        <h1 className="text-3xl font-semibold">Create Post</h1>
+        <h1 className="text-3xl font-semibold">Edit Draft</h1>
         <div className="space-y-4">
           <div className="space-y-2 flex flex-col">
             <label className="text-primary-foreground/70">Title</label>
@@ -173,8 +246,8 @@ function EditDraft() {
             </div>
             <div className="flex flex-col items-end md:items-center space-y-1 md:space-y-0 md:flex-row md:space-x-2">
             {formatTags(tags)
-                .map(tag => <Checkbox removeTag={removeTag} 
-                  label={tag} isChecked={tags[tag]} />)}
+                .map(tag => <Checkbox key={tag} removeTag={removeTag} 
+                  label={tagDisplayMap[tag] || tag} isChecked={tags[tag]} />)}
               <Checkbox removeTag={removeTag} 
                 setAddNewTag={setAddNewTag} label="..." more={true} />
               {addNewTag && <input

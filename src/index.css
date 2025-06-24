@@ -45,8 +45,10 @@
     @apply w-12 h-12 md:w-18 md:h-18 stroke-1
   }
 
+  .icons-interact {}
+
   .icons-item-options {
-    @apply w-5 h-5
+    @apply w-5 h-5 hover:text-accent
   }
 
   .icons-menu {

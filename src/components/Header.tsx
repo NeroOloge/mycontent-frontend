@@ -52,6 +52,8 @@ function Header() {
               className="header-link">Profile</NavLink>
             <NavLink to={Pages.DASHBOARD} state={{ from: location.pathname }} 
               className="header-link">Dashboard</NavLink>
+            <NavLink to={Pages.POSTS} state={{ from: location.pathname }} 
+              className="header-link">Posts</NavLink>
           </div>}
         </div>
         {account.isConnected ? 

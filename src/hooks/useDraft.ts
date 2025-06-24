@@ -21,8 +21,7 @@ function useDraft(draftId: string) {
       if (account.isConnected) {
         const docSnap = await getDoc(doc(firestore, "drafts", draftId))
         if (docSnap.exists()) setDraft(docSnap.data() as Draft)
-          else setDraft(undefined)
-        fetchDraft()
+        else setDraft(undefined)
       } else {
         setDraft(localDraft)
       }

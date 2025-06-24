@@ -1,140 +1,114 @@
 import 'primeicons/primeicons.css';
-import { useLocation, useNavigate } from "react-router"
-import { displayTime } from "../utils/functions"
-import { FormattedPost } from "../utils/types"
-import { useAccount, useWriteContract } from 'wagmi';
-import { useReadContract } from 'wagmi';
-import { wagmiContractConfig } from '../utils/contracts';
-import { QueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useNavigate } from "react-router"
+import moment from "moment"
+import { PopulatedPost } from "../utils/types"
 import { Pages } from '../utils/enums';
+import Like from '../icons/Like';
+import Comment from '../icons/Comment';
+import Pencil from '../icons/Pencil';
+import Trash from '../icons/Trash';
+import { displayAddress } from '../utils/functions';
+import useTagDisplayMap from '../hooks/useTagDisplayMap';
 
-function PostItem({ post }: { post: FormattedPost }) {
+type Props = {
+  post: PopulatedPost
+}
+
+function PostItem({ post }: Props) {
   const navigate = useNavigate()
-  const location = useLocation()
-  const account = useAccount()
+  const tagDisplayMap = useTagDisplayMap()
 
-  const { data: userLikes } = useReadContract({
-    ...wagmiContractConfig,
-    functionName: 'getLikesByUser',
-    args: [account.address!],
-    query: {
-      enabled: !!account.address,
-    },
-  })
+  // const handleLike = () => {
+  //   if (!account.isConnected) {
+  //     navigate(Pages.CONNECT, 
+  //       { state: { from: location.pathname } })
+  //     return;
+  //   }
+  //   // like({
+  //   //   ...wagmiContractConfig,
+  //   //   functionName: 'like',
+  //   //   args: [post.cid, post.author]
+  //   // }, {
+  //   //   onSuccess: () => {
+  //   //     // notifySuccess('Successfully added like.')
+  //   //   },
+  //   //   onError: (error) => {
+  //   //     console.error(error)
+  //   //     // notifyError(error.message.split("\n")[0])
+  //   //   }
+  //   // })
+  //   new QueryClient()
+  //     .invalidateQueries({ queryKey: ['readContract'] });
+  // }
 
-  const { writeContract: like, isPending: likePending } = useWriteContract()
-    
-  const { writeContract: unlike, isPending: unlikePending } = useWriteContract()
+  // const handleUnlike = () => {
+  //   if (!account.isConnected) {
+  //     navigate(Pages.CONNECT, 
+  //       { state: { from: location.pathname } })
+  //     return;
+  //   }
+  //   // unlike({
+  //   //   ...wagmiContractConfig,
+  //   //   functionName: 'unlike',
+  //   //   args: [post.cid, post.author]
+  //   // }, {
+  //   //   onSuccess: () => {
+  //   //     // notifySuccess('Successfully removed like.')
+  //   //   },
+  //   //   onError: (error) => {
+  //   //     console.error(error)
+  //   //     // notifyError(error.message.split("\n")[0])
+  //   //   }
+  //   // })
+  //   new QueryClient()
+  //     .invalidateQueries({ queryKey: ['readContract'] });
+  // }
 
-  useEffect(() => {
-    if (likePending) {
-      // notifyLoading(likePending)
-    }
-    if (unlikePending) {
-      // notifyLoading(unlikePending)
-    }
-  }, [likePending, unlikePending])
-
-  const handleLike = () => {
-    if (!account.isConnected) {
-      navigate(Pages.CONNECT, 
-        { state: { from: location.pathname } })
-      return;
-    }
-    like({
-      ...wagmiContractConfig,
-      functionName: 'like',
-      args: [post.cid, post.author]
-    }, {
-      onSuccess: () => {
-        // notifySuccess('Successfully added like.')
-      },
-      onError: (error) => {
-        console.error(error)
-        // notifyError(error.message.split("\n")[0])
-      }
-    })
-    new QueryClient()
-      .invalidateQueries({ queryKey: ['readContract'] });
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    navigate(`${Pages.POST_DETAIL}/${e.currentTarget.dataset.id}`)
   }
 
-  const handleUnlike = () => {
-    if (!account.isConnected) {
-      navigate(Pages.CONNECT, 
-        { state: { from: location.pathname } })
-      return;
-    }
-    unlike({
-      ...wagmiContractConfig,
-      functionName: 'unlike',
-      args: [post.cid, post.author]
-    }, {
-      onSuccess: () => {
-        // notifySuccess('Successfully removed like.')
-      },
-      onError: (error) => {
-        console.error(error)
-        // notifyError(error.message.split("\n")[0])
-      }
-    })
-    new QueryClient()
-      .invalidateQueries({ queryKey: ['readContract'] });
+  const handleEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
   }
 
-  const handleDelete = () => {
-    navigate(`/post/${post.cid}?delete=true`)
+  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
   }
 
-  const handleClick = () => {
-    navigate(`/post/${post.cid}`)
-  }
-
-  const isLiked = () => {
-    if (userLikes)
-      return userLikes.filter(likes => likes === post.cid).length > 0
-    return false
-  }
-
-  const isAuthor = (author: string) => {
-    return account.address === author
-  }
+  // const isAuthor = (author: string) => {
+  //   return account.address === author
+  // }
 
   return (
-    <div onClick={() => handleClick()} className="px-2 cursor-pointer mb-3 border-b-white border-b py-2 w-[100%] md:w-[80%]">
-      <div className="justify-between flex max-w-[100%] mb-3">
-        <div className="max-w-[calc(100%-120px)]">
-          <h3 className="font-[500] text-lg">{post.title}</h3>
-          <p className="text-sm w-full overflow-hidden text-ellipsis whitespace-nowrap">{post.content}</p>
+    <div onClick={handleClick} key={`${post.id}`} data-id={`${post.id}`} className="cursor-pointer flex flex-col h-full min-h-[200px] px-3 py-2 rounded-lg bg-secondary">
+      <h1 className="text-xl font-semibold mb-1 line-clamp-2">{post.title}</h1>
+      <p className="text-secondary-foreground h-5 mb-1">{post.author ? displayAddress(post.author) : "Anonymous"}</p>
+      <p className="text-sm line-clamp-2 mb-2 flex-grow-0">{post.preview}</p>
+      {post.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1 mt-auto mb-1">
+        {post.tags.map(tag => 
+          <span className="text-xs px-2 py-0.5 bg-accent text-primary rounded-full" key={tag}>
+            {tagDisplayMap[tag] || tag}
+          </span>)}
         </div>
-        <p className="text-xs">{displayTime(post.timestamp)}</p>
-      </div>
-      <div className="flex text-xs justify-between">
-        <div className="flex">
-          {isLiked() ? 
-            <i onClick={(e) => { 
-              e.stopPropagation()
-              handleUnlike() 
-            }} className='pi pi-thumbs-up-fill'></i> :
-            <i onClick={(e) => { 
-              e.stopPropagation()
-              handleLike() 
-            }} className='pi pi-thumbs-up'></i>
-          }
-          <p className="px-2">{post.likes} Like{post.likes !== 1 && "s"}</p>
-          <p className="flex-1">{post.comments} Comment{post.comments !== 1 && "s"}</p>
+      )}
+      <div className="flex justify-between mt-auto items-end">
+        <div className="space-y-2">
+          <p className="text-xs text-secondary-foreground">{moment(new Date(Number(post.timestamp))).fromNow()}</p>
+          <div className="flex space-x-2">
+            <span className="text-secondary-foreground flex items-center space-x-2">
+              <button className="cursor-pointer"><Like /></button> <span>{post.likes}</span>
+            </span>
+            <span className="text-secondary-foreground flex items-center space-x-2">
+              <button className="cursor-pointer"><Comment /></button> <span>{post.comments}</span>
+            </span>
+          </div>
         </div>
-        {isAuthor(post.author) && <div>
-          <button className="p-1 hover:text-red-500"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete();
-            }}
-            aria-label="Delete post"
-            >
-              <i className='pi pi-trash'></i>
-            </button>
-        </div>}
+        <div className="flex space-x-2">
+          <button data-id={`${post.id}`} className="cursor-pointer" onClick={handleEdit}><Pencil /></button>
+          <button data-id={`${post.id}`} className="cursor-pointer" onClick={handleDelete}><Trash /></button>
+        </div>
       </div>
     </div>
   )

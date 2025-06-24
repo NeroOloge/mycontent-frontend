@@ -10,12 +10,12 @@ import Image from "../icons/Image"
 import Checkbox from "../components/Checkbox"
 import { useState } from "react"
 import { db } from "../utils/db"
-import { convertToURL, uploadDraftImage } from "../utils/pinata"
+import { convertToURL, uploadDraftImage, uploadPost } from "../utils/pinata"
 import { collection, doc, getDocs, setDoc } from "firebase/firestore"
 import { firestore } from "../utils/firebase"
 import useDrafts from "../hooks/useDrafts"
-import { formatTags, getPreview } from "../utils/functions"
-import { Tags } from "../utils/types"
+import { appendHash, formatTags, getPreview } from "../utils/functions"
+import { TagDisplayMap, Tags } from "../utils/types"
 import { wagmiContractConfig } from "../utils/contracts"
 import { QueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router"
@@ -31,6 +31,8 @@ function CreatePost() {
     "#decentralised": true
   }
   const [tags, setTags] = useState<Tags>(defaultTags)
+  const [tagDisplayMap, setTagDisplayMap] = useState<TagDisplayMap>({})
+  console.log(tagDisplayMap)
   const [inputTag, setInputTag] = useState('')
   const [addNewTag, setAddNewTag] = useState(false)
   const drafts = useDrafts(true)
@@ -51,12 +53,13 @@ function CreatePost() {
 
   const handleKeyDown = (e: any) => {
     if ((e.key === 'Enter' || e.key === ',') && inputTag.trim()) {
-      e.preventDefault();
+      e.preventDefault()
       const newTag = inputTag.trim()
-      if (!tags[newTag]) {
-        setTags((prev) => ({ ...prev, [`#${newTag}`]: true }));
+      if (!tagDisplayMap[newTag.toLowerCase()]) {
+        setTags((prev) => ({ ...prev, [`${appendHash(newTag.toLowerCase())}`]: true }))
+        setTagDisplayMap((prev) => ({ ...prev, [`${appendHash(newTag.toLowerCase())}`]: `${appendHash(newTag)}` }))
       }
-      setInputTag('');
+      setInputTag('')
     }
   }
 
@@ -64,34 +67,43 @@ function CreatePost() {
     setTags((prev) => ({ ...prev, [tag]: false }))
   }
 
+  const saveTagDisplayMap = async () => {
+    if (account.isConnected) {
+      await setDoc(doc(firestore, "tagDisplayMap", `${account.address}`), 
+      tagDisplayMap)
+    } else {
+      localStorage.setItem("tagDisplayMap", JSON.stringify(tagDisplayMap))
+    }
+  }
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (!file || !editor) return;
+    if (!file || !editor) return
 
     if (account.isConnected) {
       // Upload to cloudinary
       const imageUpload = await uploadDraftImage(file.name, file)
       if (imageUpload) {
         const imageUrl = await convertToURL(imageUpload.cid)
-        editor.chain().focus().setImage({ src: imageUrl }).run();
+        editor.chain().focus().setImage({ src: imageUrl }).run()
       }
     } else {
       const base64: string = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result as string)
         reader.readAsDataURL(file)
-      });
+      })
       editor.chain()
       .focus()
       .setImage({ src: base64 })
-      .run();
-      // editor.commands.insertContent(`<img src="${URL.createObjectURL(file)}" alt="uploaded" />`);
+      .run()
+      // editor.commands.insertContent(`<img src="${URL.createObjectURL(file)}" alt="uploaded" />`)
     }
   }
 
   const handleSaveDraft = async () => {
-    if (!editor) return;
-    const base64Regex = /src="(data:image\/[^;]+;base64[^"]+)"/g;
+    if (!editor) return
+    const base64Regex = /src="(data:image\/[^]+base64[^"]+)"/g
     const urlRegex = /\<img.+src\=(?:\"|\')(.+?)(?:\"|\')(?:.+?)\>/g
     const content = editor.getHTML()
     const preview = getPreview(content)
@@ -125,6 +137,7 @@ function CreatePost() {
         duration: 3000, type: ToastType.SUCCESS
       })
     }
+    await saveTagDisplayMap()
     setTimeout(() => window.location.reload(), 3000)
   }
 
@@ -133,23 +146,35 @@ function CreatePost() {
       addToast("Connect wallet to publish your post!", {
         duration: 3000, type: ToastType.INFO
       })
-      return;
+      return
     }
-    // TODO: publish to blockchain
     (async () => {
-      // TODO: upload to pinata
-      // const title = titleRef.current.value
-      // const content = contentRef.current.value
-      // const timestamp = Date.now()
-      // const fileName = account.address + " " + timestamp
-      // const data = await uploadPost({
-      //   title, content, author: account.address!, timestamp
-      // }, fileName)
+      if (!editor) return
+      const urlRegex = /\<img.+src\=(?:\"|\')(.+?)(?:\"|\')(?:.+?)\>/g
+      const content = editor.getHTML()
+      const preview = getPreview(content)
+      const matches = Array.from(content.matchAll(urlRegex))
+      const entity = {
+        title,
+        content,
+        preview,
+        author: account.address!,
+        timestamp: Date.now(),
+        likes: 0,
+        comments: 0,
+        bookmarks: 0,
+        imageCIDs: matches.map(match => match[1]),
+        tags: formatTags(tags),
+        isDeleted: false,
+        exists: true
+      }
+      const fileName = account.address + " " + entity.timestamp
+      const data = await uploadPost(entity, fileName)
       
       createPost({
         ...wagmiContractConfig,
         functionName: 'createPost',
-        args: ["cid1", [], []]
+        args: [data.cid, entity.tags, entity.imageCIDs]
       }, {
         onSuccess: (data) => {
           addToast("Successfully published post!", {
@@ -157,8 +182,8 @@ function CreatePost() {
           })
           console.log("createPost data: ", data)
           new QueryClient()
-            .invalidateQueries({ queryKey: ['readContract'] });
-          navigate(Pages.DASHBOARD)
+            .invalidateQueries({ queryKey: ['readContract'] })
+          saveTagDisplayMap().then(() => navigate(Pages.DASHBOARD))
         },
         onError: (error) => {
           console.error(error)
@@ -195,8 +220,8 @@ function CreatePost() {
             </div>
             <div className="flex flex-col items-end md:items-center space-y-1 md:space-y-0 md:flex-row md:space-x-2">
               {formatTags(tags)
-                .map(tag => <Checkbox removeTag={removeTag} 
-                  label={tag} isChecked={true} />)}
+                .map(tag => <Checkbox key={tag} removeTag={removeTag} 
+                  label={tagDisplayMap[tag] || tag} isChecked={true} />)}
               <Checkbox removeTag={removeTag} 
                 setAddNewTag={setAddNewTag} label="..." more={true} />
               {addNewTag && <input

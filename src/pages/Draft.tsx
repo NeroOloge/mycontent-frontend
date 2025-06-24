@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import moment from "moment"
 import Header from "../components/Header"
 import { useNavigate, useParams } from "react-router"
 import { useToast } from "../providers/ToastProvider"
@@ -6,7 +7,7 @@ import { Pages, ToastType } from "../utils/enums"
 import RenderHTML from "../components/RenderHTML"
 import Pencil from "../icons/Pencil"
 import Trash from "../icons/Trash"
-import { displayAddress } from "../utils/functions"
+import { displayAddress, getPreview } from "../utils/functions"
 import useDraft from "../hooks/useDraft"
 import { useAccount, useWriteContract } from "wagmi"
 import { db } from "../utils/db"
@@ -14,12 +15,15 @@ import { firestore } from "../utils/firebase"
 import { deleteDoc, doc } from "firebase/firestore"
 import { wagmiContractConfig } from "../utils/contracts"
 import { QueryClient } from "@tanstack/react-query"
+import { uploadPost } from "../utils/pinata"
+import useTagDisplayMap from "../hooks/useTagDisplayMap"
 
 function Draft() {
   const params = useParams()
   const navigate = useNavigate()
   const account = useAccount()
   const { draft, isLoading } = useDraft(params.draftId!)
+  const tagDisplayMap = useTagDisplayMap()
   const { addToast, removeToast } = useToast()
 
   const { writeContract: createPost } = useWriteContract()
@@ -47,9 +51,9 @@ function Draft() {
     const loadingToastId = addToast("Deleting draft...", 
       { type: ToastType.INFO })
     if (account.isConnected) {
-      await deleteDoc(doc(firestore, "drafts", `${draft!.id}`))
+      await deleteDoc(doc(firestore, "drafts", `${params.draftId}`))
     } else {
-      await db.drafts.delete(draft!.id)
+      await db.drafts.delete(Number(params.draftId))
     }
     removeToast(loadingToastId)
     addToast("Successfully deleted draft", 
@@ -65,19 +69,28 @@ function Draft() {
       return;
     }
     (async () => {
-      // TODO: upload to pinata
-      // const title = titleRef.current.value
-      // const content = contentRef.current.value
-      // const timestamp = Date.now()
-      // const fileName = account.address + " " + timestamp
-      // const data = await uploadPost({
-      //   title, content, author: account.address!, timestamp
-      // }, fileName)
+      const preview = getPreview(draft!.content)
+      const entity = {
+        title: draft!.title,
+        content: draft!.content,
+        preview,
+        author: account.address!,
+        timestamp: Date.now(),
+        likes: 0,
+        comments: 0,
+        bookmarks: 0,
+        imageCIDs: draft!.images,
+        tags: draft!.tags,
+        isDeleted: false,
+        exists: true,
+      }
+      const fileName = account.address + " " + entity.timestamp
+      const data = await uploadPost(entity, fileName)
       
       createPost({
         ...wagmiContractConfig,
         functionName: 'createPost',
-        args: ["cid1", [], []]
+        args: [data.cid, entity.tags, entity.imageCIDs]
       }, {
         onSuccess: (data) => {
           addToast("Successfully published post!", {
@@ -86,7 +99,10 @@ function Draft() {
           console.log("createPost data: ", data)
           new QueryClient()
             .invalidateQueries({ queryKey: ['readContract'] });
-          navigate(Pages.DASHBOARD)
+          (async () => {
+            await deleteDoc(doc(firestore, "drafts", `${params.draftId}`))
+            navigate(Pages.DASHBOARD)
+          })()
         },
         onError: (error) => {
           console.error(error)
@@ -110,7 +126,7 @@ function Draft() {
             <div className="flex flex-wrap gap-1 mt-auto mb-1">
               {draft.tags.map(tag => 
                 <span className="text-xs px-2 py-0.5 bg-accent text-primary rounded-full" key={tag}>
-                  {tag}
+                  {tagDisplayMap[tag] || tag}
                 </span>
               )}
             </div>
@@ -121,8 +137,8 @@ function Draft() {
               title={account.isConnected ? "" : "Connect wallet to publish your post!"}>Publish</button>
           </div>
 
-          <div className="flex justify-between mt-auto items-end">
-            <p className="text-xs text-secondary-foreground">{new Date(Number(draft.timestamp)).toDateString()}</p>
+          <div className="flex justify-between mt-2 items-end">
+            <p className="text-xs text-secondary-foreground">{moment(new Date(Number(draft.timestamp))).fromNow()}</p>
             <div className="flex space-x-2">
               <button className="cursor-pointer" onClick={handleEdit}><Pencil /></button>
               <button className="cursor-pointer" onClick={handleDelete}><Trash /></button>

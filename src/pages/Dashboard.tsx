@@ -2,16 +2,15 @@ import { useNavigate } from "react-router"
 import Header from "../components/Header"
 import useDrafts from "../hooks/useDrafts"
 import { Pages, ToastType } from "../utils/enums"
-import { displayAddress, syncLocalDrafts } from "../utils/functions"
-import Trash from "../icons/Trash"
-import Pencil from "../icons/Pencil"
+import { syncLocalDrafts } from "../utils/functions"
 import { useToast } from "../providers/ToastProvider"
 import { useAccount } from "wagmi"
-import { db } from "../utils/db"
-import { deleteDoc, doc } from "firebase/firestore"
-import { firestore } from "../utils/firebase"
-import { execute, GetPostsQuery, GetPostsDocument } from "../../.graphclient"
-import { useEffect, useState } from "react"
+import { execute, GetPostsByAuthorDocument } from "../../.graphclient"
+import { useEffect, useRef, useState } from "react"
+import { populatePosts } from "../utils/pinata"
+import { PopulatedPost } from "../utils/types"
+import DraftItem from "../components/DraftItem"
+import PostItem from "../components/PostItem"
 
 function Dashboard() {
   const drafts = useDrafts()
@@ -19,37 +18,53 @@ function Dashboard() {
   const navigate = useNavigate()
   const account = useAccount()
   const { addToast, removeToast } = useToast()
-  const [posts, setPosts] = useState<GetPostsQuery>()
+  const [posts, setPosts] = useState<PopulatedPost[]>()
+
+  const loadingToastId = useRef<number | null>(null)
 
   useEffect(() => {
     (async () => {
-      const result = await execute(GetPostsDocument, {})
-      console.log(result)
+      try {
+        if (loadingToastId.current) {
+          removeToast(loadingToastId.current)
+        }
+
+        loadingToastId.current = 
+          addToast("Loading posts...", { type: ToastType.INFO })
+        const result = await execute(GetPostsByAuthorDocument, { author: account.address! })
+        if (result.data && result.data.posts) {
+          const [populatedPosts] = await Promise.all([
+            populatePosts(result.data.posts)
+          ])
+          console.log(populatedPosts)
+          setPosts(populatedPosts)
+
+          if (loadingToastId.current) {
+            removeToast(loadingToastId.current)
+            loadingToastId.current = null
+          }
+
+          addToast("Posts loaded successfully", { 
+            type: ToastType.SUCCESS,
+            duration: 3000 
+          })
+        }
+      } catch(e) {
+        console.error(e)
+        if (loadingToastId.current) {
+          removeToast(loadingToastId.current)
+          loadingToastId.current = null
+        }
+        addToast("Failed to load posts.", 
+          { type: ToastType.ERROR, duration: 3000 })
+      } finally {
+        if (loadingToastId.current) {
+          removeToast(loadingToastId.current)
+          loadingToastId.current = null
+        }
+      }
     })()
   }, [])
-
-  const handleEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-    navigate(`${Pages.EDIT_DRAFT}/${e.currentTarget.dataset.id}`)
-  }
-  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-    const id = Number(e.currentTarget.dataset.id)
-    const loadingToastId = addToast("Deleting draft...", 
-      { type: ToastType.INFO })
-    if (account.isConnected) {
-      await deleteDoc(doc(firestore, "drafts", `${id}`))
-    } else {
-      await db.drafts.delete(id)
-    }
-    removeToast(loadingToastId)
-    addToast("Successfully deleted draft", 
-      { type: ToastType.SUCCESS, duration: 3000 })
-  }
-
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    navigate(`${Pages.DRAFT_DETAIL}/${e.currentTarget.dataset.id}`)
-  }
     
 
   return (
@@ -62,7 +77,19 @@ function Dashboard() {
             <button onClick={() => navigate(`${Pages.CREATE_POST}`)} 
               className="button button-dark">New Post</button>
           </div>
-          <div className="text-lg md:text-base text-secondary-foreground">No posts found</div>
+          {posts && posts.length > 0 ? <div className="space-y-4">
+            <div className="md:grid md:grid-cols-3 md:gap-3 md:items-stretch space-y-3 md:space-y-0">
+              {posts.map(post => (
+                <PostItem post={post} key={post.id} />
+              ))}
+            </div>
+            <div className="text-end">
+              <button onClick={() => navigate(`${Pages.POSTS}`)} 
+                className="button">See More</button>
+            </div>
+          </div> : <div className="text-lg md:text-base text-secondary-foreground">No posts found</div>}
+          
+              
         </div>
         <div className="space-y-4">
           <div className="flex justify-between">
@@ -72,26 +99,7 @@ function Dashboard() {
           </div>
           {drafts.length > 0 ? <div className="md:grid md:grid-cols-3 md:gap-3 md:items-stretch space-y-3 md:space-y-0">
             {drafts.map(draft => (
-              <div onClick={handleClick} id={`${draft.id}`} key={draft.id} className="cursor-pointer flex flex-col h-full min-h-[200px] px-3 py-2 rounded-lg bg-secondary">
-                <h1 className="text-xl font-semibold mb-1 line-clamp-2">{draft.title}</h1>
-                <p className="text-secondary-foreground h-5 mb-1">{draft.author ? displayAddress(draft.author) : "Anonymous"}</p>
-                <p className="text-sm line-clamp-2 mb-2 flex-grow-0">{draft.preview}</p>
-                {draft.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-auto mb-1">
-                    {draft.tags.map(tag => 
-                      <span className="text-xs px-2 py-0.5 bg-accent text-primary rounded-full" key={tag}>
-                        {tag}
-                      </span>)}
-                  </div>
-                )}
-                <div className="flex justify-between mt-auto items-end">
-                  <p className="text-xs text-secondary-foreground">{new Date(Number(draft.timestamp)).toDateString()}</p>
-                  <div className="flex space-x-2">
-                    <button className="cursor-pointer" onClick={handleEdit}><Pencil /></button>
-                    <button className="cursor-pointer" onClick={handleDelete}><Trash /></button>
-                  </div>
-                </div>
-              </div>
+              <DraftItem draft={draft} key={draft.id} />
             ))}
           </div> : <div className="text-lg md:text-base text-secondary-foreground">No drafts found</div>}
         </div>
@@ -106,38 +114,7 @@ function Dashboard() {
           </div>
           <div className="md:grid md:grid-cols-3 md:gap-3 md:items-stretch space-y-3 md:space-y-0">
             {localDrafts.map(draft => (
-              <div onClick={handleClick} 
-                data-id={`${draft.id}`} 
-                key={draft.id} 
-                data-class={"local"}
-                className="cursor-pointer flex flex-col h-full min-h-[200px] px-3 py-2 rounded-lg bg-secondary">
-                <h1 className="text-xl font-semibold mb-1 line-clamp-2">{draft.title}</h1>
-                <p className="text-secondary-foreground h-5 mb-1">{draft.author ? displayAddress(draft.author) : "Anonymous"}</p>
-                <p className="text-sm line-clamp-2 mb-2 flex-grow-0">{draft.preview}</p>
-                {draft.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-auto mb-1">
-                    {draft.tags.map(tag => 
-                      <span className="text-xs px-2 py-0.5 bg-accent text-primary rounded-full" key={tag}>
-                        {tag}
-                      </span>)}
-                  </div>
-                )}
-                <div className="flex justify-between mt-auto items-end">
-                  <p className="text-xs text-secondary-foreground">{new Date(Number(draft.timestamp)).toDateString()}</p>
-                  <div className="flex space-x-2">
-                    <button 
-                      data-id={`${draft.id}`}
-                      data-class={"local"}
-                      className="cursor-pointer" 
-                      onClick={handleEdit}><Pencil /></button>
-                    <button 
-                      data-id={`${draft.id}`}
-                      data-class={"local"}
-                      className="cursor-pointer" 
-                      onClick={handleDelete}><Trash /></button>
-                  </div>
-                </div>
-              </div>
+              <DraftItem draft={draft} key={draft.id} />
             ))}
           </div>
         </div>}

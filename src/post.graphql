@@ -7,7 +7,8 @@ query GetPostById($id: ID!) {
 }
 
 query GetPostsByAuthor($author: Bytes!) {
-  posts(where: {author: $author}) {
+  posts(orderBy: blockTimestamp, orderDirection: desc, 
+  first: 6, where: {author: $author, isDeleted: false}) {
     id
     author
     cid
@@ -15,7 +16,8 @@ query GetPostsByAuthor($author: Bytes!) {
 }
 
 query GetPosts {
-  posts(first: 5) {
+  posts(orderBy: blockTimestamp, orderDirection: desc, 
+  first: 6, where: {isDeleted: false}) {
     id
     author
     cid

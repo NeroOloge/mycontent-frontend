@@ -20,20 +20,27 @@ export type PopulatedComment = SolidityComment & PinataComment & {
 }
 
 export type SolidityPost = {
+  id: string;
   cid: string;
 }
 
 export type PinataPost = {
   title: string;
   content: string;
+  preview: string;
   author: `0x${string}`;
   timestamp: number;
+  likes: number;
+  comments: number;
+  bookmarks: number;
+  imageCIDs: string[];
+  tags: string[];
+  isDeleted: boolean;
+  exists: boolean;
 }
 
 export type PopulatedPost = SolidityPost & PinataPost
 export type FormattedPost = PopulatedPost & {
-  likes: number;
-  comments: number;
 }
 
 export type PostDetail = FormattedPost & {
@@ -55,4 +62,8 @@ export type Comments = {
 
 export interface Tags {
   [tag: string]: boolean;
+}
+
+export interface TagDisplayMap {
+  [tag: string]: string;
 }

@@ -1,91 +1,83 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router"
-import { useAccount, useReadContracts } from "wagmi"
-import { FormattedPost, Posts } from "../utils/types"
+import { useAccount } from "wagmi"
+import { PopulatedPost } from "../utils/types"
 import PostItem from "../components/PostItem"
 import Header from "../components/Header"
 import { populatePosts } from "../utils/pinata"
-import { wagmiContractConfig } from "../utils/contracts"
-import { useReadContract } from "wagmi"
 import { useToast } from "../providers/ToastProvider"
 import { Pages, ToastType } from "../utils/enums"
+import { execute, GetPostsByAuthorDocument } from "../../.graphclient"
 
 
 function AuthorPosts() {
   const navigate = useNavigate()
   const account = useAccount()
-  const { addToast } = useToast()
-  const [posts, setPosts] = useState<FormattedPost[]>(null!)
+  const { addToast, removeToast } = useToast()
+  const [posts, setPosts] = useState<PopulatedPost[]>()
 
-  const { data: authorPosts, isLoading: authorPostsLoading } = useReadContract({
-    ...wagmiContractConfig,
-    functionName: 'getPostsByAuthor',
-    args: [account.address!],
-    query: {
-      enabled: !!account.address,
-    },
-  })
-
-  const { data: postCommentsLength } = useReadContracts({
-    contracts: authorPosts?.map(post => ({
-      ...wagmiContractConfig,
-      functionName: 'getCommentsNumberByPost',
-      args: [post.cid]
-    })) || [],
-    query: {
-      enabled: authorPosts && authorPosts.length > 0
-    }
-  })
-  
-  const { data: likesNumber } = useReadContracts({
-    contracts: authorPosts?.map(post => ({
-      ...wagmiContractConfig,
-      functionName: 'getLikesNumberByPost',
-      args: [post.cid]
-    })) || [],
-    query: {
-      enabled: authorPosts && authorPosts.length > 0
-    }
-  })
+  const loadingToastId = useRef<number | null>(null)
 
   useEffect(() => {
-    if (!account.isConnected) {
-      navigate(Pages.HOME, { state: { loggedIn: false } })
-      return;
-   }
+    (async () => {
+      try {
+        if (loadingToastId.current) {
+          removeToast(loadingToastId.current)
+        }
 
-    (async () => { 
-      if (authorPostsLoading) {
-        // notifyLoading(authorPostsLoading)
-        addToast("Loading posts...", { type: ToastType.INFO })
+        loadingToastId.current = 
+          addToast("Loading posts...", { type: ToastType.INFO })
+        const result = await execute(GetPostsByAuthorDocument, { author: account.address! })
+        if (result.data && result.data.posts) {
+          const [populatedPosts] = await Promise.all([
+            populatePosts(result.data.posts)
+          ])
+          setPosts(populatedPosts)
+
+          if (loadingToastId.current) {
+            removeToast(loadingToastId.current)
+            loadingToastId.current = null
+          }
+
+          addToast("Posts loaded successfully", { 
+            type: ToastType.SUCCESS,
+            duration: 3000 
+          })
+        }
+      } catch(e) {
+        console.error(e)
+        if (loadingToastId.current) {
+          removeToast(loadingToastId.current)
+          loadingToastId.current = null
+        }
+        addToast("Failed to load posts.", 
+          { type: ToastType.ERROR, duration: 3000 })
+      } finally {
+        if (loadingToastId.current) {
+          removeToast(loadingToastId.current)
+          loadingToastId.current = null
+        }
       }
-      if (authorPosts && postCommentsLength && likesNumber) {
-        console.log(authorPosts)
-        const populatedPosts = await populatePosts(authorPosts as unknown as Posts)
-        setPosts(
-          populatedPosts.map((post, index) => ({ ...post, 
-            likes: Number(likesNumber?.[index]?.result) || 0, 
-            comments: Number(postCommentsLength?.[index]?.result) || 0,
-          }))
-        )
-        // notifySuccess('Successfully loaded posts.')
-        addToast("Successfully loaded posts.", 
-          { type: ToastType.SUCCESS, duration: 3000 })
-      }
-      
     })()
-  }, [authorPosts, postCommentsLength, likesNumber, authorPostsLoading])
+    }, [])
 
   return (
     <>
       <Header />
-      <main className="mt-10">
-        <h1 className="text-3xl font-bold text-center">Your Posts</h1>
-        {posts && posts.length > 0 ? <div className="flex flex-col items-center justify-center">
-          {posts?.map(post => (
-            <PostItem post={post} key={post.cid} />
-          ))}
-        </div> : 'No posts'}
+      <main className="mt-16 flex flex-col mx-auto px-4 space-y-8">
+        <div className="space-y-4">
+          <div className="flex justify-between">
+            <h1 className="text-2xl font-semibold">My Posts</h1>
+            <button onClick={() => navigate(`${Pages.CREATE_POST}`)} 
+              className="button button-dark">New Post</button>
+          </div>
+          {posts && posts.length > 0 ? <div className="md:grid md:grid-cols-3 md:gap-3 md:items-stretch space-y-3 md:space-y-0">
+            {posts.map(post => (
+              <PostItem post={post} key={post.id} />
+            ))}
+          </div> : <div className="text-lg md:text-base text-secondary-foreground">No posts found</div>}
+              
+        </div>
       </main>
   </>)
 }

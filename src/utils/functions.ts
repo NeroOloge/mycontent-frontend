@@ -85,3 +85,8 @@ export const unformatTags = (formattedTags: string[]) => {
   })
   return tags
 }
+
+export const appendHash = (tag: string) => {
+  if (tag.charAt(0) !== "#") return `#${tag}`
+  else return tag
+}
