@@ -76,9 +76,9 @@ function Draft() {
         preview,
         author: account.address!,
         timestamp: Date.now(),
-        likes: 0,
+        // likes: 0,
         comments: 0,
-        bookmarks: 0,
+        // bookmarks: 0,
         imageCIDs: draft!.images,
         tags: draft!.tags,
         isDeleted: false,
@@ -90,7 +90,7 @@ function Draft() {
       createPost({
         ...wagmiContractConfig,
         functionName: 'createPost',
-        args: [data.cid, entity.tags, entity.imageCIDs]
+        args: [data.cid, entity.tags, entity.imageCIDs, entity.title]
       }, {
         onSuccess: (data) => {
           addToast("Successfully published post!", {

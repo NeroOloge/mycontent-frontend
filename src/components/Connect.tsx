@@ -5,11 +5,7 @@ import { useNavigate, useLocation } from "react-router";
 import SyncDraftsModal from "./SyncDraftsModal";
 import { Pages, ToastType } from "../utils/enums";
 import { useAccount } from "wagmi";
-import useDraft from "../hooks/useDrafts";
-import { doc, setDoc } from "firebase/firestore";
-import { firestore } from "../utils/firebase";
-import { db } from "../utils/db";
-import { convertToURL, uploadBase64 } from "../utils/pinata";
+import useDrafts from "../hooks/useDrafts";
 import { useToast } from "../providers/ToastProvider";
 import { syncLocalDrafts } from "../utils/functions";
 
@@ -20,7 +16,7 @@ function Connect() {
   const [isConnectOpen, setIsConnectOpen] = useState(true)
   const [isSyncOpen, setIsSyncOpen] = useState(false)
 
-  const drafts = useDraft(true)
+  const drafts = useDrafts(true)
   const { addToast, removeToast } = useToast()
   
   useEffect(() => {
@@ -44,7 +40,6 @@ function Connect() {
   }
 
   const onSyncConfirm = async () => {
-    console.log("syncing...")
     const loadingToastId = addToast("Syncing...", {
       type: ToastType.INFO
     })

@@ -21,7 +21,6 @@ function Header() {
   const handleDisconnect = () => {
     disconnect({}, {
       onSuccess: function() {
-        console.log("navigating to home")
         navigate(Pages.HOME, { state: { loggedOut: true } })
       },
       onError: function(error) {

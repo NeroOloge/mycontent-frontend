@@ -1,7 +1,5 @@
-import { useLocation, useNavigate } from "react-router"
 import { Connector, useConnect } from "wagmi"
-import { Pages } from "../utils/enums"
-import useDraft from "../hooks/useDrafts";
+import useDrafts from "../hooks/useDrafts";
 
 type Props = {
   onClose: any;
@@ -10,16 +8,13 @@ type Props = {
 }
 
 function ConnectModal({ onClose, setIsConnectOpen, setIsSyncOpen }: Props) {
-  const navigate = useNavigate()
-  const location = useLocation()
   const { connectors, connect } = useConnect()
 
-  const drafts = useDraft(true)
+  const drafts = useDrafts(true)
 
   const connectToBlockchain = (connector: Connector) => {
     connect({ connector }, {
       onSuccess: function() {
-        console.log(drafts)
         if (drafts.length > 0) {
           setIsConnectOpen(false)
           setIsSyncOpen(true)

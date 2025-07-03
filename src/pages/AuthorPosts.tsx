@@ -23,6 +23,7 @@ function AuthorPosts() {
       try {
         if (loadingToastId.current) {
           removeToast(loadingToastId.current)
+          loadingToastId.current = null
         }
 
         loadingToastId.current = 

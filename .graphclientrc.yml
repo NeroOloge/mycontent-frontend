@@ -2,7 +2,7 @@ sources:
   - name: mycontent-sepolia
     handler:
       graphql:
-        endpoint: https://api.studio.thegraph.com/query/114177/mycontent-subgraph/version/latest
+        endpoint: https://api.studio.thegraph.com/query/114177/my-content-subgraph/version/latest
 
 documents:
   - ./src/post.graphql

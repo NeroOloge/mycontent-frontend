@@ -3,6 +3,18 @@ query GetPostById($id: ID!) {
     id
     author
     cid
+    likes
+    bookmarks
+    comments(orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      cid
+      commenter
+      blockTimestamp
+    }
+    tags {
+      id
+      tag
+    }
   }
 }
 
@@ -12,6 +24,17 @@ query GetPostsByAuthor($author: Bytes!) {
     id
     author
     cid
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
   }
 }
 
@@ -21,5 +44,264 @@ query GetPosts {
     id
     author
     cid
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+
+query GetManyPosts($ids: [ID!]) {
+  posts(orderBy: blockTimestamp, orderDirection: desc, 
+  first: 6, where: {isDeleted: false, id_in: $ids}) {
+    id
+    author
+    cid
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+
+query GetMostLikedPosts {
+  posts(orderBy: likes, orderDirection: desc, first: 6, 
+  where: {
+    isDeleted: false
+  }) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+
+query FilterMostLikedPostsByTag($tag: String!) {
+  posts(orderBy: likes, orderDirection: desc, first: 6, 
+  where: {
+    isDeleted: false
+    tags_: {tag_contains: $tag}
+  }) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+
+query FilterMostLikedPosts($title: String!, $author: String!, $tag: String!) {
+  posts(orderBy: likes, orderDirection: desc, first: 6, 
+  where: {
+    and: [
+      {isDeleted: false}
+      {or: [
+      	{title_contains_nocase: $title} {tags_: {tag_contains: $tag}}
+        {authorString_contains_nocase: $author}
+      ]}
+    ]
+  }) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+
+query GetPopularTags {
+  tagSummaries(orderBy: count, orderDirection: desc, first: 10) {
+    id         # the tag name
+    count
+  }
+}
+
+query FilterPostsByTag($tag: String!) {
+  posts(orderBy: blockTimestamp, orderDirection: desc, first: 6, 
+  where: {
+    isDeleted: false
+    tags_: {tag_contains: $tag}
+  }) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+
+query FilterPosts($title: String!, $author: String!, $tag: String!) {
+  posts(orderBy: blockTimestamp, orderDirection: desc, first: 6, 
+  where: {
+    and: [
+      {isDeleted: false}
+      {or: [
+      	{title_contains_nocase: $title} {tags_: {tag_contains: $tag}}
+        {authorString_contains_nocase: $author}
+      ]}
+    ]
+  }) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+
+query GetCommentsByUser($user: Bytes!) {
+  comments(orderBy: blockTimestamp, orderDirection: desc, first: 6,
+  where: {commenter: $user}) {
+    id
+    cid
+    commenter
+    post {
+      id
+      author
+      title
+    }
+  }
+}
+
+query GetTotalCommentsByUser($user: Bytes!) {
+  comments(where: {commenter: $user}) {
+    id
+    commenter
+    post {
+      id
+    }
+  }
+}
+
+query GetFollowers($user: Bytes!) {
+  followers: follows(where: {following: $user}) {
+    id
+    follower
+    following
+  }
+  following: follows(where: {follower: $user}) {
+    id
+    follower
+    following
+  }
+}
+
+query GetIsFollowing($id: ID!) {
+  isFollowing: follow(id: $id) {
+    id
+    follower
+    following
+  }
+}
+
+query GetPostLiked($id: ID!) {
+  like(id: $id) {
+    user
+    post {
+      id
+    }
+  }
+}
+
+query GetTotalLikesByUser($user: Bytes!) {
+  likes(where: {user: $user}) {
+    id
+    user
+    post {
+      id
+    }
+  }
+}
+
+query GetPostBookmarked($id: ID!) {
+  bookmark(id: $id) {
+    user
+    post {
+      id
+    }
+  }
+}
+
+query GetTotalBookmarksByUser($user: Bytes!) {
+  bookmarks(where: {user: $user}) {
+    user
+    post {
+      id
+    }
+  }
+}
+
+query GetPostsBookmarkedByUser($user: Bytes!) {
+  bookmarks(orderBy: timestamp, orderDirection: desc, first: 6
+  where: {user: $user}) {
+    user
+    post {
+      id
+    }
   }
 }

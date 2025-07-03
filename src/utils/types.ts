@@ -3,25 +3,27 @@ export type PostComment = {
 }
 
 export type SolidityComment = {
+  id: string;
   cid: string;
-  postCid: string;
-  commenter: string;
+  post?: SolidityPost
 }
 
 export type PinataComment = {
   content: string;
-  postCid: string;
   commenter: `0x${string}`;
   timestamp: number;
 }
 
-export type PopulatedComment = SolidityComment & PinataComment & {
-  post?: PinataPost
-}
+export type PopulatedComment = SolidityComment & PinataComment
 
 export type SolidityPost = {
   id: string;
   cid: string;
+  author: `0x${string}`;
+  title: string;
+  likes: number;
+  bookmarks: number;
+  comments: SolidityComment[];
 }
 
 export type PinataPost = {
@@ -30,9 +32,6 @@ export type PinataPost = {
   preview: string;
   author: `0x${string}`;
   timestamp: number;
-  likes: number;
-  comments: number;
-  bookmarks: number;
   imageCIDs: string[];
   tags: string[];
   isDeleted: boolean;
@@ -40,30 +39,17 @@ export type PinataPost = {
 }
 
 export type PopulatedPost = SolidityPost & PinataPost
-export type FormattedPost = PopulatedPost & {
-}
 
-export type PostDetail = FormattedPost & {
-  usersComments: PopulatedComment[];
-}
-
-export type Posts = {
-  cid: string;
-  author: string;
-  timestamp: BigInt;
-}[]
-
-export type Comments = {
-  cid: string;
-  postCid: string;
-  timestamp: BigInt;
-  commenter: string;
-}[]
-
-export interface Tags {
+export type Tags = {
   [tag: string]: boolean;
 }
 
-export interface TagDisplayMap {
+export type TagDisplayMap = {
   [tag: string]: string;
+}
+
+export type PostAnalytics = {
+  likes: number;
+  comments: number;
+  bookmarks: number;
 }

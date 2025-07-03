@@ -34,46 +34,130 @@ input Block_height {
   number_gte: Int
 }
 
+type Bookmark {
+  id: ID!
+  post: Post!
+  user: Bytes!
+  timestamp: BigInt!
+}
+
+input Bookmark_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  post: String
+  post_not: String
+  post_gt: String
+  post_lt: String
+  post_gte: String
+  post_lte: String
+  post_in: [String!]
+  post_not_in: [String!]
+  post_contains: String
+  post_contains_nocase: String
+  post_not_contains: String
+  post_not_contains_nocase: String
+  post_starts_with: String
+  post_starts_with_nocase: String
+  post_not_starts_with: String
+  post_not_starts_with_nocase: String
+  post_ends_with: String
+  post_ends_with_nocase: String
+  post_not_ends_with: String
+  post_not_ends_with_nocase: String
+  post_: Post_filter
+  user: Bytes
+  user_not: Bytes
+  user_gt: Bytes
+  user_lt: Bytes
+  user_gte: Bytes
+  user_lte: Bytes
+  user_in: [Bytes!]
+  user_not_in: [Bytes!]
+  user_contains: Bytes
+  user_not_contains: Bytes
+  timestamp: BigInt
+  timestamp_not: BigInt
+  timestamp_gt: BigInt
+  timestamp_lt: BigInt
+  timestamp_gte: BigInt
+  timestamp_lte: BigInt
+  timestamp_in: [BigInt!]
+  timestamp_not_in: [BigInt!]
+  """Filter for the block changed event."""
+  _change_block: BlockChangedFilter
+  and: [Bookmark_filter]
+  or: [Bookmark_filter]
+}
+
+enum Bookmark_orderBy {
+  id
+  post
+  post__id
+  post__author
+  post__authorString
+  post__cid
+  post__title
+  post__likes
+  post__bookmarks
+  post__isDeleted
+  post__exists
+  post__blockNumber
+  post__blockTimestamp
+  post__transactionHash
+  user
+  timestamp
+}
+
 scalar Bytes
 
-type CommentAdded {
-  id: Bytes!
-  commentId: BigInt!
-  postId: BigInt!
+type Comment {
+  id: ID!
+  post: Post!
   commenter: Bytes!
   cid: String!
+  isDeleted: Boolean!
+  exists: Boolean!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
 
-input CommentAdded_filter {
-  id: Bytes
-  id_not: Bytes
-  id_gt: Bytes
-  id_lt: Bytes
-  id_gte: Bytes
-  id_lte: Bytes
-  id_in: [Bytes!]
-  id_not_in: [Bytes!]
-  id_contains: Bytes
-  id_not_contains: Bytes
-  commentId: BigInt
-  commentId_not: BigInt
-  commentId_gt: BigInt
-  commentId_lt: BigInt
-  commentId_gte: BigInt
-  commentId_lte: BigInt
-  commentId_in: [BigInt!]
-  commentId_not_in: [BigInt!]
-  postId: BigInt
-  postId_not: BigInt
-  postId_gt: BigInt
-  postId_lt: BigInt
-  postId_gte: BigInt
-  postId_lte: BigInt
-  postId_in: [BigInt!]
-  postId_not_in: [BigInt!]
+input Comment_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  post: String
+  post_not: String
+  post_gt: String
+  post_lt: String
+  post_gte: String
+  post_lte: String
+  post_in: [String!]
+  post_not_in: [String!]
+  post_contains: String
+  post_contains_nocase: String
+  post_not_contains: String
+  post_not_contains_nocase: String
+  post_starts_with: String
+  post_starts_with_nocase: String
+  post_not_starts_with: String
+  post_not_starts_with_nocase: String
+  post_ends_with: String
+  post_ends_with_nocase: String
+  post_not_ends_with: String
+  post_not_ends_with_nocase: String
+  post_: Post_filter
   commenter: Bytes
   commenter_not: Bytes
   commenter_gt: Bytes
@@ -104,6 +188,14 @@ input CommentAdded_filter {
   cid_ends_with_nocase: String
   cid_not_ends_with: String
   cid_not_ends_with_nocase: String
+  isDeleted: Boolean
+  isDeleted_not: Boolean
+  isDeleted_in: [Boolean!]
+  isDeleted_not_in: [Boolean!]
+  exists: Boolean
+  exists_not: Boolean
+  exists_in: [Boolean!]
+  exists_not_in: [Boolean!]
   blockNumber: BigInt
   blockNumber_not: BigInt
   blockNumber_gt: BigInt
@@ -132,90 +224,36 @@ input CommentAdded_filter {
   transactionHash_not_contains: Bytes
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
-  and: [CommentAdded_filter]
-  or: [CommentAdded_filter]
+  and: [Comment_filter]
+  or: [Comment_filter]
 }
 
-enum CommentAdded_orderBy {
+enum Comment_orderBy {
   id
-  commentId
-  postId
+  post
+  post__id
+  post__author
+  post__authorString
+  post__cid
+  post__title
+  post__likes
+  post__bookmarks
+  post__isDeleted
+  post__exists
+  post__blockNumber
+  post__blockTimestamp
+  post__transactionHash
   commenter
   cid
+  isDeleted
+  exists
   blockNumber
   blockTimestamp
   transactionHash
 }
 
-type CommentDeleted {
-  id: Bytes!
-  commentId: BigInt!
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-input CommentDeleted_filter {
-  id: Bytes
-  id_not: Bytes
-  id_gt: Bytes
-  id_lt: Bytes
-  id_gte: Bytes
-  id_lte: Bytes
-  id_in: [Bytes!]
-  id_not_in: [Bytes!]
-  id_contains: Bytes
-  id_not_contains: Bytes
-  commentId: BigInt
-  commentId_not: BigInt
-  commentId_gt: BigInt
-  commentId_lt: BigInt
-  commentId_gte: BigInt
-  commentId_lte: BigInt
-  commentId_in: [BigInt!]
-  commentId_not_in: [BigInt!]
-  blockNumber: BigInt
-  blockNumber_not: BigInt
-  blockNumber_gt: BigInt
-  blockNumber_lt: BigInt
-  blockNumber_gte: BigInt
-  blockNumber_lte: BigInt
-  blockNumber_in: [BigInt!]
-  blockNumber_not_in: [BigInt!]
-  blockTimestamp: BigInt
-  blockTimestamp_not: BigInt
-  blockTimestamp_gt: BigInt
-  blockTimestamp_lt: BigInt
-  blockTimestamp_gte: BigInt
-  blockTimestamp_lte: BigInt
-  blockTimestamp_in: [BigInt!]
-  blockTimestamp_not_in: [BigInt!]
-  transactionHash: Bytes
-  transactionHash_not: Bytes
-  transactionHash_gt: Bytes
-  transactionHash_lt: Bytes
-  transactionHash_gte: Bytes
-  transactionHash_lte: Bytes
-  transactionHash_in: [Bytes!]
-  transactionHash_not_in: [Bytes!]
-  transactionHash_contains: Bytes
-  transactionHash_not_contains: Bytes
-  """Filter for the block changed event."""
-  _change_block: BlockChangedFilter
-  and: [CommentDeleted_filter]
-  or: [CommentDeleted_filter]
-}
-
-enum CommentDeleted_orderBy {
-  id
-  commentId
-  blockNumber
-  blockTimestamp
-  transactionHash
-}
-
-type Followed {
-  id: Bytes!
+type Follow {
+  id: ID!
   follower: Bytes!
   following: Bytes!
   blockNumber: BigInt!
@@ -223,17 +261,15 @@ type Followed {
   transactionHash: Bytes!
 }
 
-input Followed_filter {
-  id: Bytes
-  id_not: Bytes
-  id_gt: Bytes
-  id_lt: Bytes
-  id_gte: Bytes
-  id_lte: Bytes
-  id_in: [Bytes!]
-  id_not_in: [Bytes!]
-  id_contains: Bytes
-  id_not_contains: Bytes
+input Follow_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
   follower: Bytes
   follower_not: Bytes
   follower_gt: Bytes
@@ -282,11 +318,11 @@ input Followed_filter {
   transactionHash_not_contains: Bytes
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
-  and: [Followed_filter]
-  or: [Followed_filter]
+  and: [Follow_filter]
+  or: [Follow_filter]
 }
 
-enum Followed_orderBy {
+enum Follow_orderBy {
   id
   follower
   following
@@ -367,8 +403,11 @@ enum Like_orderBy {
   post
   post__id
   post__author
+  post__authorString
   post__cid
+  post__title
   post__likes
+  post__bookmarks
   post__isDeleted
   post__exists
   post__blockNumber
@@ -387,172 +426,18 @@ enum OrderDirection {
 type Post {
   id: ID!
   author: Bytes!
+  authorString: String!
   cid: String!
+  title: String!
   tags(skip: Int = 0, first: Int = 100, orderBy: Tag_orderBy, orderDirection: OrderDirection, where: Tag_filter): [Tag!]!
+  comments(skip: Int = 0, first: Int = 100, orderBy: Comment_orderBy, orderDirection: OrderDirection, where: Comment_filter): [Comment!]!
   likes: Int!
+  bookmarks: Int!
   isDeleted: Boolean!
   exists: Boolean!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
-}
-
-type PostBookmarked {
-  id: Bytes!
-  postId: BigInt!
-  bookmarker: Bytes!
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-input PostBookmarked_filter {
-  id: Bytes
-  id_not: Bytes
-  id_gt: Bytes
-  id_lt: Bytes
-  id_gte: Bytes
-  id_lte: Bytes
-  id_in: [Bytes!]
-  id_not_in: [Bytes!]
-  id_contains: Bytes
-  id_not_contains: Bytes
-  postId: BigInt
-  postId_not: BigInt
-  postId_gt: BigInt
-  postId_lt: BigInt
-  postId_gte: BigInt
-  postId_lte: BigInt
-  postId_in: [BigInt!]
-  postId_not_in: [BigInt!]
-  bookmarker: Bytes
-  bookmarker_not: Bytes
-  bookmarker_gt: Bytes
-  bookmarker_lt: Bytes
-  bookmarker_gte: Bytes
-  bookmarker_lte: Bytes
-  bookmarker_in: [Bytes!]
-  bookmarker_not_in: [Bytes!]
-  bookmarker_contains: Bytes
-  bookmarker_not_contains: Bytes
-  blockNumber: BigInt
-  blockNumber_not: BigInt
-  blockNumber_gt: BigInt
-  blockNumber_lt: BigInt
-  blockNumber_gte: BigInt
-  blockNumber_lte: BigInt
-  blockNumber_in: [BigInt!]
-  blockNumber_not_in: [BigInt!]
-  blockTimestamp: BigInt
-  blockTimestamp_not: BigInt
-  blockTimestamp_gt: BigInt
-  blockTimestamp_lt: BigInt
-  blockTimestamp_gte: BigInt
-  blockTimestamp_lte: BigInt
-  blockTimestamp_in: [BigInt!]
-  blockTimestamp_not_in: [BigInt!]
-  transactionHash: Bytes
-  transactionHash_not: Bytes
-  transactionHash_gt: Bytes
-  transactionHash_lt: Bytes
-  transactionHash_gte: Bytes
-  transactionHash_lte: Bytes
-  transactionHash_in: [Bytes!]
-  transactionHash_not_in: [Bytes!]
-  transactionHash_contains: Bytes
-  transactionHash_not_contains: Bytes
-  """Filter for the block changed event."""
-  _change_block: BlockChangedFilter
-  and: [PostBookmarked_filter]
-  or: [PostBookmarked_filter]
-}
-
-enum PostBookmarked_orderBy {
-  id
-  postId
-  bookmarker
-  blockNumber
-  blockTimestamp
-  transactionHash
-}
-
-type PostUnbookmarked {
-  id: Bytes!
-  postId: BigInt!
-  unbookmarker: Bytes!
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-input PostUnbookmarked_filter {
-  id: Bytes
-  id_not: Bytes
-  id_gt: Bytes
-  id_lt: Bytes
-  id_gte: Bytes
-  id_lte: Bytes
-  id_in: [Bytes!]
-  id_not_in: [Bytes!]
-  id_contains: Bytes
-  id_not_contains: Bytes
-  postId: BigInt
-  postId_not: BigInt
-  postId_gt: BigInt
-  postId_lt: BigInt
-  postId_gte: BigInt
-  postId_lte: BigInt
-  postId_in: [BigInt!]
-  postId_not_in: [BigInt!]
-  unbookmarker: Bytes
-  unbookmarker_not: Bytes
-  unbookmarker_gt: Bytes
-  unbookmarker_lt: Bytes
-  unbookmarker_gte: Bytes
-  unbookmarker_lte: Bytes
-  unbookmarker_in: [Bytes!]
-  unbookmarker_not_in: [Bytes!]
-  unbookmarker_contains: Bytes
-  unbookmarker_not_contains: Bytes
-  blockNumber: BigInt
-  blockNumber_not: BigInt
-  blockNumber_gt: BigInt
-  blockNumber_lt: BigInt
-  blockNumber_gte: BigInt
-  blockNumber_lte: BigInt
-  blockNumber_in: [BigInt!]
-  blockNumber_not_in: [BigInt!]
-  blockTimestamp: BigInt
-  blockTimestamp_not: BigInt
-  blockTimestamp_gt: BigInt
-  blockTimestamp_lt: BigInt
-  blockTimestamp_gte: BigInt
-  blockTimestamp_lte: BigInt
-  blockTimestamp_in: [BigInt!]
-  blockTimestamp_not_in: [BigInt!]
-  transactionHash: Bytes
-  transactionHash_not: Bytes
-  transactionHash_gt: Bytes
-  transactionHash_lt: Bytes
-  transactionHash_gte: Bytes
-  transactionHash_lte: Bytes
-  transactionHash_in: [Bytes!]
-  transactionHash_not_in: [Bytes!]
-  transactionHash_contains: Bytes
-  transactionHash_not_contains: Bytes
-  """Filter for the block changed event."""
-  _change_block: BlockChangedFilter
-  and: [PostUnbookmarked_filter]
-  or: [PostUnbookmarked_filter]
-}
-
-enum PostUnbookmarked_orderBy {
-  id
-  postId
-  unbookmarker
-  blockNumber
-  blockTimestamp
-  transactionHash
 }
 
 input Post_filter {
@@ -574,6 +459,26 @@ input Post_filter {
   author_not_in: [Bytes!]
   author_contains: Bytes
   author_not_contains: Bytes
+  authorString: String
+  authorString_not: String
+  authorString_gt: String
+  authorString_lt: String
+  authorString_gte: String
+  authorString_lte: String
+  authorString_in: [String!]
+  authorString_not_in: [String!]
+  authorString_contains: String
+  authorString_contains_nocase: String
+  authorString_not_contains: String
+  authorString_not_contains_nocase: String
+  authorString_starts_with: String
+  authorString_starts_with_nocase: String
+  authorString_not_starts_with: String
+  authorString_not_starts_with_nocase: String
+  authorString_ends_with: String
+  authorString_ends_with_nocase: String
+  authorString_not_ends_with: String
+  authorString_not_ends_with_nocase: String
   cid: String
   cid_not: String
   cid_gt: String
@@ -594,7 +499,28 @@ input Post_filter {
   cid_ends_with_nocase: String
   cid_not_ends_with: String
   cid_not_ends_with_nocase: String
+  title: String
+  title_not: String
+  title_gt: String
+  title_lt: String
+  title_gte: String
+  title_lte: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_contains: String
+  title_contains_nocase: String
+  title_not_contains: String
+  title_not_contains_nocase: String
+  title_starts_with: String
+  title_starts_with_nocase: String
+  title_not_starts_with: String
+  title_not_starts_with_nocase: String
+  title_ends_with: String
+  title_ends_with_nocase: String
+  title_not_ends_with: String
+  title_not_ends_with_nocase: String
   tags_: Tag_filter
+  comments_: Comment_filter
   likes: Int
   likes_not: Int
   likes_gt: Int
@@ -603,6 +529,14 @@ input Post_filter {
   likes_lte: Int
   likes_in: [Int!]
   likes_not_in: [Int!]
+  bookmarks: Int
+  bookmarks_not: Int
+  bookmarks_gt: Int
+  bookmarks_lt: Int
+  bookmarks_gte: Int
+  bookmarks_lte: Int
+  bookmarks_in: [Int!]
+  bookmarks_not_in: [Int!]
   isDeleted: Boolean
   isDeleted_not: Boolean
   isDeleted_in: [Boolean!]
@@ -646,9 +580,13 @@ input Post_filter {
 enum Post_orderBy {
   id
   author
+  authorString
   cid
+  title
   tags
+  comments
   likes
+  bookmarks
   isDeleted
   exists
   blockNumber
@@ -656,8 +594,8 @@ enum Post_orderBy {
   transactionHash
 }
 
-type ProfileUpdated {
-  id: Bytes!
+type Profile {
+  id: ID!
   user: Bytes!
   username: String!
   bio: String!
@@ -667,17 +605,15 @@ type ProfileUpdated {
   transactionHash: Bytes!
 }
 
-input ProfileUpdated_filter {
-  id: Bytes
-  id_not: Bytes
-  id_gt: Bytes
-  id_lt: Bytes
-  id_gte: Bytes
-  id_lte: Bytes
-  id_in: [Bytes!]
-  id_not_in: [Bytes!]
-  id_contains: Bytes
-  id_not_contains: Bytes
+input Profile_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
   user: Bytes
   user_not: Bytes
   user_gt: Bytes
@@ -776,11 +712,11 @@ input ProfileUpdated_filter {
   transactionHash_not_contains: Bytes
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
-  and: [ProfileUpdated_filter]
-  or: [ProfileUpdated_filter]
+  and: [Profile_filter]
+  or: [Profile_filter]
 }
 
-enum ProfileUpdated_orderBy {
+enum Profile_orderBy {
   id
   user
   username
@@ -792,7 +728,7 @@ enum ProfileUpdated_orderBy {
 }
 
 type Query {
-  commentAdded(
+  comment(
     id: ID!
     """
     The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
@@ -802,13 +738,13 @@ type Query {
     Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
-  ): CommentAdded
-  commentAddeds(
+  ): Comment
+  comments(
     skip: Int = 0
     first: Int = 100
-    orderBy: CommentAdded_orderBy
+    orderBy: Comment_orderBy
     orderDirection: OrderDirection
-    where: CommentAdded_filter
+    where: Comment_filter
     """
     The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
     """
@@ -817,8 +753,8 @@ type Query {
     Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
-  ): [CommentAdded!]!
-  commentDeleted(
+  ): [Comment!]!
+  follow(
     id: ID!
     """
     The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
@@ -828,13 +764,13 @@ type Query {
     Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
-  ): CommentDeleted
-  commentDeleteds(
+  ): Follow
+  follows(
     skip: Int = 0
     first: Int = 100
-    orderBy: CommentDeleted_orderBy
+    orderBy: Follow_orderBy
     orderDirection: OrderDirection
-    where: CommentDeleted_filter
+    where: Follow_filter
     """
     The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
     """
@@ -843,59 +779,7 @@ type Query {
     Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
-  ): [CommentDeleted!]!
-  followed(
-    id: ID!
-    """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
-    """
-    block: Block_height
-    """
-    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
-    """
-    subgraphError: _SubgraphErrorPolicy_! = deny
-  ): Followed
-  followeds(
-    skip: Int = 0
-    first: Int = 100
-    orderBy: Followed_orderBy
-    orderDirection: OrderDirection
-    where: Followed_filter
-    """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
-    """
-    block: Block_height
-    """
-    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
-    """
-    subgraphError: _SubgraphErrorPolicy_! = deny
-  ): [Followed!]!
-  postBookmarked(
-    id: ID!
-    """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
-    """
-    block: Block_height
-    """
-    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
-    """
-    subgraphError: _SubgraphErrorPolicy_! = deny
-  ): PostBookmarked
-  postBookmarkeds(
-    skip: Int = 0
-    first: Int = 100
-    orderBy: PostBookmarked_orderBy
-    orderDirection: OrderDirection
-    where: PostBookmarked_filter
-    """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
-    """
-    block: Block_height
-    """
-    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
-    """
-    subgraphError: _SubgraphErrorPolicy_! = deny
-  ): [PostBookmarked!]!
+  ): [Follow!]!
   post(
     id: ID!
     """
@@ -948,7 +832,7 @@ type Query {
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): [Like!]!
-  postUnbookmarked(
+  bookmark(
     id: ID!
     """
     The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
@@ -958,13 +842,13 @@ type Query {
     Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
-  ): PostUnbookmarked
-  postUnbookmarkeds(
+  ): Bookmark
+  bookmarks(
     skip: Int = 0
     first: Int = 100
-    orderBy: PostUnbookmarked_orderBy
+    orderBy: Bookmark_orderBy
     orderDirection: OrderDirection
-    where: PostUnbookmarked_filter
+    where: Bookmark_filter
     """
     The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
     """
@@ -973,8 +857,8 @@ type Query {
     Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
-  ): [PostUnbookmarked!]!
-  profileUpdated(
+  ): [Bookmark!]!
+  profile(
     id: ID!
     """
     The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
@@ -984,13 +868,13 @@ type Query {
     Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
-  ): ProfileUpdated
-  profileUpdateds(
+  ): Profile
+  profiles(
     skip: Int = 0
     first: Int = 100
-    orderBy: ProfileUpdated_orderBy
+    orderBy: Profile_orderBy
     orderDirection: OrderDirection
-    where: ProfileUpdated_filter
+    where: Profile_filter
     """
     The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
     """
@@ -999,7 +883,7 @@ type Query {
     Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
-  ): [ProfileUpdated!]!
+  ): [Profile!]!
   tag(
     id: ID!
     """
@@ -1026,7 +910,7 @@ type Query {
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): [Tag!]!
-  tipped(
+  tagSummary(
     id: ID!
     """
     The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
@@ -1036,13 +920,13 @@ type Query {
     Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
-  ): Tipped
-  tippeds(
+  ): TagSummary
+  tagSummaries(
     skip: Int = 0
     first: Int = 100
-    orderBy: Tipped_orderBy
+    orderBy: TagSummary_orderBy
     orderDirection: OrderDirection
-    where: Tipped_filter
+    where: TagSummary_filter
     """
     The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
     """
@@ -1051,8 +935,8 @@ type Query {
     Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
-  ): [Tipped!]!
-  unfollowed(
+  ): [TagSummary!]!
+  tip(
     id: ID!
     """
     The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
@@ -1062,13 +946,13 @@ type Query {
     Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
-  ): Unfollowed
-  unfolloweds(
+  ): Tip
+  tips(
     skip: Int = 0
     first: Int = 100
-    orderBy: Unfollowed_orderBy
+    orderBy: Tip_orderBy
     orderDirection: OrderDirection
-    where: Unfollowed_filter
+    where: Tip_filter
     """
     The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
     """
@@ -1077,7 +961,7 @@ type Query {
     Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
-  ): [Unfollowed!]!
+  ): [Tip!]!
   """Access to subgraph metadata"""
   _meta(block: Block_height): _Meta_
 }
@@ -1089,6 +973,49 @@ type Tag {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+}
+
+type TagSummary {
+  id: ID!
+  count: Int!
+  lastUsed: BigInt
+}
+
+input TagSummary_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  count: Int
+  count_not: Int
+  count_gt: Int
+  count_lt: Int
+  count_gte: Int
+  count_lte: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  lastUsed: BigInt
+  lastUsed_not: BigInt
+  lastUsed_gt: BigInt
+  lastUsed_lt: BigInt
+  lastUsed_gte: BigInt
+  lastUsed_lte: BigInt
+  lastUsed_in: [BigInt!]
+  lastUsed_not_in: [BigInt!]
+  """Filter for the block changed event."""
+  _change_block: BlockChangedFilter
+  and: [TagSummary_filter]
+  or: [TagSummary_filter]
+}
+
+enum TagSummary_orderBy {
+  id
+  count
+  lastUsed
 }
 
 input Tag_filter {
@@ -1178,8 +1105,11 @@ enum Tag_orderBy {
   post
   post__id
   post__author
+  post__authorString
   post__cid
+  post__title
   post__likes
+  post__bookmarks
   post__isDeleted
   post__exists
   post__blockNumber
@@ -1197,8 +1127,8 @@ A string representation of microseconds UNIX timestamp (16 digits)
 """
 scalar Timestamp
 
-type Tipped {
-  id: Bytes!
+type Tip {
+  id: ID!
   from: Bytes!
   to: Bytes!
   amount: BigInt!
@@ -1207,17 +1137,15 @@ type Tipped {
   transactionHash: Bytes!
 }
 
-input Tipped_filter {
-  id: Bytes
-  id_not: Bytes
-  id_gt: Bytes
-  id_lt: Bytes
-  id_gte: Bytes
-  id_lte: Bytes
-  id_in: [Bytes!]
-  id_not_in: [Bytes!]
-  id_contains: Bytes
-  id_not_contains: Bytes
+input Tip_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
   from: Bytes
   from_not: Bytes
   from_gt: Bytes
@@ -1274,96 +1202,15 @@ input Tipped_filter {
   transactionHash_not_contains: Bytes
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
-  and: [Tipped_filter]
-  or: [Tipped_filter]
+  and: [Tip_filter]
+  or: [Tip_filter]
 }
 
-enum Tipped_orderBy {
+enum Tip_orderBy {
   id
   from
   to
   amount
-  blockNumber
-  blockTimestamp
-  transactionHash
-}
-
-type Unfollowed {
-  id: Bytes!
-  follower: Bytes!
-  following: Bytes!
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-input Unfollowed_filter {
-  id: Bytes
-  id_not: Bytes
-  id_gt: Bytes
-  id_lt: Bytes
-  id_gte: Bytes
-  id_lte: Bytes
-  id_in: [Bytes!]
-  id_not_in: [Bytes!]
-  id_contains: Bytes
-  id_not_contains: Bytes
-  follower: Bytes
-  follower_not: Bytes
-  follower_gt: Bytes
-  follower_lt: Bytes
-  follower_gte: Bytes
-  follower_lte: Bytes
-  follower_in: [Bytes!]
-  follower_not_in: [Bytes!]
-  follower_contains: Bytes
-  follower_not_contains: Bytes
-  following: Bytes
-  following_not: Bytes
-  following_gt: Bytes
-  following_lt: Bytes
-  following_gte: Bytes
-  following_lte: Bytes
-  following_in: [Bytes!]
-  following_not_in: [Bytes!]
-  following_contains: Bytes
-  following_not_contains: Bytes
-  blockNumber: BigInt
-  blockNumber_not: BigInt
-  blockNumber_gt: BigInt
-  blockNumber_lt: BigInt
-  blockNumber_gte: BigInt
-  blockNumber_lte: BigInt
-  blockNumber_in: [BigInt!]
-  blockNumber_not_in: [BigInt!]
-  blockTimestamp: BigInt
-  blockTimestamp_not: BigInt
-  blockTimestamp_gt: BigInt
-  blockTimestamp_lt: BigInt
-  blockTimestamp_gte: BigInt
-  blockTimestamp_lte: BigInt
-  blockTimestamp_in: [BigInt!]
-  blockTimestamp_not_in: [BigInt!]
-  transactionHash: Bytes
-  transactionHash_not: Bytes
-  transactionHash_gt: Bytes
-  transactionHash_lt: Bytes
-  transactionHash_gte: Bytes
-  transactionHash_lte: Bytes
-  transactionHash_in: [Bytes!]
-  transactionHash_not_in: [Bytes!]
-  transactionHash_contains: Bytes
-  transactionHash_not_contains: Bytes
-  """Filter for the block changed event."""
-  _change_block: BlockChangedFilter
-  and: [Unfollowed_filter]
-  or: [Unfollowed_filter]
-}
-
-enum Unfollowed_orderBy {
-  id
-  follower
-  following
   blockNumber
   blockTimestamp
   transactionHash

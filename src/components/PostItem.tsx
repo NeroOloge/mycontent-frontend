@@ -2,88 +2,283 @@ import 'primeicons/primeicons.css';
 import { useNavigate } from "react-router"
 import moment from "moment"
 import { PopulatedPost } from "../utils/types"
-import { Pages } from '../utils/enums';
+import { Pages, ToastType } from '../utils/enums';
 import Like from '../icons/Like';
 import Comment from '../icons/Comment';
-import Pencil from '../icons/Pencil';
 import Trash from '../icons/Trash';
 import { displayAddress } from '../utils/functions';
 import useTagDisplayMap from '../hooks/useTagDisplayMap';
+import { useAccount, useEnsName, useWriteContract } from 'wagmi';
+import { useToast } from '../providers/ToastProvider';
+import { wagmiContractConfig } from '../utils/contracts';
+import Copy from '../icons/Copy';
+import { QueryClient } from '@tanstack/react-query';
+import { execute, GetIsFollowingDocument, GetPostBookmarkedDocument, GetPostLikedDocument } from '../../.graphclient';
+import { useEffect, useState } from 'react';
+import Liked from '../icons/Liked';
+import Bookmarked from '../icons/Bookmarked';
+import Bookmark from '../icons/Bookmark';
+import Plus from '../icons/Plus';
 
 type Props = {
   post: PopulatedPost
+  author?: `0x${string}`
 }
 
-function PostItem({ post }: Props) {
+function PostItem({ post, author }: Props) {
   const navigate = useNavigate()
-  const tagDisplayMap = useTagDisplayMap()
+  const account = useAccount()
+  const tagDisplayMap = useTagDisplayMap(author)
+  const { addToast, removeToast } = useToast()
+  const [userLiked, setUserLiked] = useState(false)
+  const [userBookmarked, setUserBookmarked] = useState(false)
+  const [isFollowing, setIsFollowing] = useState<boolean>()
 
-  // const handleLike = () => {
-  //   if (!account.isConnected) {
-  //     navigate(Pages.CONNECT, 
-  //       { state: { from: location.pathname } })
-  //     return;
-  //   }
-  //   // like({
-  //   //   ...wagmiContractConfig,
-  //   //   functionName: 'like',
-  //   //   args: [post.cid, post.author]
-  //   // }, {
-  //   //   onSuccess: () => {
-  //   //     // notifySuccess('Successfully added like.')
-  //   //   },
-  //   //   onError: (error) => {
-  //   //     console.error(error)
-  //   //     // notifyError(error.message.split("\n")[0])
-  //   //   }
-  //   // })
-  //   new QueryClient()
-  //     .invalidateQueries({ queryKey: ['readContract'] });
-  // }
+  const { writeContract: deletePost } = useWriteContract()
+  const { writeContract: like } = useWriteContract()
+  const { writeContract: unlike } = useWriteContract()
+  const { writeContract: bookmark } = useWriteContract()
+  const { writeContract: unbookmark } = useWriteContract()
+  const { writeContract: follow } = useWriteContract()
 
-  // const handleUnlike = () => {
-  //   if (!account.isConnected) {
-  //     navigate(Pages.CONNECT, 
-  //       { state: { from: location.pathname } })
-  //     return;
-  //   }
-  //   // unlike({
-  //   //   ...wagmiContractConfig,
-  //   //   functionName: 'unlike',
-  //   //   args: [post.cid, post.author]
-  //   // }, {
-  //   //   onSuccess: () => {
-  //   //     // notifySuccess('Successfully removed like.')
-  //   //   },
-  //   //   onError: (error) => {
-  //   //     console.error(error)
-  //   //     // notifyError(error.message.split("\n")[0])
-  //   //   }
-  //   // })
-  //   new QueryClient()
-  //     .invalidateQueries({ queryKey: ['readContract'] });
-  // }
+  const { data: ensName } = useEnsName({
+    address: post.author,
+    query: {
+      enabled: !!post.author,
+    }
+  })
+  
+  useEffect(() => {
+    (async () => {
+      await isLiked()
+      await isBookmarked()
+      await checkFollowing(post.author)
+    })()
+  }, [])
+
+  const handleLike = () => {
+    if (!account.isConnected) {
+      navigate(Pages.CONNECT, 
+        { state: { from: location.pathname } })
+      return;
+    }
+    like({
+      ...wagmiContractConfig,
+      functionName: 'like',
+      args: [BigInt(Number(post.id))]
+    }, {
+      onSuccess: () => {
+        addToast("Liked post", {
+          type: ToastType.SUCCESS,
+          duration: 3000
+        })
+      },
+      onError: (error) => {
+        console.error(error)
+        addToast(error.message.split("\n")[0], {
+          type: ToastType.ERROR,
+          duration: 3000
+        })
+      }
+    })
+    new QueryClient()
+      .invalidateQueries({ queryKey: ['readContract'] });
+  }
+
+  const handleUnlike = () => {
+    unlike({
+      ...wagmiContractConfig,
+      functionName: 'unlike',
+      args: [BigInt(Number(post.id))]
+    }, {
+      onSuccess: () => {
+        addToast("Removed like", {
+          type: ToastType.SUCCESS,
+          duration: 3000
+        })
+      },
+      onError: (error) => {
+        console.error(error)
+        addToast(error.message.split("\n")[0], {
+          type: ToastType.ERROR,
+          duration: 3000
+        })
+      }
+    })
+    new QueryClient()
+      .invalidateQueries({ queryKey: ['readContract'] });
+  }
+
+  const handleBookmark = () => {
+    if (!account.isConnected) {
+      navigate(Pages.CONNECT, 
+        { state: { from: location.pathname } })
+      return;
+    }
+    bookmark({
+      ...wagmiContractConfig,
+      functionName: 'bookmark',
+      args: [BigInt(Number(post.id))]
+    }, {
+      onSuccess: () => {
+        addToast("Bookmarked post", {
+          type: ToastType.SUCCESS,
+          duration: 3000
+        })
+      },
+      onError: (error) => {
+        console.error(error)
+        addToast(error.message.split("\n")[0], {
+          type: ToastType.ERROR,
+          duration: 3000
+        })
+      }
+    })
+    new QueryClient()
+      .invalidateQueries({ queryKey: ['readContract'] });
+  }
+
+  const handleUnbookmark = () => {
+    unbookmark({
+      ...wagmiContractConfig,
+      functionName: 'unbookmark',
+      args: [BigInt(Number(post.id))]
+    }, {
+      onSuccess: () => {
+        addToast("Removed bookmark", {
+          type: ToastType.SUCCESS,
+          duration: 3000
+        })
+      },
+      onError: (error) => {
+        console.error(error)
+        addToast(error.message.split("\n")[0], {
+          type: ToastType.ERROR,
+          duration: 3000
+        })
+      }
+    })
+    new QueryClient()
+      .invalidateQueries({ queryKey: ['readContract'] });
+  }
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     navigate(`${Pages.POST_DETAIL}/${e.currentTarget.dataset.id}`)
   }
 
-  const handleEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-  }
-
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
+    const loadingToastId = addToast("Deleting post...", 
+      { type: ToastType.INFO })
+    deletePost({
+      ...wagmiContractConfig,      
+      functionName: 'deletePost',      
+      args: [BigInt(Number(e.currentTarget.dataset.id))]
+    }, {
+      onSuccess: () => {
+        removeToast(loadingToastId)
+        addToast("Successfully deleted post", 
+          { type: ToastType.SUCCESS, duration: 3000 })
+      }
+    })
   }
 
-  // const isAuthor = (author: string) => {
-  //   return account.address === author
-  // }
+  const isAuthor = (author: string) => {
+    return account.address === author
+  }
+
+  const checkFollowing = async (author: string) => {
+    const result = await execute(GetIsFollowingDocument, {
+      id: `${account.address?.toLowerCase()}-${author.toLowerCase()}`
+    })
+    if (result.data && result.data.isFollowing) {
+      setIsFollowing(result.data.isFollowing !== null)
+    } else setIsFollowing(false)
+  }
+
+  const isLiked = async () => {
+    const result = await execute(GetPostLikedDocument, {
+      id: `${account.address?.toLowerCase()}-${post.id}`
+    })
+    if (result.data && result.data.like) {
+      setUserLiked(result.data.like !== null)
+    } else setUserLiked(false)
+  }
+
+  const isBookmarked = async () => {
+    const result = await execute(GetPostBookmarkedDocument, {
+      id: `${account.address?.toLowerCase()}-${post.id}`
+    })
+    if (result.data && result.data.bookmark) {
+      setUserBookmarked(result.data.bookmark !== null)
+    } else setUserBookmarked(false)
+  }
+
+  const handleCopy = (e: React.MouseEvent<HTMLSpanElement>) => {
+    e.stopPropagation()
+    navigator.clipboard.writeText(post.author)
+    addToast("Copied to clipboard", {
+      type: ToastType.INFO, duration: 1000
+    })
+  }
+
+  const handleLikeButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    if (userLiked) handleUnlike()
+    else handleLike()
+  }
+
+  const handleBookmarkButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    if (userBookmarked) handleUnbookmark()
+    else handleBookmark()
+  }
+
+  const handleFollow = async (e: React.MouseEvent<HTMLSpanElement>) => {
+    e.stopPropagation()
+    if (!account.isConnected) {
+      navigate(Pages.CONNECT, 
+        { state: { from: location.pathname } })
+      return;
+    }
+    follow({
+      ...wagmiContractConfig,
+      functionName: 'follow',
+      args: [post.author]
+    }, {
+      onSuccess: () => {
+        addToast("Followed author", {
+          type: ToastType.SUCCESS,
+          duration: 3000
+        })
+      },
+      onError: (error) => {
+        console.error(error)
+        addToast(error.message.split("\n")[0], {
+          type: ToastType.ERROR,
+          duration: 3000
+        })
+      }
+    })
+    new QueryClient()
+      .invalidateQueries({ queryKey: ['readContract'] });
+  }
+
+  const handleAuthorClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    navigate(`${Pages.PROFILE}/${post.author}`)
+  }
 
   return (
     <div onClick={handleClick} key={`${post.id}`} data-id={`${post.id}`} className="cursor-pointer flex flex-col h-full min-h-[200px] px-3 py-2 rounded-lg bg-secondary">
       <h1 className="text-xl font-semibold mb-1 line-clamp-2">{post.title}</h1>
-      <p className="text-secondary-foreground h-5 mb-1">{post.author ? displayAddress(post.author) : "Anonymous"}</p>
+      <p className="flex space-x-1 items-center text-secondary-foreground h-5 mb-1">
+        <span onClick={handleAuthorClick} className="hover:underline">
+          {ensName || displayAddress(post.author)}
+        </span>
+        {!isAuthor(post.author) && !isFollowing && <span onClick={handleFollow}><Plus /></span>}
+        <span className='' onClick={handleCopy}><Copy /></span>
+      </p>
       <p className="text-sm line-clamp-2 mb-2 flex-grow-0">{post.preview}</p>
       {post.tags.length > 0 && (
         <div className="flex flex-wrap gap-1 mt-auto mb-1">
@@ -96,18 +291,30 @@ function PostItem({ post }: Props) {
       <div className="flex justify-between mt-auto items-end">
         <div className="space-y-2">
           <p className="text-xs text-secondary-foreground">{moment(new Date(Number(post.timestamp))).fromNow()}</p>
-          <div className="flex space-x-2">
-            <span className="text-secondary-foreground flex items-center space-x-2">
-              <button className="cursor-pointer"><Like /></button> <span>{post.likes}</span>
+          <div className="flex space-x-2 items-center">
+            <span className="text-secondary-foreground flex items-center space-x-1">
+              <button onClick={handleLikeButton} 
+                className="cursor-pointer">
+                {userLiked ? <Liked /> : <Like />}
+              </button>
+              <span>{post.likes}</span>
             </span>
-            <span className="text-secondary-foreground flex items-center space-x-2">
-              <button className="cursor-pointer"><Comment /></button> <span>{post.comments}</span>
+            <span className="text-secondary-foreground flex items-center space-x-1">
+              <button className="cursor-pointer"><Comment /></button> 
+              <span>{post.comments.length}</span>
+            </span>
+            <span className="text-secondary-foreground flex items-center space-x-1">
+              <button onClick={handleBookmarkButton} 
+                className="cursor-pointer">
+                {userBookmarked ? <Bookmarked /> : <Bookmark />}
+              </button>
+              <span>{post.bookmarks}</span>
             </span>
           </div>
         </div>
         <div className="flex space-x-2">
-          <button data-id={`${post.id}`} className="cursor-pointer" onClick={handleEdit}><Pencil /></button>
-          <button data-id={`${post.id}`} className="cursor-pointer" onClick={handleDelete}><Trash /></button>
+          {/* <button data-id={`${post.id}`} className="cursor-pointer" onClick={handleEdit}><Pencil /></button> */}
+          {isAuthor(post.author) && <button data-id={`${post.id}`} className="cursor-pointer" onClick={handleDelete}><Trash /></button>}
         </div>
       </div>
     </div>

@@ -39,44 +39,127 @@ export type Block_height = {
   number_gte?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type CommentAdded = {
-  id: Scalars['Bytes']['output'];
-  commentId: Scalars['BigInt']['output'];
-  postId: Scalars['BigInt']['output'];
+export type Bookmark = {
+  id: Scalars['ID']['output'];
+  post: Post;
+  user: Scalars['Bytes']['output'];
+  timestamp: Scalars['BigInt']['output'];
+};
+
+export type Bookmark_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  post?: InputMaybe<Scalars['String']['input']>;
+  post_not?: InputMaybe<Scalars['String']['input']>;
+  post_gt?: InputMaybe<Scalars['String']['input']>;
+  post_lt?: InputMaybe<Scalars['String']['input']>;
+  post_gte?: InputMaybe<Scalars['String']['input']>;
+  post_lte?: InputMaybe<Scalars['String']['input']>;
+  post_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  post_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  post_contains?: InputMaybe<Scalars['String']['input']>;
+  post_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_not_contains?: InputMaybe<Scalars['String']['input']>;
+  post_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_starts_with?: InputMaybe<Scalars['String']['input']>;
+  post_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  post_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_ends_with?: InputMaybe<Scalars['String']['input']>;
+  post_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  post_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_?: InputMaybe<Post_filter>;
+  user?: InputMaybe<Scalars['Bytes']['input']>;
+  user_not?: InputMaybe<Scalars['Bytes']['input']>;
+  user_gt?: InputMaybe<Scalars['Bytes']['input']>;
+  user_lt?: InputMaybe<Scalars['Bytes']['input']>;
+  user_gte?: InputMaybe<Scalars['Bytes']['input']>;
+  user_lte?: InputMaybe<Scalars['Bytes']['input']>;
+  user_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  user_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  user_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  user_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  timestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Bookmark_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Bookmark_filter>>>;
+};
+
+export type Bookmark_orderBy =
+  | 'id'
+  | 'post'
+  | 'post__id'
+  | 'post__author'
+  | 'post__authorString'
+  | 'post__cid'
+  | 'post__title'
+  | 'post__likes'
+  | 'post__bookmarks'
+  | 'post__isDeleted'
+  | 'post__exists'
+  | 'post__blockNumber'
+  | 'post__blockTimestamp'
+  | 'post__transactionHash'
+  | 'user'
+  | 'timestamp';
+
+export type Comment = {
+  id: Scalars['ID']['output'];
+  post: Post;
   commenter: Scalars['Bytes']['output'];
   cid: Scalars['String']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  exists: Scalars['Boolean']['output'];
   blockNumber: Scalars['BigInt']['output'];
   blockTimestamp: Scalars['BigInt']['output'];
   transactionHash: Scalars['Bytes']['output'];
 };
 
-export type CommentAdded_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  commentId?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_not?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  commentId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  postId?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_not?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  postId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+export type Comment_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  post?: InputMaybe<Scalars['String']['input']>;
+  post_not?: InputMaybe<Scalars['String']['input']>;
+  post_gt?: InputMaybe<Scalars['String']['input']>;
+  post_lt?: InputMaybe<Scalars['String']['input']>;
+  post_gte?: InputMaybe<Scalars['String']['input']>;
+  post_lte?: InputMaybe<Scalars['String']['input']>;
+  post_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  post_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  post_contains?: InputMaybe<Scalars['String']['input']>;
+  post_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_not_contains?: InputMaybe<Scalars['String']['input']>;
+  post_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_starts_with?: InputMaybe<Scalars['String']['input']>;
+  post_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  post_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_ends_with?: InputMaybe<Scalars['String']['input']>;
+  post_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  post_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_?: InputMaybe<Post_filter>;
   commenter?: InputMaybe<Scalars['Bytes']['input']>;
   commenter_not?: InputMaybe<Scalars['Bytes']['input']>;
   commenter_gt?: InputMaybe<Scalars['Bytes']['input']>;
@@ -107,6 +190,14 @@ export type CommentAdded_filter = {
   cid_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
   cid_not_ends_with?: InputMaybe<Scalars['String']['input']>;
   cid_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  isDeleted?: InputMaybe<Scalars['Boolean']['input']>;
+  isDeleted_not?: InputMaybe<Scalars['Boolean']['input']>;
+  isDeleted_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  isDeleted_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  exists_not?: InputMaybe<Scalars['Boolean']['input']>;
+  exists_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  exists_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
   blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
   blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
@@ -135,88 +226,35 @@ export type CommentAdded_filter = {
   transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<CommentAdded_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<CommentAdded_filter>>>;
+  and?: InputMaybe<Array<InputMaybe<Comment_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Comment_filter>>>;
 };
 
-export type CommentAdded_orderBy =
+export type Comment_orderBy =
   | 'id'
-  | 'commentId'
-  | 'postId'
+  | 'post'
+  | 'post__id'
+  | 'post__author'
+  | 'post__authorString'
+  | 'post__cid'
+  | 'post__title'
+  | 'post__likes'
+  | 'post__bookmarks'
+  | 'post__isDeleted'
+  | 'post__exists'
+  | 'post__blockNumber'
+  | 'post__blockTimestamp'
+  | 'post__transactionHash'
   | 'commenter'
   | 'cid'
+  | 'isDeleted'
+  | 'exists'
   | 'blockNumber'
   | 'blockTimestamp'
   | 'transactionHash';
 
-export type CommentDeleted = {
-  id: Scalars['Bytes']['output'];
-  commentId: Scalars['BigInt']['output'];
-  blockNumber: Scalars['BigInt']['output'];
-  blockTimestamp: Scalars['BigInt']['output'];
-  transactionHash: Scalars['Bytes']['output'];
-};
-
-export type CommentDeleted_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  commentId?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_not?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  commentId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  transactionHash?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  /** Filter for the block changed event. */
-  _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<CommentDeleted_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<CommentDeleted_filter>>>;
-};
-
-export type CommentDeleted_orderBy =
-  | 'id'
-  | 'commentId'
-  | 'blockNumber'
-  | 'blockTimestamp'
-  | 'transactionHash';
-
-export type Followed = {
-  id: Scalars['Bytes']['output'];
+export type Follow = {
+  id: Scalars['ID']['output'];
   follower: Scalars['Bytes']['output'];
   following: Scalars['Bytes']['output'];
   blockNumber: Scalars['BigInt']['output'];
@@ -224,17 +262,15 @@ export type Followed = {
   transactionHash: Scalars['Bytes']['output'];
 };
 
-export type Followed_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+export type Follow_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   follower?: InputMaybe<Scalars['Bytes']['input']>;
   follower_not?: InputMaybe<Scalars['Bytes']['input']>;
   follower_gt?: InputMaybe<Scalars['Bytes']['input']>;
@@ -283,11 +319,11 @@ export type Followed_filter = {
   transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<Followed_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<Followed_filter>>>;
+  and?: InputMaybe<Array<InputMaybe<Follow_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Follow_filter>>>;
 };
 
-export type Followed_orderBy =
+export type Follow_orderBy =
   | 'id'
   | 'follower'
   | 'following'
@@ -361,8 +397,11 @@ export type Like_orderBy =
   | 'post'
   | 'post__id'
   | 'post__author'
+  | 'post__authorString'
   | 'post__cid'
+  | 'post__title'
   | 'post__likes'
+  | 'post__bookmarks'
   | 'post__isDeleted'
   | 'post__exists'
   | 'post__blockNumber'
@@ -379,9 +418,13 @@ export type OrderDirection =
 export type Post = {
   id: Scalars['ID']['output'];
   author: Scalars['Bytes']['output'];
+  authorString: Scalars['String']['output'];
   cid: Scalars['String']['output'];
+  title: Scalars['String']['output'];
   tags: Array<Tag>;
+  comments: Array<Comment>;
   likes: Scalars['Int']['output'];
+  bookmarks: Scalars['Int']['output'];
   isDeleted: Scalars['Boolean']['output'];
   exists: Scalars['Boolean']['output'];
   blockNumber: Scalars['BigInt']['output'];
@@ -398,161 +441,14 @@ export type PosttagsArgs = {
   where?: InputMaybe<Tag_filter>;
 };
 
-export type PostBookmarked = {
-  id: Scalars['Bytes']['output'];
-  postId: Scalars['BigInt']['output'];
-  bookmarker: Scalars['Bytes']['output'];
-  blockNumber: Scalars['BigInt']['output'];
-  blockTimestamp: Scalars['BigInt']['output'];
-  transactionHash: Scalars['Bytes']['output'];
+
+export type PostcommentsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Comment_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<Comment_filter>;
 };
-
-export type PostBookmarked_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  postId?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_not?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  postId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  bookmarker?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_not?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  bookmarker_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  bookmarker_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  transactionHash?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  /** Filter for the block changed event. */
-  _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<PostBookmarked_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<PostBookmarked_filter>>>;
-};
-
-export type PostBookmarked_orderBy =
-  | 'id'
-  | 'postId'
-  | 'bookmarker'
-  | 'blockNumber'
-  | 'blockTimestamp'
-  | 'transactionHash';
-
-export type PostUnbookmarked = {
-  id: Scalars['Bytes']['output'];
-  postId: Scalars['BigInt']['output'];
-  unbookmarker: Scalars['Bytes']['output'];
-  blockNumber: Scalars['BigInt']['output'];
-  blockTimestamp: Scalars['BigInt']['output'];
-  transactionHash: Scalars['Bytes']['output'];
-};
-
-export type PostUnbookmarked_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  postId?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_not?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  postId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  unbookmarker?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_not?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  unbookmarker_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  unbookmarker_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  transactionHash?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  /** Filter for the block changed event. */
-  _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<PostUnbookmarked_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<PostUnbookmarked_filter>>>;
-};
-
-export type PostUnbookmarked_orderBy =
-  | 'id'
-  | 'postId'
-  | 'unbookmarker'
-  | 'blockNumber'
-  | 'blockTimestamp'
-  | 'transactionHash';
 
 export type Post_filter = {
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -573,6 +469,26 @@ export type Post_filter = {
   author_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
   author_contains?: InputMaybe<Scalars['Bytes']['input']>;
   author_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  authorString?: InputMaybe<Scalars['String']['input']>;
+  authorString_not?: InputMaybe<Scalars['String']['input']>;
+  authorString_gt?: InputMaybe<Scalars['String']['input']>;
+  authorString_lt?: InputMaybe<Scalars['String']['input']>;
+  authorString_gte?: InputMaybe<Scalars['String']['input']>;
+  authorString_lte?: InputMaybe<Scalars['String']['input']>;
+  authorString_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  authorString_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  authorString_contains?: InputMaybe<Scalars['String']['input']>;
+  authorString_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  authorString_not_contains?: InputMaybe<Scalars['String']['input']>;
+  authorString_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  authorString_starts_with?: InputMaybe<Scalars['String']['input']>;
+  authorString_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  authorString_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  authorString_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  authorString_ends_with?: InputMaybe<Scalars['String']['input']>;
+  authorString_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  authorString_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  authorString_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
   cid?: InputMaybe<Scalars['String']['input']>;
   cid_not?: InputMaybe<Scalars['String']['input']>;
   cid_gt?: InputMaybe<Scalars['String']['input']>;
@@ -593,7 +509,28 @@ export type Post_filter = {
   cid_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
   cid_not_ends_with?: InputMaybe<Scalars['String']['input']>;
   cid_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  title_not?: InputMaybe<Scalars['String']['input']>;
+  title_gt?: InputMaybe<Scalars['String']['input']>;
+  title_lt?: InputMaybe<Scalars['String']['input']>;
+  title_gte?: InputMaybe<Scalars['String']['input']>;
+  title_lte?: InputMaybe<Scalars['String']['input']>;
+  title_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  title_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  title_contains?: InputMaybe<Scalars['String']['input']>;
+  title_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  title_not_contains?: InputMaybe<Scalars['String']['input']>;
+  title_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  title_starts_with?: InputMaybe<Scalars['String']['input']>;
+  title_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  title_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  title_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  title_ends_with?: InputMaybe<Scalars['String']['input']>;
+  title_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  title_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  title_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
   tags_?: InputMaybe<Tag_filter>;
+  comments_?: InputMaybe<Comment_filter>;
   likes?: InputMaybe<Scalars['Int']['input']>;
   likes_not?: InputMaybe<Scalars['Int']['input']>;
   likes_gt?: InputMaybe<Scalars['Int']['input']>;
@@ -602,6 +539,14 @@ export type Post_filter = {
   likes_lte?: InputMaybe<Scalars['Int']['input']>;
   likes_in?: InputMaybe<Array<Scalars['Int']['input']>>;
   likes_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  bookmarks?: InputMaybe<Scalars['Int']['input']>;
+  bookmarks_not?: InputMaybe<Scalars['Int']['input']>;
+  bookmarks_gt?: InputMaybe<Scalars['Int']['input']>;
+  bookmarks_lt?: InputMaybe<Scalars['Int']['input']>;
+  bookmarks_gte?: InputMaybe<Scalars['Int']['input']>;
+  bookmarks_lte?: InputMaybe<Scalars['Int']['input']>;
+  bookmarks_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  bookmarks_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
   isDeleted?: InputMaybe<Scalars['Boolean']['input']>;
   isDeleted_not?: InputMaybe<Scalars['Boolean']['input']>;
   isDeleted_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
@@ -645,17 +590,21 @@ export type Post_filter = {
 export type Post_orderBy =
   | 'id'
   | 'author'
+  | 'authorString'
   | 'cid'
+  | 'title'
   | 'tags'
+  | 'comments'
   | 'likes'
+  | 'bookmarks'
   | 'isDeleted'
   | 'exists'
   | 'blockNumber'
   | 'blockTimestamp'
   | 'transactionHash';
 
-export type ProfileUpdated = {
-  id: Scalars['Bytes']['output'];
+export type Profile = {
+  id: Scalars['ID']['output'];
   user: Scalars['Bytes']['output'];
   username: Scalars['String']['output'];
   bio: Scalars['String']['output'];
@@ -665,17 +614,15 @@ export type ProfileUpdated = {
   transactionHash: Scalars['Bytes']['output'];
 };
 
-export type ProfileUpdated_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+export type Profile_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   user?: InputMaybe<Scalars['Bytes']['input']>;
   user_not?: InputMaybe<Scalars['Bytes']['input']>;
   user_gt?: InputMaybe<Scalars['Bytes']['input']>;
@@ -774,11 +721,11 @@ export type ProfileUpdated_filter = {
   transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<ProfileUpdated_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<ProfileUpdated_filter>>>;
+  and?: InputMaybe<Array<InputMaybe<Profile_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Profile_filter>>>;
 };
 
-export type ProfileUpdated_orderBy =
+export type Profile_orderBy =
   | 'id'
   | 'user'
   | 'username'
@@ -789,100 +736,60 @@ export type ProfileUpdated_orderBy =
   | 'transactionHash';
 
 export type Query = {
-  commentAdded?: Maybe<CommentAdded>;
-  commentAddeds: Array<CommentAdded>;
-  commentDeleted?: Maybe<CommentDeleted>;
-  commentDeleteds: Array<CommentDeleted>;
-  followed?: Maybe<Followed>;
-  followeds: Array<Followed>;
-  postBookmarked?: Maybe<PostBookmarked>;
-  postBookmarkeds: Array<PostBookmarked>;
+  comment?: Maybe<Comment>;
+  comments: Array<Comment>;
+  follow?: Maybe<Follow>;
+  follows: Array<Follow>;
   post?: Maybe<Post>;
   posts: Array<Post>;
   like?: Maybe<Like>;
   likes: Array<Like>;
-  postUnbookmarked?: Maybe<PostUnbookmarked>;
-  postUnbookmarkeds: Array<PostUnbookmarked>;
-  profileUpdated?: Maybe<ProfileUpdated>;
-  profileUpdateds: Array<ProfileUpdated>;
+  bookmark?: Maybe<Bookmark>;
+  bookmarks: Array<Bookmark>;
+  profile?: Maybe<Profile>;
+  profiles: Array<Profile>;
   tag?: Maybe<Tag>;
   tags: Array<Tag>;
-  tipped?: Maybe<Tipped>;
-  tippeds: Array<Tipped>;
-  unfollowed?: Maybe<Unfollowed>;
-  unfolloweds: Array<Unfollowed>;
+  tagSummary?: Maybe<TagSummary>;
+  tagSummaries: Array<TagSummary>;
+  tip?: Maybe<Tip>;
+  tips: Array<Tip>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
 };
 
 
-export type QuerycommentAddedArgs = {
+export type QuerycommentArgs = {
   id: Scalars['ID']['input'];
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QuerycommentAddedsArgs = {
+export type QuerycommentsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<CommentAdded_orderBy>;
+  orderBy?: InputMaybe<Comment_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<CommentAdded_filter>;
+  where?: InputMaybe<Comment_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QuerycommentDeletedArgs = {
+export type QueryfollowArgs = {
   id: Scalars['ID']['input'];
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QuerycommentDeletedsArgs = {
+export type QueryfollowsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<CommentDeleted_orderBy>;
+  orderBy?: InputMaybe<Follow_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<CommentDeleted_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryfollowedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryfollowedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Followed_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<Followed_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerypostBookmarkedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerypostBookmarkedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PostBookmarked_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<PostBookmarked_filter>;
+  where?: InputMaybe<Follow_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -924,37 +831,37 @@ export type QuerylikesArgs = {
 };
 
 
-export type QuerypostUnbookmarkedArgs = {
+export type QuerybookmarkArgs = {
   id: Scalars['ID']['input'];
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QuerypostUnbookmarkedsArgs = {
+export type QuerybookmarksArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PostUnbookmarked_orderBy>;
+  orderBy?: InputMaybe<Bookmark_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<PostUnbookmarked_filter>;
+  where?: InputMaybe<Bookmark_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QueryprofileUpdatedArgs = {
+export type QueryprofileArgs = {
   id: Scalars['ID']['input'];
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QueryprofileUpdatedsArgs = {
+export type QueryprofilesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ProfileUpdated_orderBy>;
+  orderBy?: InputMaybe<Profile_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<ProfileUpdated_filter>;
+  where?: InputMaybe<Profile_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -978,37 +885,37 @@ export type QuerytagsArgs = {
 };
 
 
-export type QuerytippedArgs = {
+export type QuerytagSummaryArgs = {
   id: Scalars['ID']['input'];
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QuerytippedsArgs = {
+export type QuerytagSummariesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Tipped_orderBy>;
+  orderBy?: InputMaybe<TagSummary_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<Tipped_filter>;
+  where?: InputMaybe<TagSummary_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QueryunfollowedArgs = {
+export type QuerytipArgs = {
   id: Scalars['ID']['input'];
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QueryunfollowedsArgs = {
+export type QuerytipsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Unfollowed_orderBy>;
+  orderBy?: InputMaybe<Tip_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<Unfollowed_filter>;
+  where?: InputMaybe<Tip_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -1026,6 +933,48 @@ export type Tag = {
   blockTimestamp: Scalars['BigInt']['output'];
   transactionHash: Scalars['Bytes']['output'];
 };
+
+export type TagSummary = {
+  id: Scalars['ID']['output'];
+  count: Scalars['Int']['output'];
+  lastUsed?: Maybe<Scalars['BigInt']['output']>;
+};
+
+export type TagSummary_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_not?: InputMaybe<Scalars['Int']['input']>;
+  count_gt?: InputMaybe<Scalars['Int']['input']>;
+  count_lt?: InputMaybe<Scalars['Int']['input']>;
+  count_gte?: InputMaybe<Scalars['Int']['input']>;
+  count_lte?: InputMaybe<Scalars['Int']['input']>;
+  count_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  count_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  lastUsed?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUsed_not?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUsed_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUsed_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUsed_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUsed_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUsed_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastUsed_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<TagSummary_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<TagSummary_filter>>>;
+};
+
+export type TagSummary_orderBy =
+  | 'id'
+  | 'count'
+  | 'lastUsed';
 
 export type Tag_filter = {
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -1114,8 +1063,11 @@ export type Tag_orderBy =
   | 'post'
   | 'post__id'
   | 'post__author'
+  | 'post__authorString'
   | 'post__cid'
+  | 'post__title'
   | 'post__likes'
+  | 'post__bookmarks'
   | 'post__isDeleted'
   | 'post__exists'
   | 'post__blockNumber'
@@ -1126,8 +1078,8 @@ export type Tag_orderBy =
   | 'blockTimestamp'
   | 'transactionHash';
 
-export type Tipped = {
-  id: Scalars['Bytes']['output'];
+export type Tip = {
+  id: Scalars['ID']['output'];
   from: Scalars['Bytes']['output'];
   to: Scalars['Bytes']['output'];
   amount: Scalars['BigInt']['output'];
@@ -1136,17 +1088,15 @@ export type Tipped = {
   transactionHash: Scalars['Bytes']['output'];
 };
 
-export type Tipped_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+export type Tip_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   from?: InputMaybe<Scalars['Bytes']['input']>;
   from_not?: InputMaybe<Scalars['Bytes']['input']>;
   from_gt?: InputMaybe<Scalars['Bytes']['input']>;
@@ -1203,95 +1153,15 @@ export type Tipped_filter = {
   transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<Tipped_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<Tipped_filter>>>;
+  and?: InputMaybe<Array<InputMaybe<Tip_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Tip_filter>>>;
 };
 
-export type Tipped_orderBy =
+export type Tip_orderBy =
   | 'id'
   | 'from'
   | 'to'
   | 'amount'
-  | 'blockNumber'
-  | 'blockTimestamp'
-  | 'transactionHash';
-
-export type Unfollowed = {
-  id: Scalars['Bytes']['output'];
-  follower: Scalars['Bytes']['output'];
-  following: Scalars['Bytes']['output'];
-  blockNumber: Scalars['BigInt']['output'];
-  blockTimestamp: Scalars['BigInt']['output'];
-  transactionHash: Scalars['Bytes']['output'];
-};
-
-export type Unfollowed_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  follower?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_not?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  follower_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  follower_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  following?: InputMaybe<Scalars['Bytes']['input']>;
-  following_not?: InputMaybe<Scalars['Bytes']['input']>;
-  following_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  following_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  following_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  following_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  following_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  following_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  following_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  following_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  transactionHash?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  /** Filter for the block changed event. */
-  _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<Unfollowed_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<Unfollowed_filter>>>;
-};
-
-export type Unfollowed_orderBy =
-  | 'id'
-  | 'follower'
-  | 'following'
   | 'blockNumber'
   | 'blockTimestamp'
   | 'transactionHash';
@@ -1331,21 +1201,13 @@ export type _SubgraphErrorPolicy_ =
 
   export type QuerySdk = {
       /** null **/
-  commentAdded: InContextSdkMethod<Query['commentAdded'], QuerycommentAddedArgs, MeshContext>,
+  comment: InContextSdkMethod<Query['comment'], QuerycommentArgs, MeshContext>,
   /** null **/
-  commentAddeds: InContextSdkMethod<Query['commentAddeds'], QuerycommentAddedsArgs, MeshContext>,
+  comments: InContextSdkMethod<Query['comments'], QuerycommentsArgs, MeshContext>,
   /** null **/
-  commentDeleted: InContextSdkMethod<Query['commentDeleted'], QuerycommentDeletedArgs, MeshContext>,
+  follow: InContextSdkMethod<Query['follow'], QueryfollowArgs, MeshContext>,
   /** null **/
-  commentDeleteds: InContextSdkMethod<Query['commentDeleteds'], QuerycommentDeletedsArgs, MeshContext>,
-  /** null **/
-  followed: InContextSdkMethod<Query['followed'], QueryfollowedArgs, MeshContext>,
-  /** null **/
-  followeds: InContextSdkMethod<Query['followeds'], QueryfollowedsArgs, MeshContext>,
-  /** null **/
-  postBookmarked: InContextSdkMethod<Query['postBookmarked'], QuerypostBookmarkedArgs, MeshContext>,
-  /** null **/
-  postBookmarkeds: InContextSdkMethod<Query['postBookmarkeds'], QuerypostBookmarkedsArgs, MeshContext>,
+  follows: InContextSdkMethod<Query['follows'], QueryfollowsArgs, MeshContext>,
   /** null **/
   post: InContextSdkMethod<Query['post'], QuerypostArgs, MeshContext>,
   /** null **/
@@ -1355,25 +1217,25 @@ export type _SubgraphErrorPolicy_ =
   /** null **/
   likes: InContextSdkMethod<Query['likes'], QuerylikesArgs, MeshContext>,
   /** null **/
-  postUnbookmarked: InContextSdkMethod<Query['postUnbookmarked'], QuerypostUnbookmarkedArgs, MeshContext>,
+  bookmark: InContextSdkMethod<Query['bookmark'], QuerybookmarkArgs, MeshContext>,
   /** null **/
-  postUnbookmarkeds: InContextSdkMethod<Query['postUnbookmarkeds'], QuerypostUnbookmarkedsArgs, MeshContext>,
+  bookmarks: InContextSdkMethod<Query['bookmarks'], QuerybookmarksArgs, MeshContext>,
   /** null **/
-  profileUpdated: InContextSdkMethod<Query['profileUpdated'], QueryprofileUpdatedArgs, MeshContext>,
+  profile: InContextSdkMethod<Query['profile'], QueryprofileArgs, MeshContext>,
   /** null **/
-  profileUpdateds: InContextSdkMethod<Query['profileUpdateds'], QueryprofileUpdatedsArgs, MeshContext>,
+  profiles: InContextSdkMethod<Query['profiles'], QueryprofilesArgs, MeshContext>,
   /** null **/
   tag: InContextSdkMethod<Query['tag'], QuerytagArgs, MeshContext>,
   /** null **/
   tags: InContextSdkMethod<Query['tags'], QuerytagsArgs, MeshContext>,
   /** null **/
-  tipped: InContextSdkMethod<Query['tipped'], QuerytippedArgs, MeshContext>,
+  tagSummary: InContextSdkMethod<Query['tagSummary'], QuerytagSummaryArgs, MeshContext>,
   /** null **/
-  tippeds: InContextSdkMethod<Query['tippeds'], QuerytippedsArgs, MeshContext>,
+  tagSummaries: InContextSdkMethod<Query['tagSummaries'], QuerytagSummariesArgs, MeshContext>,
   /** null **/
-  unfollowed: InContextSdkMethod<Query['unfollowed'], QueryunfollowedArgs, MeshContext>,
+  tip: InContextSdkMethod<Query['tip'], QuerytipArgs, MeshContext>,
   /** null **/
-  unfolloweds: InContextSdkMethod<Query['unfolloweds'], QueryunfollowedsArgs, MeshContext>,
+  tips: InContextSdkMethod<Query['tips'], QuerytipsArgs, MeshContext>,
   /** Access to subgraph metadata **/
   _meta: InContextSdkMethod<Query['_meta'], Query_metaArgs, MeshContext>
   };

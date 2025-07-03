@@ -11,7 +11,7 @@ import Checkbox from "../components/Checkbox"
 import { useState } from "react"
 import { db } from "../utils/db"
 import { convertToURL, uploadDraftImage, uploadPost } from "../utils/pinata"
-import { collection, doc, getDocs, setDoc } from "firebase/firestore"
+import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore"
 import { firestore } from "../utils/firebase"
 import useDrafts from "../hooks/useDrafts"
 import { appendHash, formatTags, getPreview } from "../utils/functions"
@@ -32,7 +32,6 @@ function CreatePost() {
   }
   const [tags, setTags] = useState<Tags>(defaultTags)
   const [tagDisplayMap, setTagDisplayMap] = useState<TagDisplayMap>({})
-  console.log(tagDisplayMap)
   const [inputTag, setInputTag] = useState('')
   const [addNewTag, setAddNewTag] = useState(false)
   const drafts = useDrafts(true)
@@ -69,8 +68,14 @@ function CreatePost() {
 
   const saveTagDisplayMap = async () => {
     if (account.isConnected) {
-      await setDoc(doc(firestore, "tagDisplayMap", `${account.address}`), 
-      tagDisplayMap)
+      const docSnap = await getDoc(doc(firestore, "tagDisplayMap", account.address!))
+      if (!docSnap.exists()) {
+        await setDoc(doc(firestore, "tagDisplayMap", `${account.address}`), 
+          tagDisplayMap)
+      } else {
+        await setDoc(doc(firestore, "tagDisplayMap", `${account.address}`), 
+          { ...tagDisplayMap, ...docSnap.data() })
+      }
     } else {
       localStorage.setItem("tagDisplayMap", JSON.stringify(tagDisplayMap))
     }
@@ -102,7 +107,7 @@ function CreatePost() {
   }
 
   const handleSaveDraft = async () => {
-    if (!editor) return
+    if (!editor || !title) return
     const base64Regex = /src="(data:image\/[^]+base64[^"]+)"/g
     const urlRegex = /\<img.+src\=(?:\"|\')(.+?)(?:\"|\')(?:.+?)\>/g
     const content = editor.getHTML()
@@ -128,11 +133,10 @@ function CreatePost() {
       })
     } else {
       const matches = Array.from(content.matchAll(base64Regex))
-      const id = await db.drafts.add({
+      await db.drafts.add({
         ...draft, 
         images: matches.map(match => match[1])
       })
-      console.log(id)
       addToast("Draft saved locally! Connect wallet to save to DB!", {
         duration: 3000, type: ToastType.SUCCESS
       })
@@ -149,7 +153,7 @@ function CreatePost() {
       return
     }
     (async () => {
-      if (!editor) return
+      if (!editor || !title) return
       const urlRegex = /\<img.+src\=(?:\"|\')(.+?)(?:\"|\')(?:.+?)\>/g
       const content = editor.getHTML()
       const preview = getPreview(content)
@@ -160,9 +164,9 @@ function CreatePost() {
         preview,
         author: account.address!,
         timestamp: Date.now(),
-        likes: 0,
-        comments: 0,
-        bookmarks: 0,
+        // likes: 0,
+        // comments: 0,
+        // bookmarks: 0,
         imageCIDs: matches.map(match => match[1]),
         tags: formatTags(tags),
         isDeleted: false,
@@ -174,7 +178,7 @@ function CreatePost() {
       createPost({
         ...wagmiContractConfig,
         functionName: 'createPost',
-        args: [data.cid, entity.tags, entity.imageCIDs]
+        args: [data.cid, entity.tags, entity.imageCIDs, entity.title]
       }, {
         onSuccess: (data) => {
           addToast("Successfully published post!", {

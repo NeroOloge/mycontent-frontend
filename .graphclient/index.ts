@@ -62,44 +62,127 @@ export type Block_height = {
   number_gte?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type CommentAdded = {
-  id: Scalars['Bytes']['output'];
-  commentId: Scalars['BigInt']['output'];
-  postId: Scalars['BigInt']['output'];
+export type Bookmark = {
+  id: Scalars['ID']['output'];
+  post: Post;
+  user: Scalars['Bytes']['output'];
+  timestamp: Scalars['BigInt']['output'];
+};
+
+export type Bookmark_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  post?: InputMaybe<Scalars['String']['input']>;
+  post_not?: InputMaybe<Scalars['String']['input']>;
+  post_gt?: InputMaybe<Scalars['String']['input']>;
+  post_lt?: InputMaybe<Scalars['String']['input']>;
+  post_gte?: InputMaybe<Scalars['String']['input']>;
+  post_lte?: InputMaybe<Scalars['String']['input']>;
+  post_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  post_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  post_contains?: InputMaybe<Scalars['String']['input']>;
+  post_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_not_contains?: InputMaybe<Scalars['String']['input']>;
+  post_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_starts_with?: InputMaybe<Scalars['String']['input']>;
+  post_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  post_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_ends_with?: InputMaybe<Scalars['String']['input']>;
+  post_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  post_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_?: InputMaybe<Post_filter>;
+  user?: InputMaybe<Scalars['Bytes']['input']>;
+  user_not?: InputMaybe<Scalars['Bytes']['input']>;
+  user_gt?: InputMaybe<Scalars['Bytes']['input']>;
+  user_lt?: InputMaybe<Scalars['Bytes']['input']>;
+  user_gte?: InputMaybe<Scalars['Bytes']['input']>;
+  user_lte?: InputMaybe<Scalars['Bytes']['input']>;
+  user_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  user_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  user_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  user_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  timestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Bookmark_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Bookmark_filter>>>;
+};
+
+export type Bookmark_orderBy =
+  | 'id'
+  | 'post'
+  | 'post__id'
+  | 'post__author'
+  | 'post__authorString'
+  | 'post__cid'
+  | 'post__title'
+  | 'post__likes'
+  | 'post__bookmarks'
+  | 'post__isDeleted'
+  | 'post__exists'
+  | 'post__blockNumber'
+  | 'post__blockTimestamp'
+  | 'post__transactionHash'
+  | 'user'
+  | 'timestamp';
+
+export type Comment = {
+  id: Scalars['ID']['output'];
+  post: Post;
   commenter: Scalars['Bytes']['output'];
   cid: Scalars['String']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  exists: Scalars['Boolean']['output'];
   blockNumber: Scalars['BigInt']['output'];
   blockTimestamp: Scalars['BigInt']['output'];
   transactionHash: Scalars['Bytes']['output'];
 };
 
-export type CommentAdded_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  commentId?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_not?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  commentId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  postId?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_not?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  postId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+export type Comment_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  post?: InputMaybe<Scalars['String']['input']>;
+  post_not?: InputMaybe<Scalars['String']['input']>;
+  post_gt?: InputMaybe<Scalars['String']['input']>;
+  post_lt?: InputMaybe<Scalars['String']['input']>;
+  post_gte?: InputMaybe<Scalars['String']['input']>;
+  post_lte?: InputMaybe<Scalars['String']['input']>;
+  post_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  post_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  post_contains?: InputMaybe<Scalars['String']['input']>;
+  post_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_not_contains?: InputMaybe<Scalars['String']['input']>;
+  post_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_starts_with?: InputMaybe<Scalars['String']['input']>;
+  post_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  post_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_ends_with?: InputMaybe<Scalars['String']['input']>;
+  post_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  post_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  post_?: InputMaybe<Post_filter>;
   commenter?: InputMaybe<Scalars['Bytes']['input']>;
   commenter_not?: InputMaybe<Scalars['Bytes']['input']>;
   commenter_gt?: InputMaybe<Scalars['Bytes']['input']>;
@@ -130,6 +213,14 @@ export type CommentAdded_filter = {
   cid_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
   cid_not_ends_with?: InputMaybe<Scalars['String']['input']>;
   cid_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  isDeleted?: InputMaybe<Scalars['Boolean']['input']>;
+  isDeleted_not?: InputMaybe<Scalars['Boolean']['input']>;
+  isDeleted_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  isDeleted_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  exists_not?: InputMaybe<Scalars['Boolean']['input']>;
+  exists_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  exists_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
   blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
   blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
@@ -158,88 +249,35 @@ export type CommentAdded_filter = {
   transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<CommentAdded_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<CommentAdded_filter>>>;
+  and?: InputMaybe<Array<InputMaybe<Comment_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Comment_filter>>>;
 };
 
-export type CommentAdded_orderBy =
+export type Comment_orderBy =
   | 'id'
-  | 'commentId'
-  | 'postId'
+  | 'post'
+  | 'post__id'
+  | 'post__author'
+  | 'post__authorString'
+  | 'post__cid'
+  | 'post__title'
+  | 'post__likes'
+  | 'post__bookmarks'
+  | 'post__isDeleted'
+  | 'post__exists'
+  | 'post__blockNumber'
+  | 'post__blockTimestamp'
+  | 'post__transactionHash'
   | 'commenter'
   | 'cid'
+  | 'isDeleted'
+  | 'exists'
   | 'blockNumber'
   | 'blockTimestamp'
   | 'transactionHash';
 
-export type CommentDeleted = {
-  id: Scalars['Bytes']['output'];
-  commentId: Scalars['BigInt']['output'];
-  blockNumber: Scalars['BigInt']['output'];
-  blockTimestamp: Scalars['BigInt']['output'];
-  transactionHash: Scalars['Bytes']['output'];
-};
-
-export type CommentDeleted_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  commentId?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_not?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  commentId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  commentId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  transactionHash?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  /** Filter for the block changed event. */
-  _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<CommentDeleted_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<CommentDeleted_filter>>>;
-};
-
-export type CommentDeleted_orderBy =
-  | 'id'
-  | 'commentId'
-  | 'blockNumber'
-  | 'blockTimestamp'
-  | 'transactionHash';
-
-export type Followed = {
-  id: Scalars['Bytes']['output'];
+export type Follow = {
+  id: Scalars['ID']['output'];
   follower: Scalars['Bytes']['output'];
   following: Scalars['Bytes']['output'];
   blockNumber: Scalars['BigInt']['output'];
@@ -247,17 +285,15 @@ export type Followed = {
   transactionHash: Scalars['Bytes']['output'];
 };
 
-export type Followed_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+export type Follow_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   follower?: InputMaybe<Scalars['Bytes']['input']>;
   follower_not?: InputMaybe<Scalars['Bytes']['input']>;
   follower_gt?: InputMaybe<Scalars['Bytes']['input']>;
@@ -306,11 +342,11 @@ export type Followed_filter = {
   transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<Followed_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<Followed_filter>>>;
+  and?: InputMaybe<Array<InputMaybe<Follow_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Follow_filter>>>;
 };
 
-export type Followed_orderBy =
+export type Follow_orderBy =
   | 'id'
   | 'follower'
   | 'following'
@@ -384,8 +420,11 @@ export type Like_orderBy =
   | 'post'
   | 'post__id'
   | 'post__author'
+  | 'post__authorString'
   | 'post__cid'
+  | 'post__title'
   | 'post__likes'
+  | 'post__bookmarks'
   | 'post__isDeleted'
   | 'post__exists'
   | 'post__blockNumber'
@@ -402,9 +441,13 @@ export type OrderDirection =
 export type Post = {
   id: Scalars['ID']['output'];
   author: Scalars['Bytes']['output'];
+  authorString: Scalars['String']['output'];
   cid: Scalars['String']['output'];
+  title: Scalars['String']['output'];
   tags: Array<Tag>;
+  comments: Array<Comment>;
   likes: Scalars['Int']['output'];
+  bookmarks: Scalars['Int']['output'];
   isDeleted: Scalars['Boolean']['output'];
   exists: Scalars['Boolean']['output'];
   blockNumber: Scalars['BigInt']['output'];
@@ -421,161 +464,14 @@ export type PosttagsArgs = {
   where?: InputMaybe<Tag_filter>;
 };
 
-export type PostBookmarked = {
-  id: Scalars['Bytes']['output'];
-  postId: Scalars['BigInt']['output'];
-  bookmarker: Scalars['Bytes']['output'];
-  blockNumber: Scalars['BigInt']['output'];
-  blockTimestamp: Scalars['BigInt']['output'];
-  transactionHash: Scalars['Bytes']['output'];
+
+export type PostcommentsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Comment_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<Comment_filter>;
 };
-
-export type PostBookmarked_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  postId?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_not?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  postId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  bookmarker?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_not?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  bookmarker_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  bookmarker_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  bookmarker_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  transactionHash?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  /** Filter for the block changed event. */
-  _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<PostBookmarked_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<PostBookmarked_filter>>>;
-};
-
-export type PostBookmarked_orderBy =
-  | 'id'
-  | 'postId'
-  | 'bookmarker'
-  | 'blockNumber'
-  | 'blockTimestamp'
-  | 'transactionHash';
-
-export type PostUnbookmarked = {
-  id: Scalars['Bytes']['output'];
-  postId: Scalars['BigInt']['output'];
-  unbookmarker: Scalars['Bytes']['output'];
-  blockNumber: Scalars['BigInt']['output'];
-  blockTimestamp: Scalars['BigInt']['output'];
-  transactionHash: Scalars['Bytes']['output'];
-};
-
-export type PostUnbookmarked_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  postId?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_not?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  postId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  postId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  unbookmarker?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_not?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  unbookmarker_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  unbookmarker_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  unbookmarker_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  transactionHash?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  /** Filter for the block changed event. */
-  _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<PostUnbookmarked_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<PostUnbookmarked_filter>>>;
-};
-
-export type PostUnbookmarked_orderBy =
-  | 'id'
-  | 'postId'
-  | 'unbookmarker'
-  | 'blockNumber'
-  | 'blockTimestamp'
-  | 'transactionHash';
 
 export type Post_filter = {
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -596,6 +492,26 @@ export type Post_filter = {
   author_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
   author_contains?: InputMaybe<Scalars['Bytes']['input']>;
   author_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  authorString?: InputMaybe<Scalars['String']['input']>;
+  authorString_not?: InputMaybe<Scalars['String']['input']>;
+  authorString_gt?: InputMaybe<Scalars['String']['input']>;
+  authorString_lt?: InputMaybe<Scalars['String']['input']>;
+  authorString_gte?: InputMaybe<Scalars['String']['input']>;
+  authorString_lte?: InputMaybe<Scalars['String']['input']>;
+  authorString_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  authorString_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  authorString_contains?: InputMaybe<Scalars['String']['input']>;
+  authorString_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  authorString_not_contains?: InputMaybe<Scalars['String']['input']>;
+  authorString_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  authorString_starts_with?: InputMaybe<Scalars['String']['input']>;
+  authorString_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  authorString_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  authorString_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  authorString_ends_with?: InputMaybe<Scalars['String']['input']>;
+  authorString_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  authorString_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  authorString_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
   cid?: InputMaybe<Scalars['String']['input']>;
   cid_not?: InputMaybe<Scalars['String']['input']>;
   cid_gt?: InputMaybe<Scalars['String']['input']>;
@@ -616,7 +532,28 @@ export type Post_filter = {
   cid_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
   cid_not_ends_with?: InputMaybe<Scalars['String']['input']>;
   cid_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  title_not?: InputMaybe<Scalars['String']['input']>;
+  title_gt?: InputMaybe<Scalars['String']['input']>;
+  title_lt?: InputMaybe<Scalars['String']['input']>;
+  title_gte?: InputMaybe<Scalars['String']['input']>;
+  title_lte?: InputMaybe<Scalars['String']['input']>;
+  title_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  title_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  title_contains?: InputMaybe<Scalars['String']['input']>;
+  title_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  title_not_contains?: InputMaybe<Scalars['String']['input']>;
+  title_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  title_starts_with?: InputMaybe<Scalars['String']['input']>;
+  title_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  title_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  title_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  title_ends_with?: InputMaybe<Scalars['String']['input']>;
+  title_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  title_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  title_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
   tags_?: InputMaybe<Tag_filter>;
+  comments_?: InputMaybe<Comment_filter>;
   likes?: InputMaybe<Scalars['Int']['input']>;
   likes_not?: InputMaybe<Scalars['Int']['input']>;
   likes_gt?: InputMaybe<Scalars['Int']['input']>;
@@ -625,6 +562,14 @@ export type Post_filter = {
   likes_lte?: InputMaybe<Scalars['Int']['input']>;
   likes_in?: InputMaybe<Array<Scalars['Int']['input']>>;
   likes_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  bookmarks?: InputMaybe<Scalars['Int']['input']>;
+  bookmarks_not?: InputMaybe<Scalars['Int']['input']>;
+  bookmarks_gt?: InputMaybe<Scalars['Int']['input']>;
+  bookmarks_lt?: InputMaybe<Scalars['Int']['input']>;
+  bookmarks_gte?: InputMaybe<Scalars['Int']['input']>;
+  bookmarks_lte?: InputMaybe<Scalars['Int']['input']>;
+  bookmarks_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  bookmarks_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
   isDeleted?: InputMaybe<Scalars['Boolean']['input']>;
   isDeleted_not?: InputMaybe<Scalars['Boolean']['input']>;
   isDeleted_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
@@ -668,17 +613,21 @@ export type Post_filter = {
 export type Post_orderBy =
   | 'id'
   | 'author'
+  | 'authorString'
   | 'cid'
+  | 'title'
   | 'tags'
+  | 'comments'
   | 'likes'
+  | 'bookmarks'
   | 'isDeleted'
   | 'exists'
   | 'blockNumber'
   | 'blockTimestamp'
   | 'transactionHash';
 
-export type ProfileUpdated = {
-  id: Scalars['Bytes']['output'];
+export type Profile = {
+  id: Scalars['ID']['output'];
   user: Scalars['Bytes']['output'];
   username: Scalars['String']['output'];
   bio: Scalars['String']['output'];
@@ -688,17 +637,15 @@ export type ProfileUpdated = {
   transactionHash: Scalars['Bytes']['output'];
 };
 
-export type ProfileUpdated_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+export type Profile_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   user?: InputMaybe<Scalars['Bytes']['input']>;
   user_not?: InputMaybe<Scalars['Bytes']['input']>;
   user_gt?: InputMaybe<Scalars['Bytes']['input']>;
@@ -797,11 +744,11 @@ export type ProfileUpdated_filter = {
   transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<ProfileUpdated_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<ProfileUpdated_filter>>>;
+  and?: InputMaybe<Array<InputMaybe<Profile_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Profile_filter>>>;
 };
 
-export type ProfileUpdated_orderBy =
+export type Profile_orderBy =
   | 'id'
   | 'user'
   | 'username'
@@ -812,100 +759,60 @@ export type ProfileUpdated_orderBy =
   | 'transactionHash';
 
 export type Query = {
-  commentAdded?: Maybe<CommentAdded>;
-  commentAddeds: Array<CommentAdded>;
-  commentDeleted?: Maybe<CommentDeleted>;
-  commentDeleteds: Array<CommentDeleted>;
-  followed?: Maybe<Followed>;
-  followeds: Array<Followed>;
-  postBookmarked?: Maybe<PostBookmarked>;
-  postBookmarkeds: Array<PostBookmarked>;
+  comment?: Maybe<Comment>;
+  comments: Array<Comment>;
+  follow?: Maybe<Follow>;
+  follows: Array<Follow>;
   post?: Maybe<Post>;
   posts: Array<Post>;
   like?: Maybe<Like>;
   likes: Array<Like>;
-  postUnbookmarked?: Maybe<PostUnbookmarked>;
-  postUnbookmarkeds: Array<PostUnbookmarked>;
-  profileUpdated?: Maybe<ProfileUpdated>;
-  profileUpdateds: Array<ProfileUpdated>;
+  bookmark?: Maybe<Bookmark>;
+  bookmarks: Array<Bookmark>;
+  profile?: Maybe<Profile>;
+  profiles: Array<Profile>;
   tag?: Maybe<Tag>;
   tags: Array<Tag>;
-  tipped?: Maybe<Tipped>;
-  tippeds: Array<Tipped>;
-  unfollowed?: Maybe<Unfollowed>;
-  unfolloweds: Array<Unfollowed>;
+  tagSummary?: Maybe<TagSummary>;
+  tagSummaries: Array<TagSummary>;
+  tip?: Maybe<Tip>;
+  tips: Array<Tip>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
 };
 
 
-export type QuerycommentAddedArgs = {
+export type QuerycommentArgs = {
   id: Scalars['ID']['input'];
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QuerycommentAddedsArgs = {
+export type QuerycommentsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<CommentAdded_orderBy>;
+  orderBy?: InputMaybe<Comment_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<CommentAdded_filter>;
+  where?: InputMaybe<Comment_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QuerycommentDeletedArgs = {
+export type QueryfollowArgs = {
   id: Scalars['ID']['input'];
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QuerycommentDeletedsArgs = {
+export type QueryfollowsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<CommentDeleted_orderBy>;
+  orderBy?: InputMaybe<Follow_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<CommentDeleted_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryfollowedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryfollowedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Followed_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<Followed_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerypostBookmarkedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerypostBookmarkedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PostBookmarked_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<PostBookmarked_filter>;
+  where?: InputMaybe<Follow_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -947,37 +854,37 @@ export type QuerylikesArgs = {
 };
 
 
-export type QuerypostUnbookmarkedArgs = {
+export type QuerybookmarkArgs = {
   id: Scalars['ID']['input'];
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QuerypostUnbookmarkedsArgs = {
+export type QuerybookmarksArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PostUnbookmarked_orderBy>;
+  orderBy?: InputMaybe<Bookmark_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<PostUnbookmarked_filter>;
+  where?: InputMaybe<Bookmark_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QueryprofileUpdatedArgs = {
+export type QueryprofileArgs = {
   id: Scalars['ID']['input'];
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QueryprofileUpdatedsArgs = {
+export type QueryprofilesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ProfileUpdated_orderBy>;
+  orderBy?: InputMaybe<Profile_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<ProfileUpdated_filter>;
+  where?: InputMaybe<Profile_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -1001,37 +908,37 @@ export type QuerytagsArgs = {
 };
 
 
-export type QuerytippedArgs = {
+export type QuerytagSummaryArgs = {
   id: Scalars['ID']['input'];
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QuerytippedsArgs = {
+export type QuerytagSummariesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Tipped_orderBy>;
+  orderBy?: InputMaybe<TagSummary_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<Tipped_filter>;
+  where?: InputMaybe<TagSummary_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QueryunfollowedArgs = {
+export type QuerytipArgs = {
   id: Scalars['ID']['input'];
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QueryunfollowedsArgs = {
+export type QuerytipsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Unfollowed_orderBy>;
+  orderBy?: InputMaybe<Tip_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<Unfollowed_filter>;
+  where?: InputMaybe<Tip_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -1049,6 +956,48 @@ export type Tag = {
   blockTimestamp: Scalars['BigInt']['output'];
   transactionHash: Scalars['Bytes']['output'];
 };
+
+export type TagSummary = {
+  id: Scalars['ID']['output'];
+  count: Scalars['Int']['output'];
+  lastUsed?: Maybe<Scalars['BigInt']['output']>;
+};
+
+export type TagSummary_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_not?: InputMaybe<Scalars['Int']['input']>;
+  count_gt?: InputMaybe<Scalars['Int']['input']>;
+  count_lt?: InputMaybe<Scalars['Int']['input']>;
+  count_gte?: InputMaybe<Scalars['Int']['input']>;
+  count_lte?: InputMaybe<Scalars['Int']['input']>;
+  count_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  count_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  lastUsed?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUsed_not?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUsed_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUsed_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUsed_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUsed_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastUsed_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastUsed_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<TagSummary_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<TagSummary_filter>>>;
+};
+
+export type TagSummary_orderBy =
+  | 'id'
+  | 'count'
+  | 'lastUsed';
 
 export type Tag_filter = {
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -1137,8 +1086,11 @@ export type Tag_orderBy =
   | 'post'
   | 'post__id'
   | 'post__author'
+  | 'post__authorString'
   | 'post__cid'
+  | 'post__title'
   | 'post__likes'
+  | 'post__bookmarks'
   | 'post__isDeleted'
   | 'post__exists'
   | 'post__blockNumber'
@@ -1149,8 +1101,8 @@ export type Tag_orderBy =
   | 'blockTimestamp'
   | 'transactionHash';
 
-export type Tipped = {
-  id: Scalars['Bytes']['output'];
+export type Tip = {
+  id: Scalars['ID']['output'];
   from: Scalars['Bytes']['output'];
   to: Scalars['Bytes']['output'];
   amount: Scalars['BigInt']['output'];
@@ -1159,17 +1111,15 @@ export type Tipped = {
   transactionHash: Scalars['Bytes']['output'];
 };
 
-export type Tipped_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+export type Tip_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
   from?: InputMaybe<Scalars['Bytes']['input']>;
   from_not?: InputMaybe<Scalars['Bytes']['input']>;
   from_gt?: InputMaybe<Scalars['Bytes']['input']>;
@@ -1226,95 +1176,15 @@ export type Tipped_filter = {
   transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<Tipped_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<Tipped_filter>>>;
+  and?: InputMaybe<Array<InputMaybe<Tip_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Tip_filter>>>;
 };
 
-export type Tipped_orderBy =
+export type Tip_orderBy =
   | 'id'
   | 'from'
   | 'to'
   | 'amount'
-  | 'blockNumber'
-  | 'blockTimestamp'
-  | 'transactionHash';
-
-export type Unfollowed = {
-  id: Scalars['Bytes']['output'];
-  follower: Scalars['Bytes']['output'];
-  following: Scalars['Bytes']['output'];
-  blockNumber: Scalars['BigInt']['output'];
-  blockTimestamp: Scalars['BigInt']['output'];
-  transactionHash: Scalars['Bytes']['output'];
-};
-
-export type Unfollowed_filter = {
-  id?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  id_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  id_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  id_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  follower?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_not?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  follower_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  follower_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  follower_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  following?: InputMaybe<Scalars['Bytes']['input']>;
-  following_not?: InputMaybe<Scalars['Bytes']['input']>;
-  following_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  following_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  following_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  following_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  following_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  following_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  following_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  following_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  blockTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  blockTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  transactionHash?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lt?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_gte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_lte?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
-  transactionHash_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
-  /** Filter for the block changed event. */
-  _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<Unfollowed_filter>>>;
-  or?: InputMaybe<Array<InputMaybe<Unfollowed_filter>>>;
-};
-
-export type Unfollowed_orderBy =
-  | 'id'
-  | 'follower'
-  | 'following'
   | 'blockNumber'
   | 'blockTimestamp'
   | 'transactionHash';
@@ -1443,18 +1313,18 @@ export type ResolversTypes = ResolversObject<{
   BigInt: ResolverTypeWrapper<Scalars['BigInt']['output']>;
   BlockChangedFilter: BlockChangedFilter;
   Block_height: Block_height;
+  Bookmark: ResolverTypeWrapper<Bookmark>;
+  Bookmark_filter: Bookmark_filter;
+  Bookmark_orderBy: Bookmark_orderBy;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Bytes: ResolverTypeWrapper<Scalars['Bytes']['output']>;
-  CommentAdded: ResolverTypeWrapper<CommentAdded>;
-  CommentAdded_filter: CommentAdded_filter;
-  CommentAdded_orderBy: CommentAdded_orderBy;
-  CommentDeleted: ResolverTypeWrapper<CommentDeleted>;
-  CommentDeleted_filter: CommentDeleted_filter;
-  CommentDeleted_orderBy: CommentDeleted_orderBy;
+  Comment: ResolverTypeWrapper<Comment>;
+  Comment_filter: Comment_filter;
+  Comment_orderBy: Comment_orderBy;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
-  Followed: ResolverTypeWrapper<Followed>;
-  Followed_filter: Followed_filter;
-  Followed_orderBy: Followed_orderBy;
+  Follow: ResolverTypeWrapper<Follow>;
+  Follow_filter: Follow_filter;
+  Follow_orderBy: Follow_orderBy;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Int8: ResolverTypeWrapper<Scalars['Int8']['output']>;
@@ -1463,29 +1333,23 @@ export type ResolversTypes = ResolversObject<{
   Like_orderBy: Like_orderBy;
   OrderDirection: OrderDirection;
   Post: ResolverTypeWrapper<Post>;
-  PostBookmarked: ResolverTypeWrapper<PostBookmarked>;
-  PostBookmarked_filter: PostBookmarked_filter;
-  PostBookmarked_orderBy: PostBookmarked_orderBy;
-  PostUnbookmarked: ResolverTypeWrapper<PostUnbookmarked>;
-  PostUnbookmarked_filter: PostUnbookmarked_filter;
-  PostUnbookmarked_orderBy: PostUnbookmarked_orderBy;
   Post_filter: Post_filter;
   Post_orderBy: Post_orderBy;
-  ProfileUpdated: ResolverTypeWrapper<ProfileUpdated>;
-  ProfileUpdated_filter: ProfileUpdated_filter;
-  ProfileUpdated_orderBy: ProfileUpdated_orderBy;
+  Profile: ResolverTypeWrapper<Profile>;
+  Profile_filter: Profile_filter;
+  Profile_orderBy: Profile_orderBy;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Tag: ResolverTypeWrapper<Tag>;
+  TagSummary: ResolverTypeWrapper<TagSummary>;
+  TagSummary_filter: TagSummary_filter;
+  TagSummary_orderBy: TagSummary_orderBy;
   Tag_filter: Tag_filter;
   Tag_orderBy: Tag_orderBy;
   Timestamp: ResolverTypeWrapper<Scalars['Timestamp']['output']>;
-  Tipped: ResolverTypeWrapper<Tipped>;
-  Tipped_filter: Tipped_filter;
-  Tipped_orderBy: Tipped_orderBy;
-  Unfollowed: ResolverTypeWrapper<Unfollowed>;
-  Unfollowed_filter: Unfollowed_filter;
-  Unfollowed_orderBy: Unfollowed_orderBy;
+  Tip: ResolverTypeWrapper<Tip>;
+  Tip_filter: Tip_filter;
+  Tip_orderBy: Tip_orderBy;
   _Block_: ResolverTypeWrapper<_Block_>;
   _Meta_: ResolverTypeWrapper<_Meta_>;
   _SubgraphErrorPolicy_: _SubgraphErrorPolicy_;
@@ -1497,37 +1361,33 @@ export type ResolversParentTypes = ResolversObject<{
   BigInt: Scalars['BigInt']['output'];
   BlockChangedFilter: BlockChangedFilter;
   Block_height: Block_height;
+  Bookmark: Bookmark;
+  Bookmark_filter: Bookmark_filter;
   Boolean: Scalars['Boolean']['output'];
   Bytes: Scalars['Bytes']['output'];
-  CommentAdded: CommentAdded;
-  CommentAdded_filter: CommentAdded_filter;
-  CommentDeleted: CommentDeleted;
-  CommentDeleted_filter: CommentDeleted_filter;
+  Comment: Comment;
+  Comment_filter: Comment_filter;
   Float: Scalars['Float']['output'];
-  Followed: Followed;
-  Followed_filter: Followed_filter;
+  Follow: Follow;
+  Follow_filter: Follow_filter;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Int8: Scalars['Int8']['output'];
   Like: Like;
   Like_filter: Like_filter;
   Post: Post;
-  PostBookmarked: PostBookmarked;
-  PostBookmarked_filter: PostBookmarked_filter;
-  PostUnbookmarked: PostUnbookmarked;
-  PostUnbookmarked_filter: PostUnbookmarked_filter;
   Post_filter: Post_filter;
-  ProfileUpdated: ProfileUpdated;
-  ProfileUpdated_filter: ProfileUpdated_filter;
+  Profile: Profile;
+  Profile_filter: Profile_filter;
   Query: {};
   String: Scalars['String']['output'];
   Tag: Tag;
+  TagSummary: TagSummary;
+  TagSummary_filter: TagSummary_filter;
   Tag_filter: Tag_filter;
   Timestamp: Scalars['Timestamp']['output'];
-  Tipped: Tipped;
-  Tipped_filter: Tipped_filter;
-  Unfollowed: Unfollowed;
-  Unfollowed_filter: Unfollowed_filter;
+  Tip: Tip;
+  Tip_filter: Tip_filter;
   _Block_: _Block_;
   _Meta_: _Meta_;
 }>;
@@ -1556,33 +1416,33 @@ export interface BigIntScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
   name: 'BigInt';
 }
 
+export type BookmarkResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Bookmark'] = ResolversParentTypes['Bookmark']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  post?: Resolver<ResolversTypes['Post'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
+  timestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export interface BytesScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Bytes'], any> {
   name: 'Bytes';
 }
 
-export type CommentAddedResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['CommentAdded'] = ResolversParentTypes['CommentAdded']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  commentId?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  postId?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
+export type CommentResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  post?: Resolver<ResolversTypes['Post'], ParentType, ContextType>;
   commenter?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isDeleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  exists?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   blockNumber?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   blockTimestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   transactionHash?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type CommentDeletedResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['CommentDeleted'] = ResolversParentTypes['CommentDeleted']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  commentId?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  blockNumber?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  blockTimestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  transactionHash?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type FollowedResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Followed'] = ResolversParentTypes['Followed']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
+export type FollowResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Follow'] = ResolversParentTypes['Follow']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   follower?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   following?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   blockNumber?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
@@ -1606,9 +1466,13 @@ export type LikeResolvers<ContextType = MeshContext, ParentType extends Resolver
 export type PostResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
+  authorString?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<PosttagsArgs, 'skip' | 'first'>>;
+  comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<PostcommentsArgs, 'skip' | 'first'>>;
   likes?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  bookmarks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   isDeleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   exists?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   blockNumber?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
@@ -1617,28 +1481,8 @@ export type PostResolvers<ContextType = MeshContext, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type PostBookmarkedResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['PostBookmarked'] = ResolversParentTypes['PostBookmarked']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  postId?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  bookmarker?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  blockNumber?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  blockTimestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  transactionHash?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type PostUnbookmarkedResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['PostUnbookmarked'] = ResolversParentTypes['PostUnbookmarked']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  postId?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  unbookmarker?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  blockNumber?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  blockTimestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  transactionHash?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type ProfileUpdatedResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['ProfileUpdated'] = ResolversParentTypes['ProfileUpdated']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
+export type ProfileResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1650,28 +1494,24 @@ export type ProfileUpdatedResolvers<ContextType = MeshContext, ParentType extend
 }>;
 
 export type QueryResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  commentAdded?: Resolver<Maybe<ResolversTypes['CommentAdded']>, ParentType, ContextType, RequireFields<QuerycommentAddedArgs, 'id' | 'subgraphError'>>;
-  commentAddeds?: Resolver<Array<ResolversTypes['CommentAdded']>, ParentType, ContextType, RequireFields<QuerycommentAddedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  commentDeleted?: Resolver<Maybe<ResolversTypes['CommentDeleted']>, ParentType, ContextType, RequireFields<QuerycommentDeletedArgs, 'id' | 'subgraphError'>>;
-  commentDeleteds?: Resolver<Array<ResolversTypes['CommentDeleted']>, ParentType, ContextType, RequireFields<QuerycommentDeletedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  followed?: Resolver<Maybe<ResolversTypes['Followed']>, ParentType, ContextType, RequireFields<QueryfollowedArgs, 'id' | 'subgraphError'>>;
-  followeds?: Resolver<Array<ResolversTypes['Followed']>, ParentType, ContextType, RequireFields<QueryfollowedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  postBookmarked?: Resolver<Maybe<ResolversTypes['PostBookmarked']>, ParentType, ContextType, RequireFields<QuerypostBookmarkedArgs, 'id' | 'subgraphError'>>;
-  postBookmarkeds?: Resolver<Array<ResolversTypes['PostBookmarked']>, ParentType, ContextType, RequireFields<QuerypostBookmarkedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  comment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerycommentArgs, 'id' | 'subgraphError'>>;
+  comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerycommentsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  follow?: Resolver<Maybe<ResolversTypes['Follow']>, ParentType, ContextType, RequireFields<QueryfollowArgs, 'id' | 'subgraphError'>>;
+  follows?: Resolver<Array<ResolversTypes['Follow']>, ParentType, ContextType, RequireFields<QueryfollowsArgs, 'skip' | 'first' | 'subgraphError'>>;
   post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerypostArgs, 'id' | 'subgraphError'>>;
   posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerypostsArgs, 'skip' | 'first' | 'subgraphError'>>;
   like?: Resolver<Maybe<ResolversTypes['Like']>, ParentType, ContextType, RequireFields<QuerylikeArgs, 'id' | 'subgraphError'>>;
   likes?: Resolver<Array<ResolversTypes['Like']>, ParentType, ContextType, RequireFields<QuerylikesArgs, 'skip' | 'first' | 'subgraphError'>>;
-  postUnbookmarked?: Resolver<Maybe<ResolversTypes['PostUnbookmarked']>, ParentType, ContextType, RequireFields<QuerypostUnbookmarkedArgs, 'id' | 'subgraphError'>>;
-  postUnbookmarkeds?: Resolver<Array<ResolversTypes['PostUnbookmarked']>, ParentType, ContextType, RequireFields<QuerypostUnbookmarkedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  profileUpdated?: Resolver<Maybe<ResolversTypes['ProfileUpdated']>, ParentType, ContextType, RequireFields<QueryprofileUpdatedArgs, 'id' | 'subgraphError'>>;
-  profileUpdateds?: Resolver<Array<ResolversTypes['ProfileUpdated']>, ParentType, ContextType, RequireFields<QueryprofileUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  bookmark?: Resolver<Maybe<ResolversTypes['Bookmark']>, ParentType, ContextType, RequireFields<QuerybookmarkArgs, 'id' | 'subgraphError'>>;
+  bookmarks?: Resolver<Array<ResolversTypes['Bookmark']>, ParentType, ContextType, RequireFields<QuerybookmarksArgs, 'skip' | 'first' | 'subgraphError'>>;
+  profile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<QueryprofileArgs, 'id' | 'subgraphError'>>;
+  profiles?: Resolver<Array<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<QueryprofilesArgs, 'skip' | 'first' | 'subgraphError'>>;
   tag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<QuerytagArgs, 'id' | 'subgraphError'>>;
   tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<QuerytagsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  tipped?: Resolver<Maybe<ResolversTypes['Tipped']>, ParentType, ContextType, RequireFields<QuerytippedArgs, 'id' | 'subgraphError'>>;
-  tippeds?: Resolver<Array<ResolversTypes['Tipped']>, ParentType, ContextType, RequireFields<QuerytippedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  unfollowed?: Resolver<Maybe<ResolversTypes['Unfollowed']>, ParentType, ContextType, RequireFields<QueryunfollowedArgs, 'id' | 'subgraphError'>>;
-  unfolloweds?: Resolver<Array<ResolversTypes['Unfollowed']>, ParentType, ContextType, RequireFields<QueryunfollowedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  tagSummary?: Resolver<Maybe<ResolversTypes['TagSummary']>, ParentType, ContextType, RequireFields<QuerytagSummaryArgs, 'id' | 'subgraphError'>>;
+  tagSummaries?: Resolver<Array<ResolversTypes['TagSummary']>, ParentType, ContextType, RequireFields<QuerytagSummariesArgs, 'skip' | 'first' | 'subgraphError'>>;
+  tip?: Resolver<Maybe<ResolversTypes['Tip']>, ParentType, ContextType, RequireFields<QuerytipArgs, 'id' | 'subgraphError'>>;
+  tips?: Resolver<Array<ResolversTypes['Tip']>, ParentType, ContextType, RequireFields<QuerytipsArgs, 'skip' | 'first' | 'subgraphError'>>;
   _meta?: Resolver<Maybe<ResolversTypes['_Meta_']>, ParentType, ContextType, Partial<Query_metaArgs>>;
 }>;
 
@@ -1685,25 +1525,22 @@ export type TagResolvers<ContextType = MeshContext, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type TagSummaryResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['TagSummary'] = ResolversParentTypes['TagSummary']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  lastUsed?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export interface TimestampScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Timestamp'], any> {
   name: 'Timestamp';
 }
 
-export type TippedResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Tipped'] = ResolversParentTypes['Tipped']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
+export type TipResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Tip'] = ResolversParentTypes['Tip']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   from?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   to?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   amount?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  blockNumber?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  blockTimestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  transactionHash?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type UnfollowedResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Unfollowed'] = ResolversParentTypes['Unfollowed']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  follower?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  following?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   blockNumber?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   blockTimestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   transactionHash?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
@@ -1728,21 +1565,19 @@ export type _Meta_Resolvers<ContextType = MeshContext, ParentType extends Resolv
 export type Resolvers<ContextType = MeshContext> = ResolversObject<{
   BigDecimal?: GraphQLScalarType;
   BigInt?: GraphQLScalarType;
+  Bookmark?: BookmarkResolvers<ContextType>;
   Bytes?: GraphQLScalarType;
-  CommentAdded?: CommentAddedResolvers<ContextType>;
-  CommentDeleted?: CommentDeletedResolvers<ContextType>;
-  Followed?: FollowedResolvers<ContextType>;
+  Comment?: CommentResolvers<ContextType>;
+  Follow?: FollowResolvers<ContextType>;
   Int8?: GraphQLScalarType;
   Like?: LikeResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
-  PostBookmarked?: PostBookmarkedResolvers<ContextType>;
-  PostUnbookmarked?: PostUnbookmarkedResolvers<ContextType>;
-  ProfileUpdated?: ProfileUpdatedResolvers<ContextType>;
+  Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Tag?: TagResolvers<ContextType>;
+  TagSummary?: TagSummaryResolvers<ContextType>;
   Timestamp?: GraphQLScalarType;
-  Tipped?: TippedResolvers<ContextType>;
-  Unfollowed?: UnfollowedResolvers<ContextType>;
+  Tip?: TipResolvers<ContextType>;
   _Block_?: _Block_Resolvers<ContextType>;
   _Meta_?: _Meta_Resolvers<ContextType>;
 }>;
@@ -1799,7 +1634,7 @@ const mycontentSepoliaTransforms = [];
 const additionalTypeDefs = [] as any[];
 const mycontentSepoliaHandler = new GraphqlHandler({
               name: "mycontent-sepolia",
-              config: {"endpoint":"https://api.studio.thegraph.com/query/114177/mycontent-subgraph/version/latest"},
+              config: {"endpoint":"https://api.studio.thegraph.com/query/114177/my-content-subgraph/version/latest"},
               baseDir,
               cache,
               pubsub,
@@ -1820,9 +1655,25 @@ const merger = new(BareMerger as any)({
         store: rootStore.child('bareMerger')
       })
 const documentHashMap = {
-        "edc653a4c2f3b84f3e5c926f3991a3e82fdb3e73f7bb39bc00c9c5cc0831a429": GetPostByIdDocument,
-"edc653a4c2f3b84f3e5c926f3991a3e82fdb3e73f7bb39bc00c9c5cc0831a429": GetPostsByAuthorDocument,
-"edc653a4c2f3b84f3e5c926f3991a3e82fdb3e73f7bb39bc00c9c5cc0831a429": GetPostsDocument
+        "d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPostByIdDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPostsByAuthorDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPostsDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetManyPostsDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetMostLikedPostsDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": FilterMostLikedPostsByTagDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": FilterMostLikedPostsDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPopularTagsDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": FilterPostsByTagDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": FilterPostsDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetCommentsByUserDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetTotalCommentsByUserDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetFollowersDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetIsFollowingDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPostLikedDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetTotalLikesByUserDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPostBookmarkedDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetTotalBookmarksByUserDocument,
+"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPostsBookmarkedByUserDocument
       }
 additionalEnvelopPlugins.push(usePersistedOperations({
         getPersistedOperation(key) {
@@ -1849,21 +1700,133 @@ additionalEnvelopPlugins.push(usePersistedOperations({
           return printWithCache(GetPostByIdDocument);
         },
         location: 'GetPostByIdDocument.graphql',
-        sha256Hash: 'edc653a4c2f3b84f3e5c926f3991a3e82fdb3e73f7bb39bc00c9c5cc0831a429'
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
       },{
         document: GetPostsByAuthorDocument,
         get rawSDL() {
           return printWithCache(GetPostsByAuthorDocument);
         },
         location: 'GetPostsByAuthorDocument.graphql',
-        sha256Hash: 'edc653a4c2f3b84f3e5c926f3991a3e82fdb3e73f7bb39bc00c9c5cc0831a429'
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
       },{
         document: GetPostsDocument,
         get rawSDL() {
           return printWithCache(GetPostsDocument);
         },
         location: 'GetPostsDocument.graphql',
-        sha256Hash: 'edc653a4c2f3b84f3e5c926f3991a3e82fdb3e73f7bb39bc00c9c5cc0831a429'
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: GetManyPostsDocument,
+        get rawSDL() {
+          return printWithCache(GetManyPostsDocument);
+        },
+        location: 'GetManyPostsDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: GetMostLikedPostsDocument,
+        get rawSDL() {
+          return printWithCache(GetMostLikedPostsDocument);
+        },
+        location: 'GetMostLikedPostsDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: FilterMostLikedPostsByTagDocument,
+        get rawSDL() {
+          return printWithCache(FilterMostLikedPostsByTagDocument);
+        },
+        location: 'FilterMostLikedPostsByTagDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: FilterMostLikedPostsDocument,
+        get rawSDL() {
+          return printWithCache(FilterMostLikedPostsDocument);
+        },
+        location: 'FilterMostLikedPostsDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: GetPopularTagsDocument,
+        get rawSDL() {
+          return printWithCache(GetPopularTagsDocument);
+        },
+        location: 'GetPopularTagsDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: FilterPostsByTagDocument,
+        get rawSDL() {
+          return printWithCache(FilterPostsByTagDocument);
+        },
+        location: 'FilterPostsByTagDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: FilterPostsDocument,
+        get rawSDL() {
+          return printWithCache(FilterPostsDocument);
+        },
+        location: 'FilterPostsDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: GetCommentsByUserDocument,
+        get rawSDL() {
+          return printWithCache(GetCommentsByUserDocument);
+        },
+        location: 'GetCommentsByUserDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: GetTotalCommentsByUserDocument,
+        get rawSDL() {
+          return printWithCache(GetTotalCommentsByUserDocument);
+        },
+        location: 'GetTotalCommentsByUserDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: GetFollowersDocument,
+        get rawSDL() {
+          return printWithCache(GetFollowersDocument);
+        },
+        location: 'GetFollowersDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: GetIsFollowingDocument,
+        get rawSDL() {
+          return printWithCache(GetIsFollowingDocument);
+        },
+        location: 'GetIsFollowingDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: GetPostLikedDocument,
+        get rawSDL() {
+          return printWithCache(GetPostLikedDocument);
+        },
+        location: 'GetPostLikedDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: GetTotalLikesByUserDocument,
+        get rawSDL() {
+          return printWithCache(GetTotalLikesByUserDocument);
+        },
+        location: 'GetTotalLikesByUserDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: GetPostBookmarkedDocument,
+        get rawSDL() {
+          return printWithCache(GetPostBookmarkedDocument);
+        },
+        location: 'GetPostBookmarkedDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: GetTotalBookmarksByUserDocument,
+        get rawSDL() {
+          return printWithCache(GetTotalBookmarksByUserDocument);
+        },
+        location: 'GetTotalBookmarksByUserDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+      },{
+        document: GetPostsBookmarkedByUserDocument,
+        get rawSDL() {
+          return printWithCache(GetPostsBookmarkedByUserDocument);
+        },
+        location: 'GetPostsBookmarkedByUserDocument.graphql',
+        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
       }
     ];
     },
@@ -1923,19 +1886,179 @@ export type GetPostByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetPostByIdQuery = { post?: Maybe<Pick<Post, 'id' | 'author' | 'cid'>> };
+export type GetPostByIdQuery = { post?: Maybe<(
+    Pick<Post, 'id' | 'author' | 'cid' | 'likes' | 'bookmarks'>
+    & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter' | 'blockTimestamp'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
+  )> };
 
 export type GetPostsByAuthorQueryVariables = Exact<{
   author: Scalars['Bytes']['input'];
 }>;
 
 
-export type GetPostsByAuthorQuery = { posts: Array<Pick<Post, 'id' | 'author' | 'cid'>> };
+export type GetPostsByAuthorQuery = { posts: Array<(
+    Pick<Post, 'id' | 'author' | 'cid' | 'likes' | 'bookmarks'>
+    & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
+  )> };
 
 export type GetPostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPostsQuery = { posts: Array<Pick<Post, 'id' | 'author' | 'cid'>> };
+export type GetPostsQuery = { posts: Array<(
+    Pick<Post, 'id' | 'author' | 'cid' | 'likes' | 'bookmarks'>
+    & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
+  )> };
+
+export type GetManyPostsQueryVariables = Exact<{
+  ids?: InputMaybe<Array<Scalars['ID']['input']> | Scalars['ID']['input']>;
+}>;
+
+
+export type GetManyPostsQuery = { posts: Array<(
+    Pick<Post, 'id' | 'author' | 'cid' | 'likes' | 'bookmarks'>
+    & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
+  )> };
+
+export type GetMostLikedPostsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMostLikedPostsQuery = { posts: Array<(
+    Pick<Post, 'id' | 'author' | 'cid' | 'title' | 'likes' | 'bookmarks'>
+    & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
+  )> };
+
+export type FilterMostLikedPostsByTagQueryVariables = Exact<{
+  tag: Scalars['String']['input'];
+}>;
+
+
+export type FilterMostLikedPostsByTagQuery = { posts: Array<(
+    Pick<Post, 'id' | 'author' | 'cid' | 'title' | 'likes' | 'bookmarks'>
+    & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
+  )> };
+
+export type FilterMostLikedPostsQueryVariables = Exact<{
+  title: Scalars['String']['input'];
+  author: Scalars['String']['input'];
+  tag: Scalars['String']['input'];
+}>;
+
+
+export type FilterMostLikedPostsQuery = { posts: Array<(
+    Pick<Post, 'id' | 'author' | 'cid' | 'title' | 'likes' | 'bookmarks'>
+    & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
+  )> };
+
+export type GetPopularTagsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPopularTagsQuery = { tagSummaries: Array<Pick<TagSummary, 'id' | 'count'>> };
+
+export type FilterPostsByTagQueryVariables = Exact<{
+  tag: Scalars['String']['input'];
+}>;
+
+
+export type FilterPostsByTagQuery = { posts: Array<(
+    Pick<Post, 'id' | 'author' | 'cid' | 'title' | 'likes' | 'bookmarks'>
+    & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
+  )> };
+
+export type FilterPostsQueryVariables = Exact<{
+  title: Scalars['String']['input'];
+  author: Scalars['String']['input'];
+  tag: Scalars['String']['input'];
+}>;
+
+
+export type FilterPostsQuery = { posts: Array<(
+    Pick<Post, 'id' | 'author' | 'cid' | 'title' | 'likes' | 'bookmarks'>
+    & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
+  )> };
+
+export type GetCommentsByUserQueryVariables = Exact<{
+  user: Scalars['Bytes']['input'];
+}>;
+
+
+export type GetCommentsByUserQuery = { comments: Array<(
+    Pick<Comment, 'id' | 'cid' | 'commenter'>
+    & { post: Pick<Post, 'id' | 'author' | 'title'> }
+  )> };
+
+export type GetTotalCommentsByUserQueryVariables = Exact<{
+  user: Scalars['Bytes']['input'];
+}>;
+
+
+export type GetTotalCommentsByUserQuery = { comments: Array<(
+    Pick<Comment, 'id' | 'commenter'>
+    & { post: Pick<Post, 'id'> }
+  )> };
+
+export type GetFollowersQueryVariables = Exact<{
+  user: Scalars['Bytes']['input'];
+}>;
+
+
+export type GetFollowersQuery = { followers: Array<Pick<Follow, 'id' | 'follower' | 'following'>>, following: Array<Pick<Follow, 'id' | 'follower' | 'following'>> };
+
+export type GetIsFollowingQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetIsFollowingQuery = { isFollowing?: Maybe<Pick<Follow, 'id' | 'follower' | 'following'>> };
+
+export type GetPostLikedQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetPostLikedQuery = { like?: Maybe<(
+    Pick<Like, 'user'>
+    & { post: Pick<Post, 'id'> }
+  )> };
+
+export type GetTotalLikesByUserQueryVariables = Exact<{
+  user: Scalars['Bytes']['input'];
+}>;
+
+
+export type GetTotalLikesByUserQuery = { likes: Array<(
+    Pick<Like, 'id' | 'user'>
+    & { post: Pick<Post, 'id'> }
+  )> };
+
+export type GetPostBookmarkedQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetPostBookmarkedQuery = { bookmark?: Maybe<(
+    Pick<Bookmark, 'user'>
+    & { post: Pick<Post, 'id'> }
+  )> };
+
+export type GetTotalBookmarksByUserQueryVariables = Exact<{
+  user: Scalars['Bytes']['input'];
+}>;
+
+
+export type GetTotalBookmarksByUserQuery = { bookmarks: Array<(
+    Pick<Bookmark, 'user'>
+    & { post: Pick<Post, 'id'> }
+  )> };
+
+export type GetPostsBookmarkedByUserQueryVariables = Exact<{
+  user: Scalars['Bytes']['input'];
+}>;
+
+
+export type GetPostsBookmarkedByUserQuery = { bookmarks: Array<(
+    Pick<Bookmark, 'user'>
+    & { post: Pick<Post, 'id'> }
+  )> };
 
 
 export const GetPostByIdDocument = gql`
@@ -1944,6 +2067,18 @@ export const GetPostByIdDocument = gql`
     id
     author
     cid
+    likes
+    bookmarks
+    comments(orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      cid
+      commenter
+      blockTimestamp
+    }
+    tags {
+      id
+      tag
+    }
   }
 }
     ` as unknown as DocumentNode<GetPostByIdQuery, GetPostByIdQueryVariables>;
@@ -1958,6 +2093,17 @@ export const GetPostsByAuthorDocument = gql`
     id
     author
     cid
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
   }
 }
     ` as unknown as DocumentNode<GetPostsByAuthorQuery, GetPostsByAuthorQueryVariables>;
@@ -1972,9 +2118,303 @@ export const GetPostsDocument = gql`
     id
     author
     cid
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
   }
 }
     ` as unknown as DocumentNode<GetPostsQuery, GetPostsQueryVariables>;
+export const GetManyPostsDocument = gql`
+    query GetManyPosts($ids: [ID!]) {
+  posts(
+    orderBy: blockTimestamp
+    orderDirection: desc
+    first: 6
+    where: {isDeleted: false, id_in: $ids}
+  ) {
+    id
+    author
+    cid
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+    ` as unknown as DocumentNode<GetManyPostsQuery, GetManyPostsQueryVariables>;
+export const GetMostLikedPostsDocument = gql`
+    query GetMostLikedPosts {
+  posts(orderBy: likes, orderDirection: desc, first: 6, where: {isDeleted: false}) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+    ` as unknown as DocumentNode<GetMostLikedPostsQuery, GetMostLikedPostsQueryVariables>;
+export const FilterMostLikedPostsByTagDocument = gql`
+    query FilterMostLikedPostsByTag($tag: String!) {
+  posts(
+    orderBy: likes
+    orderDirection: desc
+    first: 6
+    where: {isDeleted: false, tags_: {tag_contains: $tag}}
+  ) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+    ` as unknown as DocumentNode<FilterMostLikedPostsByTagQuery, FilterMostLikedPostsByTagQueryVariables>;
+export const FilterMostLikedPostsDocument = gql`
+    query FilterMostLikedPosts($title: String!, $author: String!, $tag: String!) {
+  posts(
+    orderBy: likes
+    orderDirection: desc
+    first: 6
+    where: {and: [{isDeleted: false}, {or: [{title_contains_nocase: $title}, {tags_: {tag_contains: $tag}}, {authorString_contains_nocase: $author}]}]}
+  ) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+    ` as unknown as DocumentNode<FilterMostLikedPostsQuery, FilterMostLikedPostsQueryVariables>;
+export const GetPopularTagsDocument = gql`
+    query GetPopularTags {
+  tagSummaries(orderBy: count, orderDirection: desc, first: 10) {
+    id
+    count
+  }
+}
+    ` as unknown as DocumentNode<GetPopularTagsQuery, GetPopularTagsQueryVariables>;
+export const FilterPostsByTagDocument = gql`
+    query FilterPostsByTag($tag: String!) {
+  posts(
+    orderBy: blockTimestamp
+    orderDirection: desc
+    first: 6
+    where: {isDeleted: false, tags_: {tag_contains: $tag}}
+  ) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+    ` as unknown as DocumentNode<FilterPostsByTagQuery, FilterPostsByTagQueryVariables>;
+export const FilterPostsDocument = gql`
+    query FilterPosts($title: String!, $author: String!, $tag: String!) {
+  posts(
+    orderBy: blockTimestamp
+    orderDirection: desc
+    first: 6
+    where: {and: [{isDeleted: false}, {or: [{title_contains_nocase: $title}, {tags_: {tag_contains: $tag}}, {authorString_contains_nocase: $author}]}]}
+  ) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+    ` as unknown as DocumentNode<FilterPostsQuery, FilterPostsQueryVariables>;
+export const GetCommentsByUserDocument = gql`
+    query GetCommentsByUser($user: Bytes!) {
+  comments(
+    orderBy: blockTimestamp
+    orderDirection: desc
+    first: 6
+    where: {commenter: $user}
+  ) {
+    id
+    cid
+    commenter
+    post {
+      id
+      author
+      title
+    }
+  }
+}
+    ` as unknown as DocumentNode<GetCommentsByUserQuery, GetCommentsByUserQueryVariables>;
+export const GetTotalCommentsByUserDocument = gql`
+    query GetTotalCommentsByUser($user: Bytes!) {
+  comments(where: {commenter: $user}) {
+    id
+    commenter
+    post {
+      id
+    }
+  }
+}
+    ` as unknown as DocumentNode<GetTotalCommentsByUserQuery, GetTotalCommentsByUserQueryVariables>;
+export const GetFollowersDocument = gql`
+    query GetFollowers($user: Bytes!) {
+  followers: follows(where: {following: $user}) {
+    id
+    follower
+    following
+  }
+  following: follows(where: {follower: $user}) {
+    id
+    follower
+    following
+  }
+}
+    ` as unknown as DocumentNode<GetFollowersQuery, GetFollowersQueryVariables>;
+export const GetIsFollowingDocument = gql`
+    query GetIsFollowing($id: ID!) {
+  isFollowing: follow(id: $id) {
+    id
+    follower
+    following
+  }
+}
+    ` as unknown as DocumentNode<GetIsFollowingQuery, GetIsFollowingQueryVariables>;
+export const GetPostLikedDocument = gql`
+    query GetPostLiked($id: ID!) {
+  like(id: $id) {
+    user
+    post {
+      id
+    }
+  }
+}
+    ` as unknown as DocumentNode<GetPostLikedQuery, GetPostLikedQueryVariables>;
+export const GetTotalLikesByUserDocument = gql`
+    query GetTotalLikesByUser($user: Bytes!) {
+  likes(where: {user: $user}) {
+    id
+    user
+    post {
+      id
+    }
+  }
+}
+    ` as unknown as DocumentNode<GetTotalLikesByUserQuery, GetTotalLikesByUserQueryVariables>;
+export const GetPostBookmarkedDocument = gql`
+    query GetPostBookmarked($id: ID!) {
+  bookmark(id: $id) {
+    user
+    post {
+      id
+    }
+  }
+}
+    ` as unknown as DocumentNode<GetPostBookmarkedQuery, GetPostBookmarkedQueryVariables>;
+export const GetTotalBookmarksByUserDocument = gql`
+    query GetTotalBookmarksByUser($user: Bytes!) {
+  bookmarks(where: {user: $user}) {
+    user
+    post {
+      id
+    }
+  }
+}
+    ` as unknown as DocumentNode<GetTotalBookmarksByUserQuery, GetTotalBookmarksByUserQueryVariables>;
+export const GetPostsBookmarkedByUserDocument = gql`
+    query GetPostsBookmarkedByUser($user: Bytes!) {
+  bookmarks(
+    orderBy: timestamp
+    orderDirection: desc
+    first: 6
+    where: {user: $user}
+  ) {
+    user
+    post {
+      id
+    }
+  }
+}
+    ` as unknown as DocumentNode<GetPostsBookmarkedByUserQuery, GetPostsBookmarkedByUserQueryVariables>;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1990,6 +2430,54 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     },
     GetPosts(variables?: GetPostsQueryVariables, options?: C): Promise<GetPostsQuery> {
       return requester<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, variables, options) as Promise<GetPostsQuery>;
+    },
+    GetManyPosts(variables?: GetManyPostsQueryVariables, options?: C): Promise<GetManyPostsQuery> {
+      return requester<GetManyPostsQuery, GetManyPostsQueryVariables>(GetManyPostsDocument, variables, options) as Promise<GetManyPostsQuery>;
+    },
+    GetMostLikedPosts(variables?: GetMostLikedPostsQueryVariables, options?: C): Promise<GetMostLikedPostsQuery> {
+      return requester<GetMostLikedPostsQuery, GetMostLikedPostsQueryVariables>(GetMostLikedPostsDocument, variables, options) as Promise<GetMostLikedPostsQuery>;
+    },
+    FilterMostLikedPostsByTag(variables: FilterMostLikedPostsByTagQueryVariables, options?: C): Promise<FilterMostLikedPostsByTagQuery> {
+      return requester<FilterMostLikedPostsByTagQuery, FilterMostLikedPostsByTagQueryVariables>(FilterMostLikedPostsByTagDocument, variables, options) as Promise<FilterMostLikedPostsByTagQuery>;
+    },
+    FilterMostLikedPosts(variables: FilterMostLikedPostsQueryVariables, options?: C): Promise<FilterMostLikedPostsQuery> {
+      return requester<FilterMostLikedPostsQuery, FilterMostLikedPostsQueryVariables>(FilterMostLikedPostsDocument, variables, options) as Promise<FilterMostLikedPostsQuery>;
+    },
+    GetPopularTags(variables?: GetPopularTagsQueryVariables, options?: C): Promise<GetPopularTagsQuery> {
+      return requester<GetPopularTagsQuery, GetPopularTagsQueryVariables>(GetPopularTagsDocument, variables, options) as Promise<GetPopularTagsQuery>;
+    },
+    FilterPostsByTag(variables: FilterPostsByTagQueryVariables, options?: C): Promise<FilterPostsByTagQuery> {
+      return requester<FilterPostsByTagQuery, FilterPostsByTagQueryVariables>(FilterPostsByTagDocument, variables, options) as Promise<FilterPostsByTagQuery>;
+    },
+    FilterPosts(variables: FilterPostsQueryVariables, options?: C): Promise<FilterPostsQuery> {
+      return requester<FilterPostsQuery, FilterPostsQueryVariables>(FilterPostsDocument, variables, options) as Promise<FilterPostsQuery>;
+    },
+    GetCommentsByUser(variables: GetCommentsByUserQueryVariables, options?: C): Promise<GetCommentsByUserQuery> {
+      return requester<GetCommentsByUserQuery, GetCommentsByUserQueryVariables>(GetCommentsByUserDocument, variables, options) as Promise<GetCommentsByUserQuery>;
+    },
+    GetTotalCommentsByUser(variables: GetTotalCommentsByUserQueryVariables, options?: C): Promise<GetTotalCommentsByUserQuery> {
+      return requester<GetTotalCommentsByUserQuery, GetTotalCommentsByUserQueryVariables>(GetTotalCommentsByUserDocument, variables, options) as Promise<GetTotalCommentsByUserQuery>;
+    },
+    GetFollowers(variables: GetFollowersQueryVariables, options?: C): Promise<GetFollowersQuery> {
+      return requester<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, variables, options) as Promise<GetFollowersQuery>;
+    },
+    GetIsFollowing(variables: GetIsFollowingQueryVariables, options?: C): Promise<GetIsFollowingQuery> {
+      return requester<GetIsFollowingQuery, GetIsFollowingQueryVariables>(GetIsFollowingDocument, variables, options) as Promise<GetIsFollowingQuery>;
+    },
+    GetPostLiked(variables: GetPostLikedQueryVariables, options?: C): Promise<GetPostLikedQuery> {
+      return requester<GetPostLikedQuery, GetPostLikedQueryVariables>(GetPostLikedDocument, variables, options) as Promise<GetPostLikedQuery>;
+    },
+    GetTotalLikesByUser(variables: GetTotalLikesByUserQueryVariables, options?: C): Promise<GetTotalLikesByUserQuery> {
+      return requester<GetTotalLikesByUserQuery, GetTotalLikesByUserQueryVariables>(GetTotalLikesByUserDocument, variables, options) as Promise<GetTotalLikesByUserQuery>;
+    },
+    GetPostBookmarked(variables: GetPostBookmarkedQueryVariables, options?: C): Promise<GetPostBookmarkedQuery> {
+      return requester<GetPostBookmarkedQuery, GetPostBookmarkedQueryVariables>(GetPostBookmarkedDocument, variables, options) as Promise<GetPostBookmarkedQuery>;
+    },
+    GetTotalBookmarksByUser(variables: GetTotalBookmarksByUserQueryVariables, options?: C): Promise<GetTotalBookmarksByUserQuery> {
+      return requester<GetTotalBookmarksByUserQuery, GetTotalBookmarksByUserQueryVariables>(GetTotalBookmarksByUserDocument, variables, options) as Promise<GetTotalBookmarksByUserQuery>;
+    },
+    GetPostsBookmarkedByUser(variables: GetPostsBookmarkedByUserQueryVariables, options?: C): Promise<GetPostsBookmarkedByUserQuery> {
+      return requester<GetPostsBookmarkedByUserQuery, GetPostsBookmarkedByUserQueryVariables>(GetPostsBookmarkedByUserDocument, variables, options) as Promise<GetPostsBookmarkedByUserQuery>;
     }
   };
 }

@@ -5,10 +5,12 @@ import { Pages, ToastType } from "../utils/enums"
 import { syncLocalDrafts } from "../utils/functions"
 import { useToast } from "../providers/ToastProvider"
 import { useAccount } from "wagmi"
-import { execute, GetPostsByAuthorDocument } from "../../.graphclient"
+import { execute, GetPostsByAuthorDocument, 
+  GetTotalBookmarksByUserDocument, GetTotalCommentsByUserDocument, 
+  GetTotalLikesByUserDocument } from "../../.graphclient"
 import { useEffect, useRef, useState } from "react"
 import { populatePosts } from "../utils/pinata"
-import { PopulatedPost } from "../utils/types"
+import { PopulatedPost, PostAnalytics } from "../utils/types"
 import DraftItem from "../components/DraftItem"
 import PostItem from "../components/PostItem"
 
@@ -19,6 +21,7 @@ function Dashboard() {
   const account = useAccount()
   const { addToast, removeToast } = useToast()
   const [posts, setPosts] = useState<PopulatedPost[]>()
+  const [postAnalytics, setPostAnalytics] = useState<PostAnalytics>()
 
   const loadingToastId = useRef<number | null>(null)
 
@@ -27,16 +30,37 @@ function Dashboard() {
       try {
         if (loadingToastId.current) {
           removeToast(loadingToastId.current)
+          loadingToastId.current = null
         }
 
         loadingToastId.current = 
           addToast("Loading posts...", { type: ToastType.INFO })
+        const [totalLikesResult, totalCommentsResult, totalBookmarksResult] = 
+        await Promise.all([
+          execute(GetTotalLikesByUserDocument, { user: account.address! }),
+          execute(GetTotalCommentsByUserDocument, { user: account.address! }),
+          execute(GetTotalBookmarksByUserDocument, { user: account.address! })
+        ])
+
+        if (totalLikesResult.data && totalCommentsResult.data &&
+          totalBookmarksResult.data
+        ) {
+          if (totalLikesResult.data.likes && totalCommentsResult.data.comments &&
+            totalBookmarksResult.data.bookmarks
+          ) {
+            setPostAnalytics({
+              likes: totalLikesResult.data.likes.length,
+              comments: totalCommentsResult.data.comments.length,
+              bookmarks: totalBookmarksResult.data.bookmarks.length
+            })
+          }
+        }
+
         const result = await execute(GetPostsByAuthorDocument, { author: account.address! })
         if (result.data && result.data.posts) {
           const [populatedPosts] = await Promise.all([
             populatePosts(result.data.posts)
           ])
-          console.log(populatedPosts)
           setPosts(populatedPosts)
 
           if (loadingToastId.current) {
@@ -83,13 +107,11 @@ function Dashboard() {
                 <PostItem post={post} key={post.id} />
               ))}
             </div>
-            <div className="text-end">
+            {posts.length >= 6 && <div className="text-end">
               <button onClick={() => navigate(`${Pages.POSTS}`)} 
                 className="button">See More</button>
-            </div>
+            </div>}
           </div> : <div className="text-lg md:text-base text-secondary-foreground">No posts found</div>}
-          
-              
         </div>
         <div className="space-y-4">
           <div className="flex justify-between">
@@ -118,7 +140,23 @@ function Dashboard() {
             ))}
           </div>
         </div>}
-        <div className="space-y-4"></div>
+        <div className="space-y-4">
+          <h1 className="text-2xl font-semibold">Post Analytics</h1>
+          <div className="grid md:grid-cols-3 gap-2">
+            <div>
+              <p className="text-secondary-foreground">Total Likes</p>
+              <span className="text-xl">{postAnalytics?.likes || 0}</span>
+            </div>
+            <div>
+              <p className="text-secondary-foreground">Total Replies</p>
+              <span className="text-xl">{postAnalytics?.comments || 0}</span>
+            </div>
+            <div>
+              <p className="text-secondary-foreground">Total Bookmarks</p>
+              <span className="text-xl">{postAnalytics?.bookmarks || 0}</span>
+            </div>
+          </div>
+        </div>
         <div className="space-y-4"></div>
         <div className="text-end">
           <button className="button md:w-[25%]">Withdraw</button>

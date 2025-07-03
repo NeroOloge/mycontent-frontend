@@ -1,5 +1,5 @@
 import { PinataSDK, UploadResponse } from "pinata"
-import { PinataComment, PinataPost, PopulatedComment, PostComment, SolidityComment, SolidityPost } from "./types"
+import { PinataComment, PinataPost, SolidityComment, SolidityPost } from "./types"
 import { PINATA_COMMENT_GROUP, PINATA_DRAFT_IMAGE_GROUP, PINATA_POST_GROUP } from "./constants"
 
 export const pinata = new PinataSDK({
@@ -15,7 +15,10 @@ export const populatePosts = async (posts: SolidityPost[]) => {
   const populatedPosts = []
   for (let post of posts) {
     const postJSON = await populatePost(post.cid)
-    populatedPosts.push({...postJSON, cid: post.cid, id: post.id})
+    populatedPosts.push({
+      ...postJSON, cid: post.cid, id: post.id, likes: post.likes,
+      bookmarks: post.bookmarks, comments: post.comments
+    })
   }
   return populatedPosts
 }
@@ -28,21 +31,22 @@ export const populateComments = async (comments: SolidityComment[]) => {
   const populatedComments = []
   for (let comment of comments) {
     const commentJSON = await populateComment(comment)
-    populatedComments.push({...commentJSON, cid: comment.cid})
+    populatedComments.push({ ...commentJSON, id: comment.id, 
+      cid: comment.cid, post: comment.post })
   }
   return populatedComments
 }
 
-export const formatComments = async (populatedComments: PopulatedComment[]) => {
-  const formattedComments: PostComment = {}
-  await Promise.all(populatedComments.map(async (comment) => {
-    const currPostComments = (formattedComments[comment.postCid] || [])
-    const populatedPost = await populatePost(comment.postCid)
-    currPostComments.push({ ...comment, post: populatedPost })
-    formattedComments[comment.postCid] = currPostComments
-  }))
-  return formattedComments
-}
+// export const formatComments = async (populatedComments: PopulatedComment[]) => {
+//   const formattedComments: PostComment = {}
+//   await Promise.all(populatedComments.map(async (comment) => {
+//     const currPostComments = (formattedComments[comment.postCid] || [])
+//     const populatedPost = await populatePost(comment.postCid)
+//     currPostComments.push({ ...comment, post: populatedPost })
+//     formattedComments[comment.postCid] = currPostComments
+//   }))
+//   return formattedComments
+// }
 
 export const uploadPost = async (post: PinataPost, fileName: string): Promise<UploadResponse> => {
   const data = await pinata.upload.public.json(post)
@@ -50,9 +54,9 @@ export const uploadPost = async (post: PinataPost, fileName: string): Promise<Up
   return data
 }
 
-export const uploadComment = async ({ commenter, timestamp, content, postCid }: PinataComment, fileName: string) => {
+export const uploadComment = async ({ commenter, timestamp, content }: PinataComment, fileName: string) => {
   const data = await pinata.upload.public.json({
-    postCid,
+    // postCid,
     commenter,
     timestamp,
     content

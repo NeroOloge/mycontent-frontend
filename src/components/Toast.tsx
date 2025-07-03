@@ -31,7 +31,7 @@ function Toast({ message, type = ToastType.INFO, duration, onClose }: Props) {
   };
 
   return (
-    <div className={`fixed top-4 right-4 z-50 border-l-4 p-4 rounded shadow-lg ${typeStyles[type]}`}>
+    <div className={`z-50 border-l-4 p-4 rounded shadow-lg ${typeStyles[type]}`}>
       <div className="flex items-center">
         <div className="flex-shrink-0">
           {/* Icons for different toast types */}

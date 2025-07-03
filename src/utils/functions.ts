@@ -2,7 +2,7 @@ import { doc, setDoc } from "firebase/firestore"
 import { db, Draft } from "./db"
 import { convertToURL, uploadBase64 } from "./pinata"
 import { firestore } from "./firebase"
-import { Tags } from "./types"
+import { PopulatedComment, PopulatedPost, Tags } from "./types"
 
 const getAMPM = (hour: number) => {
   if (hour === 0) return "AM"
@@ -89,4 +89,17 @@ export const unformatTags = (formattedTags: string[]) => {
 export const appendHash = (tag: string) => {
   if (tag.charAt(0) !== "#") return `#${tag}`
   else return tag
+}
+
+export const sortPosts = (posts: PopulatedPost[], byLikes?: boolean) => {
+  return posts.sort((a, b) => {
+    if (byLikes) {
+      return b.likes - a.likes || Number(b.timestamp) - Number(a.timestamp)
+    }
+    return Number(b.timestamp) - Number(a.timestamp)
+  })
+}
+
+export const sortComments = (comments: PopulatedComment[]) => {
+  return comments.sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
 }
