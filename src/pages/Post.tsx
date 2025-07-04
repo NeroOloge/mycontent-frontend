@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import moment from "moment"
 import { PopulatedComment, PopulatedPost } from "../utils/types"
-import { displayAddress } from "../utils/functions"
+import { displayAddress, isAuthor } from "../utils/functions"
 import Header from "../components/Header"
 import RenderHTML from "../components/RenderHTML"
 import useTagDisplayMap from "../hooks/useTagDisplayMap"
@@ -269,10 +269,6 @@ function Post() {
     })()
   }
 
-  const isAuthor = (author: string) => {
-    return account.address === author
-  }
-
   const isLiked = async () => {
     const result = await execute(GetPostLikedDocument, {
       id: `${account.address?.toLowerCase()}-${params.postId}`
@@ -361,7 +357,7 @@ function Post() {
             </div>
             <div className="flex space-x-2">
               {/* <button className="cursor-pointer" onClick={handleEdit}><Pencil /></button> */}
-              {isAuthor(post.author) && 
+              {isAuthor(account.address!, post.author) && 
               <button className="cursor-pointer" onClick={handleDelete}><Trash /></button>}
             </div>
           </div>
@@ -388,7 +384,7 @@ function Post() {
                   </div>
                   <div className="flex space-x-4">
                     <p>{comment.content}</p>
-                    {isAuthor(comment.commenter) && 
+                    {isAuthor(account.address!, comment.commenter) && 
                     <button id={comment.id} className="cursor-pointer" onClick={handleDeleteComment}><Trash /></button>}
                   </div>
                 </div>

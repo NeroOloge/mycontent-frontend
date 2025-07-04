@@ -53,3 +53,11 @@ export type PostAnalytics = {
   comments: number;
   bookmarks: number;
 }
+
+export type IProfile = {
+  id: string;
+  user: `0x${string}`
+  username: string;
+  bio: string;
+  imageCID: string;
+}

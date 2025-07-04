@@ -1655,25 +1655,26 @@ const merger = new(BareMerger as any)({
         store: rootStore.child('bareMerger')
       })
 const documentHashMap = {
-        "d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPostByIdDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPostsByAuthorDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPostsDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetManyPostsDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetMostLikedPostsDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": FilterMostLikedPostsByTagDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": FilterMostLikedPostsDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPopularTagsDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": FilterPostsByTagDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": FilterPostsDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetCommentsByUserDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetTotalCommentsByUserDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetFollowersDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetIsFollowingDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPostLikedDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetTotalLikesByUserDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPostBookmarkedDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetTotalBookmarksByUserDocument,
-"d3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05": GetPostsBookmarkedByUserDocument
+        "70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPostByIdDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPostsByAuthorDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPostsDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetManyPostsDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetMostLikedPostsDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": FilterMostLikedPostsByTagDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": FilterMostLikedPostsDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPopularTagsDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": FilterPostsByTagDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": FilterPostsDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetCommentsByUserDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetTotalCommentsByUserDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetFollowersDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetIsFollowingDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPostLikedDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetTotalLikesByUserDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPostBookmarkedDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetTotalBookmarksByUserDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPostsBookmarkedByUserDocument,
+"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetProfileDocument
       }
 additionalEnvelopPlugins.push(usePersistedOperations({
         getPersistedOperation(key) {
@@ -1700,133 +1701,140 @@ additionalEnvelopPlugins.push(usePersistedOperations({
           return printWithCache(GetPostByIdDocument);
         },
         location: 'GetPostByIdDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetPostsByAuthorDocument,
         get rawSDL() {
           return printWithCache(GetPostsByAuthorDocument);
         },
         location: 'GetPostsByAuthorDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetPostsDocument,
         get rawSDL() {
           return printWithCache(GetPostsDocument);
         },
         location: 'GetPostsDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetManyPostsDocument,
         get rawSDL() {
           return printWithCache(GetManyPostsDocument);
         },
         location: 'GetManyPostsDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetMostLikedPostsDocument,
         get rawSDL() {
           return printWithCache(GetMostLikedPostsDocument);
         },
         location: 'GetMostLikedPostsDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: FilterMostLikedPostsByTagDocument,
         get rawSDL() {
           return printWithCache(FilterMostLikedPostsByTagDocument);
         },
         location: 'FilterMostLikedPostsByTagDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: FilterMostLikedPostsDocument,
         get rawSDL() {
           return printWithCache(FilterMostLikedPostsDocument);
         },
         location: 'FilterMostLikedPostsDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetPopularTagsDocument,
         get rawSDL() {
           return printWithCache(GetPopularTagsDocument);
         },
         location: 'GetPopularTagsDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: FilterPostsByTagDocument,
         get rawSDL() {
           return printWithCache(FilterPostsByTagDocument);
         },
         location: 'FilterPostsByTagDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: FilterPostsDocument,
         get rawSDL() {
           return printWithCache(FilterPostsDocument);
         },
         location: 'FilterPostsDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetCommentsByUserDocument,
         get rawSDL() {
           return printWithCache(GetCommentsByUserDocument);
         },
         location: 'GetCommentsByUserDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetTotalCommentsByUserDocument,
         get rawSDL() {
           return printWithCache(GetTotalCommentsByUserDocument);
         },
         location: 'GetTotalCommentsByUserDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetFollowersDocument,
         get rawSDL() {
           return printWithCache(GetFollowersDocument);
         },
         location: 'GetFollowersDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetIsFollowingDocument,
         get rawSDL() {
           return printWithCache(GetIsFollowingDocument);
         },
         location: 'GetIsFollowingDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetPostLikedDocument,
         get rawSDL() {
           return printWithCache(GetPostLikedDocument);
         },
         location: 'GetPostLikedDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetTotalLikesByUserDocument,
         get rawSDL() {
           return printWithCache(GetTotalLikesByUserDocument);
         },
         location: 'GetTotalLikesByUserDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetPostBookmarkedDocument,
         get rawSDL() {
           return printWithCache(GetPostBookmarkedDocument);
         },
         location: 'GetPostBookmarkedDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetTotalBookmarksByUserDocument,
         get rawSDL() {
           return printWithCache(GetTotalBookmarksByUserDocument);
         },
         location: 'GetTotalBookmarksByUserDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       },{
         document: GetPostsBookmarkedByUserDocument,
         get rawSDL() {
           return printWithCache(GetPostsBookmarkedByUserDocument);
         },
         location: 'GetPostsBookmarkedByUserDocument.graphql',
-        sha256Hash: 'd3b3a865a457baf9959605e084fc5eb3870fa11a646b1e4a101e264e9ef15f05'
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+      },{
+        document: GetProfileDocument,
+        get rawSDL() {
+          return printWithCache(GetProfileDocument);
+        },
+        location: 'GetProfileDocument.graphql',
+        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
       }
     ];
     },
@@ -2059,6 +2067,13 @@ export type GetPostsBookmarkedByUserQuery = { bookmarks: Array<(
     Pick<Bookmark, 'user'>
     & { post: Pick<Post, 'id'> }
   )> };
+
+export type GetProfileQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetProfileQuery = { profile?: Maybe<Pick<Profile, 'id' | 'user' | 'username' | 'bio' | 'imageCID'>> };
 
 
 export const GetPostByIdDocument = gql`
@@ -2399,6 +2414,18 @@ export const GetPostsBookmarkedByUserDocument = gql`
   }
 }
     ` as unknown as DocumentNode<GetPostsBookmarkedByUserQuery, GetPostsBookmarkedByUserQueryVariables>;
+export const GetProfileDocument = gql`
+    query GetProfile($id: ID!) {
+  profile(id: $id) {
+    id
+    user
+    username
+    bio
+    imageCID
+  }
+}
+    ` as unknown as DocumentNode<GetProfileQuery, GetProfileQueryVariables>;
+
 
 
 
@@ -2478,6 +2505,9 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     },
     GetPostsBookmarkedByUser(variables: GetPostsBookmarkedByUserQueryVariables, options?: C): Promise<GetPostsBookmarkedByUserQuery> {
       return requester<GetPostsBookmarkedByUserQuery, GetPostsBookmarkedByUserQueryVariables>(GetPostsBookmarkedByUserDocument, variables, options) as Promise<GetPostsBookmarkedByUserQuery>;
+    },
+    GetProfile(variables: GetProfileQueryVariables, options?: C): Promise<GetProfileQuery> {
+      return requester<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, variables, options) as Promise<GetProfileQuery>;
     }
   };
 }

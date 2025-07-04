@@ -7,10 +7,10 @@ import { useEffect, useRef, useState } from "react"
 import { useToast } from "../providers/ToastProvider"
 import { Pages, ToastType } from "../utils/enums"
 import { useAccount, useEnsName, useWriteContract } from "wagmi"
-import { displayAddress } from "../utils/functions"
-import { PopulatedComment, PopulatedPost, PostComment, SolidityPost } from "../utils/types";
+import { displayAddress, isAuthor } from "../utils/functions"
+import { PopulatedComment, PopulatedPost, PostComment, IProfile, SolidityPost } from "../utils/types";
 import { populateComments, populatePosts } from "../utils/pinata";
-import { execute, GetCommentsByUserDocument, GetFollowersDocument, GetManyPostsDocument, GetPostsBookmarkedByUserDocument, GetPostsBookmarkedByUserQuery, GetPostsByAuthorDocument } from "../../.graphclient";
+import { execute, GetCommentsByUserDocument, GetFollowersDocument, GetManyPostsDocument, GetPostsBookmarkedByUserDocument, GetPostsBookmarkedByUserQuery, GetPostsByAuthorDocument, GetProfileDocument } from "../../.graphclient";
 import PostItem from "../components/PostItem";
 import Copy from "../icons/Copy";
 import { wagmiContractConfig } from "../utils/contracts";
@@ -28,6 +28,7 @@ function Profile() {
   const [posts, setPosts] = useState<PopulatedPost[]>()
   const [replies, setReplies] = useState<PostComment>({})
   const [repliedPosts, setRepliedPosts] = useState<SolidityPost[]>()
+  const [profile, setProfile] = useState<IProfile>()
   const [followers, setFollowers] = useState<number>()
   const [following, setFollowing] = useState<number>()
   
@@ -52,6 +53,20 @@ function Profile() {
         type: ToastType.SUCCESS, duration: 3000
       })
     }
+
+    (async () => {
+      try {
+        const profileResult = await execute(GetProfileDocument, { id: account.address!.toString() })
+        if (profileResult.data && profileResult.data.profile) {
+          setProfile(profileResult.data.profile)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    })()
+  }, [])
+
+  useEffect(() => {
     (async () => {
       try {
         setPosts([])
@@ -174,10 +189,6 @@ function Profile() {
     setCurrentTab(e.target.id)
   }
 
-  const isAuthor = (author: string) => {
-    return account.address === author
-  }
-
   const handleCopy = () => {
     const author = params.authorAddress || "Anonymous"
     navigator.clipboard.writeText(author)
@@ -199,16 +210,18 @@ function Profile() {
       <Header />
       {account.isConnected && <main className="relative mt-16 flex flex-col items-center mx-auto px-4 space-y-8">
         <p className="md:absolute relative top-0 -right-10 md:right-0">Member since [date]</p>
-        <img src={makeBlockie(params.authorAddress!)} className="image image-profile" />
+        <img src={profile?.imageCID || makeBlockie(params.authorAddress!)} className="image image-profile" />
         <div className="text-center space-y-4">
-          <div>
-            <h1 className="text-4xl">{ensName || "Anonymous"}</h1>
+          <div className="space-y-2">
+            <h1 className="text-4xl">{ensName || profile?.username || "Anonymous"}</h1>
             <p className="flex justify-center space-x-1 items-center">
               <span>{displayAddress(params.authorAddress! as `0x${string}`)}</span>
               <span className='cursor-pointer' onClick={handleCopy}><Copy /></span>
             </p>
           </div>
-          <p title="Click 'Edit Profile' to add a bio and photo" className="text-xl md:text-lg text-secondary-foreground">Enter bio</p>
+          <p title={`${isAuthor(account.address!, params.authorAddress!) 
+          ? "Click 'Edit Profile' to add a bio and photo" : ""}`} 
+          className="text-xl md:text-lg text-secondary-foreground">{profile?.bio || "Enter bio"}</p>
         </div>
         <div className="flex justify-between w-full md:max-w-xs">
           <div className="flex flex-col items-center">
@@ -224,7 +237,9 @@ function Profile() {
             <span className="stats stats-title">following</span>
           </div>
         </div>
-        <button className="button button-dark text-xl">Edit profile</button>
+        {isAuthor(account.address!, params.authorAddress!) ? 
+        <button className="button button-dark text-xl">Edit profile</button> :
+        <button className="button button-dark text-xl">Follow</button>}
         <div ref={tabsContainerRef}
           className="flex justify-between w-full md:max-w-xs">
           <span onClick={switchTabs} id="posts" className={`${styles.tabs} ${styles.tabsActive}`}>Posts</span>
@@ -262,7 +277,7 @@ function Profile() {
                       </div>
                       <div className="flex space-x-4">
                         <p>{comment.content}</p>
-                        {isAuthor(comment.commenter) && 
+                        {isAuthor(account.address!, comment.commenter) && 
                         <button id={comment.id} className="cursor-pointer" onClick={handleDeleteComment}><Trash /></button>}
                       </div>
                     </div>

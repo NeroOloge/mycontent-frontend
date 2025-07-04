@@ -305,3 +305,13 @@ query GetPostsBookmarkedByUser($user: Bytes!) {
     }
   }
 }
+
+query GetProfile($id: ID!) {
+  profile(id: $id) {
+    id
+    user
+    username
+    bio
+    imageCID
+  }
+}

@@ -6,7 +6,7 @@ import { Pages, ToastType } from '../utils/enums';
 import Like from '../icons/Like';
 import Comment from '../icons/Comment';
 import Trash from '../icons/Trash';
-import { displayAddress } from '../utils/functions';
+import { displayAddress, isAuthor } from '../utils/functions';
 import useTagDisplayMap from '../hooks/useTagDisplayMap';
 import { useAccount, useEnsName, useWriteContract } from 'wagmi';
 import { useToast } from '../providers/ToastProvider';
@@ -183,10 +183,6 @@ function PostItem({ post, author }: Props) {
     })
   }
 
-  const isAuthor = (author: string) => {
-    return account.address === author
-  }
-
   const checkFollowing = async (author: string) => {
     const result = await execute(GetIsFollowingDocument, {
       id: `${account.address?.toLowerCase()}-${author.toLowerCase()}`
@@ -276,7 +272,7 @@ function PostItem({ post, author }: Props) {
         <span onClick={handleAuthorClick} className="hover:underline">
           {ensName || displayAddress(post.author)}
         </span>
-        {!isAuthor(post.author) && !isFollowing && <span onClick={handleFollow}><Plus /></span>}
+        {!isAuthor(account.address!, post.author) && !isFollowing && <span onClick={handleFollow}><Plus /></span>}
         <span className='' onClick={handleCopy}><Copy /></span>
       </p>
       <p className="text-sm line-clamp-2 mb-2 flex-grow-0">{post.preview}</p>
@@ -314,7 +310,7 @@ function PostItem({ post, author }: Props) {
         </div>
         <div className="flex space-x-2">
           {/* <button data-id={`${post.id}`} className="cursor-pointer" onClick={handleEdit}><Pencil /></button> */}
-          {isAuthor(post.author) && <button data-id={`${post.id}`} className="cursor-pointer" onClick={handleDelete}><Trash /></button>}
+          {isAuthor(account.address!, post.author) && <button data-id={`${post.id}`} className="cursor-pointer" onClick={handleDelete}><Trash /></button>}
         </div>
       </div>
     </div>
