@@ -1,4 +1,3 @@
-import styles from "../style/Home.module.css"
 import { useEffect, useState, useRef } from "react"
 import { useLocation, useNavigate } from "react-router"
 import Header from "../components/Header"
@@ -123,16 +122,16 @@ function Home() {
   const switchTabs = (e: any) => {
     const tabs = Array.from(tabsContainerRef.current.children)
     tabs.forEach(tab => {
-      tab.className = styles.tabs
+      tab.className = 'tabs-home'
     })
-    e.target.className = `${styles.tabs} ${styles.tabsActive}`
+    e.target.className = `tabs-home tabs-active-home`
     setCurrentTab(e.target.id)
   }
 
   const selectTag = async (e: React.MouseEvent<HTMLSpanElement>) => {
     const tagElements = Array.from(e.currentTarget.parentElement!.children)
     tagElements.forEach(tagElement => {
-      tagElement.className = styles.tags
+      tagElement.className = 'tags-home'
     })
     let result
     let byLikes = false;
@@ -150,7 +149,7 @@ function Home() {
         })
           
     } else {
-      e.currentTarget.className = `${styles.tags} ${styles.tagsActive}`
+      e.currentTarget.className = `tags-home tags-active-home`
       setSelectedTag(e.currentTarget.id)
       if (currentTab === 'popular-posts') {
         result = await execute(FilterMostLikedPostsByTagDocument, {
@@ -198,8 +197,8 @@ function Home() {
           <div className="space-y-4 bg-secondary self-start px-3 py-5 rounded-lg">
             <h2 className="font-semibold text-lg">Category</h2>
             <div className="space-y-3" ref={tabsContainerRef}>
-              <p id="recent-posts" onClick={switchTabs} className={`${styles.tabs} ${styles.tabsActive}`}>Recent Posts</p>
-              <p id="popular-posts" onClick={switchTabs} className={`${styles.tabs}`}>Popular Posts</p>
+              <p id="recent-posts" onClick={switchTabs} className={`tabs-home tabs-active-home`}>Recent Posts</p>
+              <p id="popular-posts" onClick={switchTabs} className={`tabs-home`}>Popular Posts</p>
             </div>
           </div>
           <div className="space-y-4 md:flex-1">
@@ -213,7 +212,7 @@ function Home() {
             </div>
             <div className="flex flex-wrap gap-1 mt-auto">
               {tags.map(tag => 
-                <span onClick={selectTag} id={tag} className={styles.tags} key={tag}>
+                <span onClick={selectTag} id={tag} className='tags-home' key={tag}>
                   {tag}
                 </span>
               )}

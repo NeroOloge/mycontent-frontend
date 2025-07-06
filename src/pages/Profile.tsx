@@ -1,4 +1,3 @@
-import styles from "../style/Profile.module.css"
 import { useLocation, useNavigate, useParams } from "react-router"
 import makeBlockie from 'ethereum-blockies-base64';
 import moment from 'moment'
@@ -183,9 +182,9 @@ function Profile() {
   const switchTabs = (e: any) => {
     const tabs = Array.from(tabsContainerRef.current.children)
     tabs.forEach(tab => {
-      tab.className = `${styles.tabs}`
+      tab.className = `tabs-profile`
     })
-    e.target.className = `${styles.tabs} ${styles.tabsActive}`
+    e.target.className = `tabs-profile tabs-active-profile`
     setCurrentTab(e.target.id)
   }
 
@@ -242,16 +241,16 @@ function Profile() {
         <button className="button button-dark text-xl">Follow</button>}
         <div ref={tabsContainerRef}
           className="flex justify-between w-full md:max-w-xs">
-          <span onClick={switchTabs} id="posts" className={`${styles.tabs} ${styles.tabsActive}`}>Posts</span>
-          <span onClick={switchTabs} id="replies" className={`${styles.tabs}`}>Replies</span>
-          <span onClick={switchTabs} id="bookmarks" className={`${styles.tabs}`}>Bookmarks</span>
+          <span onClick={switchTabs} id="posts" className={`tabs-profile tabs-active-profile`}>Posts</span>
+          <span onClick={switchTabs} id="replies" className={`tabs-profile`}>Replies</span>
+          <span onClick={switchTabs} id="bookmarks" className={`tabs-profile`}>Bookmarks</span>
         </div>
         <div className={currentTab === "posts" ? "visible" : "hidden"}>
           {posts && posts.length > 0 ? <div className="md:grid md:grid-cols-3 md:gap-3 md:items-stretch space-y-3 md:space-y-0">
               {posts.map(post => (
                 <PostItem post={post} key={post.id} />
               ))}
-            </div> : <div className={styles.tabContent}>No posts found</div>}
+            </div> : <div className="tab-content-profile">No posts found</div>}
         </div>
         <div className={currentTab === "replies" ? "visible" : "hidden"}>
           {repliedPosts && repliedPosts.length > 0 ? <div className="space-y-4">
@@ -285,14 +284,14 @@ function Profile() {
                 </div>
               </div>
             )}
-            </div> : <div className={styles.tabContent}>No replies yet</div>}
+            </div> : <div className="tab-content-profile">No replies yet</div>}
         </div>
         <div className={currentTab === "bookmarks" ? "visible" : "hidden"}>
           {posts && posts.length > 0 ? <div className="md:grid md:grid-cols-3 md:gap-3 md:items-stretch space-y-3 md:space-y-0">
               {posts.map(post => (
                 <PostItem post={post} key={post.id} />
               ))}
-            </div> : <div className={styles.tabContent}>No posts bookmarked</div>}
+            </div> : <div className="tab-content-profile">No posts bookmarked</div>}
         </div>
       </main>}
     </>

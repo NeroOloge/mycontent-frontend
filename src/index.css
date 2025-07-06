@@ -104,4 +104,33 @@
       display: inline-block;
     }
   }
+
+  .tabs-profile {
+    @apply text-xl py-2 cursor-pointer text-secondary-foreground
+  hover:text-primary-foreground hover:border-b hover:border-accent;
+  }
+
+  .tabs-active-profile {
+    @apply border-b border-accent text-primary-foreground;
+  }
+  
+  .tab-content-profile {
+    @apply text-lg md:text-base text-secondary-foreground;
+  }
+
+  .tabs-home {
+    @apply text-sm text-secondary-foreground pr-6 cursor-pointer;
+  }
+  
+  .tabs-active-home {
+    @apply text-accent;
+  }
+  
+  .tags-home {
+    @apply cursor-pointer text-xs px-2 py-0.5 bg-secondary text-accent rounded-full;
+  }
+  
+  .tags-active-home {
+    @apply bg-accent text-primary;
+  }
 }
