@@ -272,7 +272,7 @@ function PostItem({ post, author }: Props) {
         <span onClick={handleAuthorClick} className="hover:underline">
           {ensName || displayAddress(post.author)}
         </span>
-        {!isAuthor(account.address!, post.author) && !isFollowing && <span onClick={handleFollow}><Plus /></span>}
+        {!isAuthor(post.author, account.address) && !isFollowing && <span onClick={handleFollow}><Plus /></span>}
         <span className='' onClick={handleCopy}><Copy /></span>
       </p>
       <p className="text-sm line-clamp-2 mb-2 flex-grow-0">{post.preview}</p>
@@ -310,7 +310,7 @@ function PostItem({ post, author }: Props) {
         </div>
         <div className="flex space-x-2">
           {/* <button data-id={`${post.id}`} className="cursor-pointer" onClick={handleEdit}><Pencil /></button> */}
-          {isAuthor(account.address!, post.author) && <button data-id={`${post.id}`} className="cursor-pointer" onClick={handleDelete}><Trash /></button>}
+          {isAuthor(post.author, account.address) && <button data-id={`${post.id}`} className="cursor-pointer" onClick={handleDelete}><Trash /></button>}
         </div>
       </div>
     </div>

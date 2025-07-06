@@ -51,11 +51,15 @@ function Post() {
   
   useEffect(() => {
     (async () => {
-      loadingToastId.current = addToast("Loading post...", 
-        { type: ToastType.INFO })
-      await isLiked()
-      await isBookmarked()
       try {
+        await isLiked()
+        await isBookmarked()
+        if (loadingToastId.current) {
+          removeToast(loadingToastId.current)
+          loadingToastId.current = null
+        }
+        loadingToastId.current = addToast("Loading post...", 
+          { type: ToastType.INFO })
         const result = await execute(GetPostByIdDocument, { id: Number(params.postId) })
         if (result.data && result.data.post) {
           const [populatedPost, populatedComments] = await Promise.all([
@@ -357,7 +361,7 @@ function Post() {
             </div>
             <div className="flex space-x-2">
               {/* <button className="cursor-pointer" onClick={handleEdit}><Pencil /></button> */}
-              {isAuthor(account.address!, post.author) && 
+              {isAuthor(post.author, account.address) && 
               <button className="cursor-pointer" onClick={handleDelete}><Trash /></button>}
             </div>
           </div>
@@ -384,7 +388,7 @@ function Post() {
                   </div>
                   <div className="flex space-x-4">
                     <p>{comment.content}</p>
-                    {isAuthor(account.address!, comment.commenter) && 
+                    {isAuthor(comment.commenter, account.address) && 
                     <button id={comment.id} className="cursor-pointer" onClick={handleDeleteComment}><Trash /></button>}
                   </div>
                 </div>

@@ -104,6 +104,6 @@ export const sortComments = (comments: PopulatedComment[]) => {
   return comments.sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
 }
 
-export const isAuthor = (currentUser: string, author: string) => {
-  return currentUser.toLowerCase() === author.toLowerCase()
+export const isAuthor = (author: string, currentUser?: string) => {
+  return currentUser?.toLowerCase() === author.toLowerCase()
 }

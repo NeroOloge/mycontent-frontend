@@ -219,7 +219,7 @@ function Profile() {
               <span className='cursor-pointer' onClick={handleCopy}><Copy /></span>
             </p>
           </div>
-          <p title={`${isAuthor(account.address!, params.authorAddress!) 
+          <p title={`${isAuthor(params.authorAddress!, account.address) 
           ? "Click 'Edit Profile' to add a bio and photo" : ""}`} 
           className="text-xl md:text-lg text-secondary-foreground">{profile?.bio || "Enter bio"}</p>
         </div>
@@ -237,7 +237,7 @@ function Profile() {
             <span className="stats stats-title">following</span>
           </div>
         </div>
-        {isAuthor(account.address!, params.authorAddress!) ? 
+        {isAuthor(params.authorAddress!, account.address!) ? 
         <button className="button button-dark text-xl">Edit profile</button> :
         <button className="button button-dark text-xl">Follow</button>}
         <div ref={tabsContainerRef}
@@ -277,7 +277,7 @@ function Profile() {
                       </div>
                       <div className="flex space-x-4">
                         <p>{comment.content}</p>
-                        {isAuthor(account.address!, comment.commenter) && 
+                        {isAuthor(comment.commenter, account.address!) && 
                         <button id={comment.id} className="cursor-pointer" onClick={handleDeleteComment}><Trash /></button>}
                       </div>
                     </div>
