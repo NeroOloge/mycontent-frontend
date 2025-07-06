@@ -1,15 +1,9 @@
-import { useLocation, useNavigate } from "react-router"
-import { Pages } from "../utils/enums"
-
 type Props = {
   onClose: any;
   onConfirm: any;
 }
 
 function SyncDraftsModal({ onClose, onConfirm }: Props) {
-  const navigate = useNavigate()
-  const location = useLocation()
-
   return (
     <div className="p-6">
       <h3 className="text-lg font-medium leading-6 text-gray-900">Welcome</h3>
