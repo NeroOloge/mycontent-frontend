@@ -90,7 +90,7 @@ function Draft() {
       createPost({
         ...wagmiContractConfig,
         functionName: 'createPost',
-        args: [data.cid, entity.tags, entity.imageCIDs, entity.title]
+        args: [data.cid, entity.tags, entity.imageCIDs, entity.title, BigInt(entity.timestamp)]
       }, {
         onSuccess: (data) => {
           addToast("Successfully published post!", {

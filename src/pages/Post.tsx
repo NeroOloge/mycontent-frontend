@@ -250,7 +250,7 @@ function Post() {
       addComment({
         ...wagmiContractConfig,
         functionName: 'addComment',
-        args: [BigInt(Number(params.postId)), data.cid]
+        args: [BigInt(Number(params.postId)), data.cid, BigInt(entity.timestamp)]
       }, {
         onSuccess: () => {
           removeToast(loadingToastId)

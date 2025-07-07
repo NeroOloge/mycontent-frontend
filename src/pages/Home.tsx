@@ -24,6 +24,7 @@ function Home() {
   const successToastId = useRef<number | null>(null)
 
   const tabsContainerRef = useRef<HTMLDivElement>(null!)
+  const postContainerRef = useRef<HTMLDivElement>(null!)
 
   useEffect(() => {
     if (location.state?.loggedIn === false) {
@@ -48,6 +49,18 @@ function Home() {
       })
       navigate(`${Pages.HOME}`, { state: {} })
       return;
+    }
+
+  }, [])
+  
+  useEffect(() => {
+    const postContainer = postContainerRef.current
+    if (postContainer) {
+      const observer = new IntersectionObserver(entries => {
+        console.log(entries)
+      })
+      const lastPost = Array.from(postContainer.children)[postContainer.children.length]
+      observer.observe(lastPost)
     }
   }, [])
 
@@ -220,7 +233,8 @@ function Home() {
             <div 
               className={currentTab === "recent-posts" ? "visible space-y-2" : "hidden"}>
               <h2 className="font-semibold text-xl">Recent Posts</h2>
-              {posts && posts.length > 0 ? <div className="md:grid md:grid-cols-3 md:gap-3 md:items-stretch space-y-3 md:space-y-0">
+              {posts && posts.length > 0 ? <div ref={postContainerRef} 
+                className="md:grid md:grid-cols-3 md:gap-3 md:items-stretch space-y-3 md:space-y-0">
                 {posts.map(post => (
                   <PostItem author={post.author} post={post} key={post.id} />
                 ))}

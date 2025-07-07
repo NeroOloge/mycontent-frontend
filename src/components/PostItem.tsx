@@ -240,7 +240,7 @@ function PostItem({ post, author }: Props) {
     follow({
       ...wagmiContractConfig,
       functionName: 'follow',
-      args: [post.author]
+      args: [post.author, BigInt(Date.now())]
     }, {
       onSuccess: () => {
         addToast("Followed author", {

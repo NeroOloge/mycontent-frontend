@@ -9,7 +9,8 @@ export const wagmiContractConfig = {
         { name: 'cid', type: 'string' }, 
         { name: 'tags', type: 'string[]' },
         { name: 'imageCIDs', type: 'string[]' },
-        { name: 'title', type: 'string' }
+        { name: 'title', type: 'string' },
+        { name: 'timestamp', type: 'uint256' }
       ],
       outputs: [],
     },
@@ -52,7 +53,11 @@ export const wagmiContractConfig = {
       type: 'function',
       name: 'addComment',
       stateMutability: 'nonpayable',
-      inputs: [{ name: 'postId', type: 'uint256' }, { name: 'cid', type: 'string' }],
+      inputs: [
+        { name: 'postId', type: 'uint256' }, 
+        { name: 'cid', type: 'string' },
+        { name: 'timestamp', type: 'uint256' }
+      ],
       outputs: [],
     },
     {
@@ -66,7 +71,7 @@ export const wagmiContractConfig = {
       type: 'function',
       name: 'follow',
       stateMutability: 'nonpayable',
-      inputs: [{ name: 'userToFollow', type: 'address' }],
+      inputs: [{ name: 'userToFollow', type: 'address' }, { name: 'timestamp', type: 'uint256' }],
       outputs: [],
     }
   ]

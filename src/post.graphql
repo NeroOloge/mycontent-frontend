@@ -161,6 +161,13 @@ query GetPopularTags {
   }
 }
 
+query GetTrendingTags($time: BigInt) {
+  tags(where: { blockTimestamp_gt: $time }) {
+    id
+    tag
+  }
+}
+
 query FilterPostsByTag($tag: String!) {
   posts(orderBy: blockTimestamp, orderDirection: desc, first: 6, 
   where: {

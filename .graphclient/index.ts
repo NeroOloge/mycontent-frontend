@@ -1634,7 +1634,7 @@ const mycontentSepoliaTransforms = [];
 const additionalTypeDefs = [] as any[];
 const mycontentSepoliaHandler = new GraphqlHandler({
               name: "mycontent-sepolia",
-              config: {"endpoint":"https://api.studio.thegraph.com/query/114177/my-content-subgraph/version/latest"},
+              config: {"endpoint":"https://api.studio.thegraph.com/query/114177/my-content-subgraph/v0.0.2"},
               baseDir,
               cache,
               pubsub,
@@ -1655,26 +1655,27 @@ const merger = new(BareMerger as any)({
         store: rootStore.child('bareMerger')
       })
 const documentHashMap = {
-        "70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPostByIdDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPostsByAuthorDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPostsDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetManyPostsDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetMostLikedPostsDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": FilterMostLikedPostsByTagDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": FilterMostLikedPostsDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPopularTagsDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": FilterPostsByTagDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": FilterPostsDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetCommentsByUserDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetTotalCommentsByUserDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetFollowersDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetIsFollowingDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPostLikedDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetTotalLikesByUserDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPostBookmarkedDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetTotalBookmarksByUserDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetPostsBookmarkedByUserDocument,
-"70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e": GetProfileDocument
+        "d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPostByIdDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPostsByAuthorDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPostsDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetManyPostsDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetMostLikedPostsDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": FilterMostLikedPostsByTagDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": FilterMostLikedPostsDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPopularTagsDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetTrendingTagsDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": FilterPostsByTagDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": FilterPostsDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetCommentsByUserDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetTotalCommentsByUserDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetFollowersDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetIsFollowingDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPostLikedDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetTotalLikesByUserDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPostBookmarkedDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetTotalBookmarksByUserDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPostsBookmarkedByUserDocument,
+"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetProfileDocument
       }
 additionalEnvelopPlugins.push(usePersistedOperations({
         getPersistedOperation(key) {
@@ -1701,140 +1702,147 @@ additionalEnvelopPlugins.push(usePersistedOperations({
           return printWithCache(GetPostByIdDocument);
         },
         location: 'GetPostByIdDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetPostsByAuthorDocument,
         get rawSDL() {
           return printWithCache(GetPostsByAuthorDocument);
         },
         location: 'GetPostsByAuthorDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetPostsDocument,
         get rawSDL() {
           return printWithCache(GetPostsDocument);
         },
         location: 'GetPostsDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetManyPostsDocument,
         get rawSDL() {
           return printWithCache(GetManyPostsDocument);
         },
         location: 'GetManyPostsDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetMostLikedPostsDocument,
         get rawSDL() {
           return printWithCache(GetMostLikedPostsDocument);
         },
         location: 'GetMostLikedPostsDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: FilterMostLikedPostsByTagDocument,
         get rawSDL() {
           return printWithCache(FilterMostLikedPostsByTagDocument);
         },
         location: 'FilterMostLikedPostsByTagDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: FilterMostLikedPostsDocument,
         get rawSDL() {
           return printWithCache(FilterMostLikedPostsDocument);
         },
         location: 'FilterMostLikedPostsDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetPopularTagsDocument,
         get rawSDL() {
           return printWithCache(GetPopularTagsDocument);
         },
         location: 'GetPopularTagsDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+      },{
+        document: GetTrendingTagsDocument,
+        get rawSDL() {
+          return printWithCache(GetTrendingTagsDocument);
+        },
+        location: 'GetTrendingTagsDocument.graphql',
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: FilterPostsByTagDocument,
         get rawSDL() {
           return printWithCache(FilterPostsByTagDocument);
         },
         location: 'FilterPostsByTagDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: FilterPostsDocument,
         get rawSDL() {
           return printWithCache(FilterPostsDocument);
         },
         location: 'FilterPostsDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetCommentsByUserDocument,
         get rawSDL() {
           return printWithCache(GetCommentsByUserDocument);
         },
         location: 'GetCommentsByUserDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetTotalCommentsByUserDocument,
         get rawSDL() {
           return printWithCache(GetTotalCommentsByUserDocument);
         },
         location: 'GetTotalCommentsByUserDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetFollowersDocument,
         get rawSDL() {
           return printWithCache(GetFollowersDocument);
         },
         location: 'GetFollowersDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetIsFollowingDocument,
         get rawSDL() {
           return printWithCache(GetIsFollowingDocument);
         },
         location: 'GetIsFollowingDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetPostLikedDocument,
         get rawSDL() {
           return printWithCache(GetPostLikedDocument);
         },
         location: 'GetPostLikedDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetTotalLikesByUserDocument,
         get rawSDL() {
           return printWithCache(GetTotalLikesByUserDocument);
         },
         location: 'GetTotalLikesByUserDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetPostBookmarkedDocument,
         get rawSDL() {
           return printWithCache(GetPostBookmarkedDocument);
         },
         location: 'GetPostBookmarkedDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetTotalBookmarksByUserDocument,
         get rawSDL() {
           return printWithCache(GetTotalBookmarksByUserDocument);
         },
         location: 'GetTotalBookmarksByUserDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetPostsBookmarkedByUserDocument,
         get rawSDL() {
           return printWithCache(GetPostsBookmarkedByUserDocument);
         },
         location: 'GetPostsBookmarkedByUserDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       },{
         document: GetProfileDocument,
         get rawSDL() {
           return printWithCache(GetProfileDocument);
         },
         location: 'GetProfileDocument.graphql',
-        sha256Hash: '70752b70e496692c807d55a77c1355793f777974beaaacb527af77e3aa924f0e'
+        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
       }
     ];
     },
@@ -1961,6 +1969,13 @@ export type GetPopularTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetPopularTagsQuery = { tagSummaries: Array<Pick<TagSummary, 'id' | 'count'>> };
+
+export type GetTrendingTagsQueryVariables = Exact<{
+  time?: InputMaybe<Scalars['BigInt']['input']>;
+}>;
+
+
+export type GetTrendingTagsQuery = { tags: Array<Pick<Tag, 'id' | 'tag'>> };
 
 export type FilterPostsByTagQueryVariables = Exact<{
   tag: Scalars['String']['input'];
@@ -2253,6 +2268,14 @@ export const GetPopularTagsDocument = gql`
   }
 }
     ` as unknown as DocumentNode<GetPopularTagsQuery, GetPopularTagsQueryVariables>;
+export const GetTrendingTagsDocument = gql`
+    query GetTrendingTags($time: BigInt) {
+  tags(where: {blockTimestamp_gt: $time}) {
+    id
+    tag
+  }
+}
+    ` as unknown as DocumentNode<GetTrendingTagsQuery, GetTrendingTagsQueryVariables>;
 export const FilterPostsByTagDocument = gql`
     query FilterPostsByTag($tag: String!) {
   posts(
@@ -2446,6 +2469,7 @@ export const GetProfileDocument = gql`
 
 
 
+
 export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
@@ -2472,6 +2496,9 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     },
     GetPopularTags(variables?: GetPopularTagsQueryVariables, options?: C): Promise<GetPopularTagsQuery> {
       return requester<GetPopularTagsQuery, GetPopularTagsQueryVariables>(GetPopularTagsDocument, variables, options) as Promise<GetPopularTagsQuery>;
+    },
+    GetTrendingTags(variables?: GetTrendingTagsQueryVariables, options?: C): Promise<GetTrendingTagsQuery> {
+      return requester<GetTrendingTagsQuery, GetTrendingTagsQueryVariables>(GetTrendingTagsDocument, variables, options) as Promise<GetTrendingTagsQuery>;
     },
     FilterPostsByTag(variables: FilterPostsByTagQueryVariables, options?: C): Promise<FilterPostsByTagQuery> {
       return requester<FilterPostsByTagQuery, FilterPostsByTagQueryVariables>(FilterPostsByTagDocument, variables, options) as Promise<FilterPostsByTagQuery>;

@@ -9,7 +9,7 @@ import { useAccount, useEnsName, useWriteContract } from "wagmi"
 import { displayAddress, isAuthor } from "../utils/functions"
 import { PopulatedComment, PopulatedPost, PostComment, IProfile, SolidityPost } from "../utils/types";
 import { populateComments, populatePosts } from "../utils/pinata";
-import { execute, GetCommentsByUserDocument, GetFollowersDocument, GetManyPostsDocument, GetPostsBookmarkedByUserDocument, GetPostsBookmarkedByUserQuery, GetPostsByAuthorDocument, GetProfileDocument } from "../../.graphclient";
+import { execute, GetCommentsByUserDocument, GetFollowersDocument, GetIsFollowingDocument, GetManyPostsDocument, GetPostsBookmarkedByUserDocument, GetPostsBookmarkedByUserQuery, GetPostsByAuthorDocument, GetProfileDocument } from "../../.graphclient";
 import PostItem from "../components/PostItem";
 import Copy from "../icons/Copy";
 import { wagmiContractConfig } from "../utils/contracts";
@@ -23,6 +23,7 @@ function Profile() {
   const { addToast, removeToast } = useToast()
   const tabsContainerRef = useRef<HTMLDivElement>(null!)
   const [currentTab, setCurrentTab] = useState<string>("posts")
+  const [isFollowing, setIsFollowing] = useState<boolean>()
   
   const [posts, setPosts] = useState<PopulatedPost[]>()
   const [replies, setReplies] = useState<PostComment>({})
@@ -51,6 +52,10 @@ function Profile() {
       addToast("Welcome! Customize your profile so others can find and follow you.", {
         type: ToastType.SUCCESS, duration: 3000
       })
+    }
+
+    if (!isAuthor(params.authorAddress!, account.address)) {
+      checkFollowing(params.authorAddress!).then()
     }
 
     (async () => {
@@ -145,6 +150,15 @@ function Profile() {
     
   }, [currentTab, params.authorAddress])
 
+  const checkFollowing = async (author: string) => {
+    const result = await execute(GetIsFollowingDocument, {
+      id: `${account.address?.toLowerCase()}-${author.toLowerCase()}`
+    })
+    if (result.data && result.data.isFollowing) {
+      setIsFollowing(result.data.isFollowing !== null)
+    } else setIsFollowing(false)
+  } 
+
   const handleDeleteComment = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     const loadingToastId = addToast("Deleting comment...", 
@@ -238,7 +252,8 @@ function Profile() {
         </div>
         {isAuthor(params.authorAddress!, account.address!) ? 
         <button className="button button-dark text-xl">Edit profile</button> :
-        <button className="button button-dark text-xl">Follow</button>}
+        !isFollowing ? <button className="button button-dark text-xl">Follow</button> :
+        <button className="button button-dark text-xl">Following</button>}
         <div ref={tabsContainerRef}
           className="flex justify-between w-full md:max-w-xs">
           <span onClick={switchTabs} id="posts" className={`tabs-profile tabs-active-profile`}>Posts</span>
