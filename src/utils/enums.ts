@@ -2,7 +2,7 @@ export enum Pages {
   HOME = '/',
   ABOUT = '/about',
   PROFILE = '/author',
-  EDIT_PROFILE = 'edit-profile',
+  EDIT_PROFILE = '/edit-profile',
   CONNECT = '/connect',
   DASHBOARD = '/dashboard',
   POSTS = '/posts',

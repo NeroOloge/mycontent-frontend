@@ -6,8 +6,7 @@ import { syncLocalDrafts } from "../utils/functions"
 import { useToast } from "../providers/ToastProvider"
 import { useAccount } from "wagmi"
 import { execute, GetPostsByAuthorDocument, 
-  GetTotalBookmarksByUserDocument, GetTotalCommentsByUserDocument, 
-  GetTotalLikesByUserDocument } from "../../.graphclient"
+  GetTotalPostInfoByUserDocument} from "../../.graphclient"
 import { useEffect, useRef, useState } from "react"
 import { populatePosts } from "../utils/pinata"
 import { PopulatedPost, PostAnalytics } from "../utils/types"
@@ -35,23 +34,19 @@ function Dashboard() {
 
         loadingToastId.current = 
           addToast("Loading posts...", { type: ToastType.INFO })
-        const [totalLikesResult, totalCommentsResult, totalBookmarksResult] = 
-        await Promise.all([
-          execute(GetTotalLikesByUserDocument, { user: account.address! }),
-          execute(GetTotalCommentsByUserDocument, { user: account.address! }),
-          execute(GetTotalBookmarksByUserDocument, { user: account.address! })
-        ])
+        
+        const totalPostInfoResult = await execute(GetTotalPostInfoByUserDocument,
+          { user: account.address! }
+        )
 
-        if (totalLikesResult.data && totalCommentsResult.data &&
-          totalBookmarksResult.data
-        ) {
-          if (totalLikesResult.data.likes && totalCommentsResult.data.comments &&
-            totalBookmarksResult.data.bookmarks
+        if (totalPostInfoResult.data) {
+          if (totalPostInfoResult.data.likes && totalPostInfoResult.data.comments &&
+            totalPostInfoResult.data.bookmarks
           ) {
             setPostAnalytics({
-              likes: totalLikesResult.data.likes.length,
-              comments: totalCommentsResult.data.comments.length,
-              bookmarks: totalBookmarksResult.data.bookmarks.length
+              likes: totalPostInfoResult.data.likes.length,
+              comments: totalPostInfoResult.data.comments.length,
+              bookmarks: totalPostInfoResult.data.bookmarks.length
             })
           }
         }

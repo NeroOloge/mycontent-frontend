@@ -29,6 +29,15 @@ export const displayTime = (timestamp: number) => {
     ${getHour(Number(hour))}:${minute} ${getAMPM(Number(hour))}`
 }
 
+export const displayDate = (timestamp: number) => {
+  const date = new Date(timestamp)
+  const dateString = date.toDateString()
+  const month = dateString.split(" ")[1]
+  const day = date.getDate()
+  const year = date.getFullYear()
+  return `${month} ${day} ${year}`
+}
+
 export const displayAddress = (address: `0x${string}`) => {
   return `${address?.slice(0, 5)}...${address?.slice(address?.length-3)}`
 }

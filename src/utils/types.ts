@@ -61,3 +61,12 @@ export type IProfile = {
   bio: string;
   imageCID: string;
 }
+
+export type TopAuthor = {
+  id: string;
+  username?: string;
+  address: `0x${string}`;
+  totalLikes: number;
+  postCount: number;
+  imageCID?: string;
+}

@@ -52,6 +52,58 @@ export type Aggregation_interval =
   | 'hour'
   | 'day';
 
+export type Author = {
+  id: Scalars['ID']['output'];
+  postCount: Scalars['Int']['output'];
+  totalLikes: Scalars['Int']['output'];
+  totalBookmarks: Scalars['Int']['output'];
+};
+
+export type Author_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  postCount?: InputMaybe<Scalars['Int']['input']>;
+  postCount_not?: InputMaybe<Scalars['Int']['input']>;
+  postCount_gt?: InputMaybe<Scalars['Int']['input']>;
+  postCount_lt?: InputMaybe<Scalars['Int']['input']>;
+  postCount_gte?: InputMaybe<Scalars['Int']['input']>;
+  postCount_lte?: InputMaybe<Scalars['Int']['input']>;
+  postCount_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  postCount_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  totalLikes?: InputMaybe<Scalars['Int']['input']>;
+  totalLikes_not?: InputMaybe<Scalars['Int']['input']>;
+  totalLikes_gt?: InputMaybe<Scalars['Int']['input']>;
+  totalLikes_lt?: InputMaybe<Scalars['Int']['input']>;
+  totalLikes_gte?: InputMaybe<Scalars['Int']['input']>;
+  totalLikes_lte?: InputMaybe<Scalars['Int']['input']>;
+  totalLikes_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  totalLikes_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  totalBookmarks?: InputMaybe<Scalars['Int']['input']>;
+  totalBookmarks_not?: InputMaybe<Scalars['Int']['input']>;
+  totalBookmarks_gt?: InputMaybe<Scalars['Int']['input']>;
+  totalBookmarks_lt?: InputMaybe<Scalars['Int']['input']>;
+  totalBookmarks_gte?: InputMaybe<Scalars['Int']['input']>;
+  totalBookmarks_lte?: InputMaybe<Scalars['Int']['input']>;
+  totalBookmarks_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  totalBookmarks_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Author_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Author_filter>>>;
+};
+
+export type Author_orderBy =
+  | 'id'
+  | 'postCount'
+  | 'totalLikes'
+  | 'totalBookmarks';
+
 export type BlockChangedFilter = {
   number_gte: Scalars['Int']['input'];
 };
@@ -765,6 +817,8 @@ export type Query = {
   follows: Array<Follow>;
   post?: Maybe<Post>;
   posts: Array<Post>;
+  author?: Maybe<Author>;
+  authors: Array<Author>;
   like?: Maybe<Like>;
   likes: Array<Like>;
   bookmark?: Maybe<Bookmark>;
@@ -831,6 +885,24 @@ export type QuerypostsArgs = {
   orderBy?: InputMaybe<Post_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   where?: InputMaybe<Post_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryauthorArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryauthorsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Author_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<Author_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -1309,6 +1381,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Aggregation_interval: Aggregation_interval;
+  Author: ResolverTypeWrapper<Author>;
+  Author_filter: Author_filter;
+  Author_orderBy: Author_orderBy;
   BigDecimal: ResolverTypeWrapper<Scalars['BigDecimal']['output']>;
   BigInt: ResolverTypeWrapper<Scalars['BigInt']['output']>;
   BlockChangedFilter: BlockChangedFilter;
@@ -1357,6 +1432,8 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  Author: Author;
+  Author_filter: Author_filter;
   BigDecimal: Scalars['BigDecimal']['output'];
   BigInt: Scalars['BigInt']['output'];
   BlockChangedFilter: BlockChangedFilter;
@@ -1407,6 +1484,14 @@ export type derivedFromDirectiveArgs = {
 };
 
 export type derivedFromDirectiveResolver<Result, Parent, ContextType = MeshContext, Args = derivedFromDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type AuthorResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Author'] = ResolversParentTypes['Author']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  postCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalLikes?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalBookmarks?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
 
 export interface BigDecimalScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BigDecimal'], any> {
   name: 'BigDecimal';
@@ -1500,6 +1585,8 @@ export type QueryResolvers<ContextType = MeshContext, ParentType extends Resolve
   follows?: Resolver<Array<ResolversTypes['Follow']>, ParentType, ContextType, RequireFields<QueryfollowsArgs, 'skip' | 'first' | 'subgraphError'>>;
   post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerypostArgs, 'id' | 'subgraphError'>>;
   posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerypostsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  author?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType, RequireFields<QueryauthorArgs, 'id' | 'subgraphError'>>;
+  authors?: Resolver<Array<ResolversTypes['Author']>, ParentType, ContextType, RequireFields<QueryauthorsArgs, 'skip' | 'first' | 'subgraphError'>>;
   like?: Resolver<Maybe<ResolversTypes['Like']>, ParentType, ContextType, RequireFields<QuerylikeArgs, 'id' | 'subgraphError'>>;
   likes?: Resolver<Array<ResolversTypes['Like']>, ParentType, ContextType, RequireFields<QuerylikesArgs, 'skip' | 'first' | 'subgraphError'>>;
   bookmark?: Resolver<Maybe<ResolversTypes['Bookmark']>, ParentType, ContextType, RequireFields<QuerybookmarkArgs, 'id' | 'subgraphError'>>;
@@ -1563,6 +1650,7 @@ export type _Meta_Resolvers<ContextType = MeshContext, ParentType extends Resolv
 }>;
 
 export type Resolvers<ContextType = MeshContext> = ResolversObject<{
+  Author?: AuthorResolvers<ContextType>;
   BigDecimal?: GraphQLScalarType;
   BigInt?: GraphQLScalarType;
   Bookmark?: BookmarkResolvers<ContextType>;
@@ -1634,7 +1722,7 @@ const mycontentSepoliaTransforms = [];
 const additionalTypeDefs = [] as any[];
 const mycontentSepoliaHandler = new GraphqlHandler({
               name: "mycontent-sepolia",
-              config: {"endpoint":"https://api.studio.thegraph.com/query/114177/my-content-subgraph/v0.0.2"},
+              config: {"endpoint":"https://api.studio.thegraph.com/query/114177/my-content-subgraph/version/latest"},
               baseDir,
               cache,
               pubsub,
@@ -1655,27 +1743,28 @@ const merger = new(BareMerger as any)({
         store: rootStore.child('bareMerger')
       })
 const documentHashMap = {
-        "d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPostByIdDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPostsByAuthorDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPostsDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetManyPostsDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetMostLikedPostsDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": FilterMostLikedPostsByTagDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": FilterMostLikedPostsDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPopularTagsDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetTrendingTagsDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": FilterPostsByTagDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": FilterPostsDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetCommentsByUserDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetTotalCommentsByUserDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetFollowersDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetIsFollowingDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPostLikedDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetTotalLikesByUserDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPostBookmarkedDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetTotalBookmarksByUserDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetPostsBookmarkedByUserDocument,
-"d6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40": GetProfileDocument
+        "b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetPostByIdDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetAuthorFirstPostDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetPostsByAuthorDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetPostsDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetManyPostsDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetMostLikedPostsDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": FilterMostLikedPostsByTagDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": FilterMostLikedPostsDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": FilterMostLikedPostsBySearchAndTagDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetPopularTagsDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetTrendingTagsDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": FilterPostsByTagDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": FilterPostsDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": FilterPostsBySearchAndTagDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetCommentsByUserDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetFollowersDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetIsFollowingDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetPostUserInfoDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetTotalPostInfoByUserDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetPostsBookmarkedByUserDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetTopAuthorsDocument,
+"b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891": GetProfileDocument
       }
 additionalEnvelopPlugins.push(usePersistedOperations({
         getPersistedOperation(key) {
@@ -1702,147 +1791,154 @@ additionalEnvelopPlugins.push(usePersistedOperations({
           return printWithCache(GetPostByIdDocument);
         },
         location: 'GetPostByIdDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
+      },{
+        document: GetAuthorFirstPostDocument,
+        get rawSDL() {
+          return printWithCache(GetAuthorFirstPostDocument);
+        },
+        location: 'GetAuthorFirstPostDocument.graphql',
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: GetPostsByAuthorDocument,
         get rawSDL() {
           return printWithCache(GetPostsByAuthorDocument);
         },
         location: 'GetPostsByAuthorDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: GetPostsDocument,
         get rawSDL() {
           return printWithCache(GetPostsDocument);
         },
         location: 'GetPostsDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: GetManyPostsDocument,
         get rawSDL() {
           return printWithCache(GetManyPostsDocument);
         },
         location: 'GetManyPostsDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: GetMostLikedPostsDocument,
         get rawSDL() {
           return printWithCache(GetMostLikedPostsDocument);
         },
         location: 'GetMostLikedPostsDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: FilterMostLikedPostsByTagDocument,
         get rawSDL() {
           return printWithCache(FilterMostLikedPostsByTagDocument);
         },
         location: 'FilterMostLikedPostsByTagDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: FilterMostLikedPostsDocument,
         get rawSDL() {
           return printWithCache(FilterMostLikedPostsDocument);
         },
         location: 'FilterMostLikedPostsDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
+      },{
+        document: FilterMostLikedPostsBySearchAndTagDocument,
+        get rawSDL() {
+          return printWithCache(FilterMostLikedPostsBySearchAndTagDocument);
+        },
+        location: 'FilterMostLikedPostsBySearchAndTagDocument.graphql',
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: GetPopularTagsDocument,
         get rawSDL() {
           return printWithCache(GetPopularTagsDocument);
         },
         location: 'GetPopularTagsDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: GetTrendingTagsDocument,
         get rawSDL() {
           return printWithCache(GetTrendingTagsDocument);
         },
         location: 'GetTrendingTagsDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: FilterPostsByTagDocument,
         get rawSDL() {
           return printWithCache(FilterPostsByTagDocument);
         },
         location: 'FilterPostsByTagDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: FilterPostsDocument,
         get rawSDL() {
           return printWithCache(FilterPostsDocument);
         },
         location: 'FilterPostsDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
+      },{
+        document: FilterPostsBySearchAndTagDocument,
+        get rawSDL() {
+          return printWithCache(FilterPostsBySearchAndTagDocument);
+        },
+        location: 'FilterPostsBySearchAndTagDocument.graphql',
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: GetCommentsByUserDocument,
         get rawSDL() {
           return printWithCache(GetCommentsByUserDocument);
         },
         location: 'GetCommentsByUserDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
-      },{
-        document: GetTotalCommentsByUserDocument,
-        get rawSDL() {
-          return printWithCache(GetTotalCommentsByUserDocument);
-        },
-        location: 'GetTotalCommentsByUserDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: GetFollowersDocument,
         get rawSDL() {
           return printWithCache(GetFollowersDocument);
         },
         location: 'GetFollowersDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: GetIsFollowingDocument,
         get rawSDL() {
           return printWithCache(GetIsFollowingDocument);
         },
         location: 'GetIsFollowingDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
-        document: GetPostLikedDocument,
+        document: GetPostUserInfoDocument,
         get rawSDL() {
-          return printWithCache(GetPostLikedDocument);
+          return printWithCache(GetPostUserInfoDocument);
         },
-        location: 'GetPostLikedDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        location: 'GetPostUserInfoDocument.graphql',
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
-        document: GetTotalLikesByUserDocument,
+        document: GetTotalPostInfoByUserDocument,
         get rawSDL() {
-          return printWithCache(GetTotalLikesByUserDocument);
+          return printWithCache(GetTotalPostInfoByUserDocument);
         },
-        location: 'GetTotalLikesByUserDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
-      },{
-        document: GetPostBookmarkedDocument,
-        get rawSDL() {
-          return printWithCache(GetPostBookmarkedDocument);
-        },
-        location: 'GetPostBookmarkedDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
-      },{
-        document: GetTotalBookmarksByUserDocument,
-        get rawSDL() {
-          return printWithCache(GetTotalBookmarksByUserDocument);
-        },
-        location: 'GetTotalBookmarksByUserDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        location: 'GetTotalPostInfoByUserDocument.graphql',
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: GetPostsBookmarkedByUserDocument,
         get rawSDL() {
           return printWithCache(GetPostsBookmarkedByUserDocument);
         },
         location: 'GetPostsBookmarkedByUserDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
+      },{
+        document: GetTopAuthorsDocument,
+        get rawSDL() {
+          return printWithCache(GetTopAuthorsDocument);
+        },
+        location: 'GetTopAuthorsDocument.graphql',
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       },{
         document: GetProfileDocument,
         get rawSDL() {
           return printWithCache(GetProfileDocument);
         },
         location: 'GetProfileDocument.graphql',
-        sha256Hash: 'd6f2dd794b6de4206a97fe38c6eeeb1d9be1162e1f6bbfd0a90a3ce5cf8a3c40'
+        sha256Hash: 'b669770b686d1e9d3f7de19cd703e1c81e43da56da6f9be8a243c9c0ecedf891'
       }
     ];
     },
@@ -1907,6 +2003,13 @@ export type GetPostByIdQuery = { post?: Maybe<(
     & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter' | 'blockTimestamp'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
   )> };
 
+export type GetAuthorFirstPostQueryVariables = Exact<{
+  author: Scalars['Bytes']['input'];
+}>;
+
+
+export type GetAuthorFirstPostQuery = { posts: Array<Pick<Post, 'id' | 'author' | 'cid' | 'blockTimestamp'>> };
+
 export type GetPostsByAuthorQueryVariables = Exact<{
   author: Scalars['Bytes']['input'];
 }>;
@@ -1954,13 +2057,23 @@ export type FilterMostLikedPostsByTagQuery = { posts: Array<(
   )> };
 
 export type FilterMostLikedPostsQueryVariables = Exact<{
+  searchTerm: Scalars['String']['input'];
+}>;
+
+
+export type FilterMostLikedPostsQuery = { posts: Array<(
+    Pick<Post, 'id' | 'author' | 'cid' | 'title' | 'likes' | 'bookmarks'>
+    & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
+  )> };
+
+export type FilterMostLikedPostsBySearchAndTagQueryVariables = Exact<{
   title: Scalars['String']['input'];
   author: Scalars['String']['input'];
   tag: Scalars['String']['input'];
 }>;
 
 
-export type FilterMostLikedPostsQuery = { posts: Array<(
+export type FilterMostLikedPostsBySearchAndTagQuery = { posts: Array<(
     Pick<Post, 'id' | 'author' | 'cid' | 'title' | 'likes' | 'bookmarks'>
     & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
   )> };
@@ -1975,7 +2088,7 @@ export type GetTrendingTagsQueryVariables = Exact<{
 }>;
 
 
-export type GetTrendingTagsQuery = { tags: Array<Pick<Tag, 'id' | 'tag'>> };
+export type GetTrendingTagsQuery = { tags: Array<Pick<Tag, 'id' | 'tag' | 'blockTimestamp'>> };
 
 export type FilterPostsByTagQueryVariables = Exact<{
   tag: Scalars['String']['input'];
@@ -1988,13 +2101,23 @@ export type FilterPostsByTagQuery = { posts: Array<(
   )> };
 
 export type FilterPostsQueryVariables = Exact<{
+  searchTerm: Scalars['String']['input'];
+}>;
+
+
+export type FilterPostsQuery = { posts: Array<(
+    Pick<Post, 'id' | 'author' | 'cid' | 'title' | 'likes' | 'bookmarks'>
+    & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
+  )> };
+
+export type FilterPostsBySearchAndTagQueryVariables = Exact<{
   title: Scalars['String']['input'];
   author: Scalars['String']['input'];
   tag: Scalars['String']['input'];
 }>;
 
 
-export type FilterPostsQuery = { posts: Array<(
+export type FilterPostsBySearchAndTagQuery = { posts: Array<(
     Pick<Post, 'id' | 'author' | 'cid' | 'title' | 'likes' | 'bookmarks'>
     & { comments: Array<Pick<Comment, 'id' | 'cid' | 'commenter'>>, tags: Array<Pick<Tag, 'id' | 'tag'>> }
   )> };
@@ -2007,16 +2130,6 @@ export type GetCommentsByUserQueryVariables = Exact<{
 export type GetCommentsByUserQuery = { comments: Array<(
     Pick<Comment, 'id' | 'cid' | 'commenter'>
     & { post: Pick<Post, 'id' | 'author' | 'title'> }
-  )> };
-
-export type GetTotalCommentsByUserQueryVariables = Exact<{
-  user: Scalars['Bytes']['input'];
-}>;
-
-
-export type GetTotalCommentsByUserQuery = { comments: Array<(
-    Pick<Comment, 'id' | 'commenter'>
-    & { post: Pick<Post, 'id'> }
   )> };
 
 export type GetFollowersQueryVariables = Exact<{
@@ -2033,43 +2146,32 @@ export type GetIsFollowingQueryVariables = Exact<{
 
 export type GetIsFollowingQuery = { isFollowing?: Maybe<Pick<Follow, 'id' | 'follower' | 'following'>> };
 
-export type GetPostLikedQueryVariables = Exact<{
+export type GetPostUserInfoQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetPostLikedQuery = { like?: Maybe<(
+export type GetPostUserInfoQuery = { like?: Maybe<(
     Pick<Like, 'user'>
     & { post: Pick<Post, 'id'> }
+  )>, bookmark?: Maybe<(
+    Pick<Bookmark, 'user'>
+    & { post: Pick<Post, 'id'> }
   )> };
 
-export type GetTotalLikesByUserQueryVariables = Exact<{
+export type GetTotalPostInfoByUserQueryVariables = Exact<{
   user: Scalars['Bytes']['input'];
 }>;
 
 
-export type GetTotalLikesByUserQuery = { likes: Array<(
+export type GetTotalPostInfoByUserQuery = { likes: Array<(
     Pick<Like, 'id' | 'user'>
     & { post: Pick<Post, 'id'> }
-  )> };
-
-export type GetPostBookmarkedQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type GetPostBookmarkedQuery = { bookmark?: Maybe<(
+  )>, bookmarks: Array<(
     Pick<Bookmark, 'user'>
     & { post: Pick<Post, 'id'> }
-  )> };
-
-export type GetTotalBookmarksByUserQueryVariables = Exact<{
-  user: Scalars['Bytes']['input'];
-}>;
-
-
-export type GetTotalBookmarksByUserQuery = { bookmarks: Array<(
-    Pick<Bookmark, 'user'>
+  )>, comments: Array<(
+    Pick<Comment, 'id' | 'commenter'>
     & { post: Pick<Post, 'id'> }
   )> };
 
@@ -2082,6 +2184,11 @@ export type GetPostsBookmarkedByUserQuery = { bookmarks: Array<(
     Pick<Bookmark, 'user'>
     & { post: Pick<Post, 'id'> }
   )> };
+
+export type GetTopAuthorsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTopAuthorsQuery = { authors: Array<Pick<Author, 'id' | 'postCount' | 'totalLikes'>> };
 
 export type GetProfileQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2112,12 +2219,27 @@ export const GetPostByIdDocument = gql`
   }
 }
     ` as unknown as DocumentNode<GetPostByIdQuery, GetPostByIdQueryVariables>;
+export const GetAuthorFirstPostDocument = gql`
+    query GetAuthorFirstPost($author: Bytes!) {
+  posts(
+    orderBy: blockTimestamp
+    orderDirection: asc
+    first: 1
+    where: {author: $author}
+  ) {
+    id
+    author
+    cid
+    blockTimestamp
+  }
+}
+    ` as unknown as DocumentNode<GetAuthorFirstPostQuery, GetAuthorFirstPostQueryVariables>;
 export const GetPostsByAuthorDocument = gql`
     query GetPostsByAuthor($author: Bytes!) {
   posts(
     orderBy: blockTimestamp
     orderDirection: desc
-    first: 6
+    first: 10
     where: {author: $author, isDeleted: false}
   ) {
     id
@@ -2142,7 +2264,7 @@ export const GetPostsDocument = gql`
   posts(
     orderBy: blockTimestamp
     orderDirection: desc
-    first: 6
+    first: 10
     where: {isDeleted: false}
   ) {
     id
@@ -2167,7 +2289,6 @@ export const GetManyPostsDocument = gql`
   posts(
     orderBy: blockTimestamp
     orderDirection: desc
-    first: 6
     where: {isDeleted: false, id_in: $ids}
   ) {
     id
@@ -2189,7 +2310,12 @@ export const GetManyPostsDocument = gql`
     ` as unknown as DocumentNode<GetManyPostsQuery, GetManyPostsQueryVariables>;
 export const GetMostLikedPostsDocument = gql`
     query GetMostLikedPosts {
-  posts(orderBy: likes, orderDirection: desc, first: 6, where: {isDeleted: false}) {
+  posts(
+    orderBy: likes
+    orderDirection: desc
+    first: 10
+    where: {isDeleted: false}
+  ) {
     id
     author
     cid
@@ -2213,7 +2339,7 @@ export const FilterMostLikedPostsByTagDocument = gql`
   posts(
     orderBy: likes
     orderDirection: desc
-    first: 6
+    first: 10
     where: {isDeleted: false, tags_: {tag_contains: $tag}}
   ) {
     id
@@ -2235,12 +2361,12 @@ export const FilterMostLikedPostsByTagDocument = gql`
 }
     ` as unknown as DocumentNode<FilterMostLikedPostsByTagQuery, FilterMostLikedPostsByTagQueryVariables>;
 export const FilterMostLikedPostsDocument = gql`
-    query FilterMostLikedPosts($title: String!, $author: String!, $tag: String!) {
+    query FilterMostLikedPosts($searchTerm: String!) {
   posts(
     orderBy: likes
     orderDirection: desc
-    first: 6
-    where: {and: [{isDeleted: false}, {or: [{title_contains_nocase: $title}, {tags_: {tag_contains: $tag}}, {authorString_contains_nocase: $author}]}]}
+    first: 10
+    where: {and: [{isDeleted: false}, {or: [{title_contains_nocase: $searchTerm}, {tags_: {tag_contains: $searchTerm}}, {authorString_contains_nocase: $searchTerm}]}]}
   ) {
     id
     author
@@ -2260,6 +2386,32 @@ export const FilterMostLikedPostsDocument = gql`
   }
 }
     ` as unknown as DocumentNode<FilterMostLikedPostsQuery, FilterMostLikedPostsQueryVariables>;
+export const FilterMostLikedPostsBySearchAndTagDocument = gql`
+    query FilterMostLikedPostsBySearchAndTag($title: String!, $author: String!, $tag: String!) {
+  posts(
+    orderBy: likes
+    orderDirection: desc
+    first: 10
+    where: {and: [{isDeleted: false}, {tags_: {tag_contains: $tag}}, {or: [{title_contains_nocase: $title}, {authorString_contains_nocase: $author}]}]}
+  ) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+    ` as unknown as DocumentNode<FilterMostLikedPostsBySearchAndTagQuery, FilterMostLikedPostsBySearchAndTagQueryVariables>;
 export const GetPopularTagsDocument = gql`
     query GetPopularTags {
   tagSummaries(orderBy: count, orderDirection: desc, first: 10) {
@@ -2270,9 +2422,10 @@ export const GetPopularTagsDocument = gql`
     ` as unknown as DocumentNode<GetPopularTagsQuery, GetPopularTagsQueryVariables>;
 export const GetTrendingTagsDocument = gql`
     query GetTrendingTags($time: BigInt) {
-  tags(where: {blockTimestamp_gt: $time}) {
+  tags(where: {blockTimestamp_gt: $time}, first: 10) {
     id
     tag
+    blockTimestamp
   }
 }
     ` as unknown as DocumentNode<GetTrendingTagsQuery, GetTrendingTagsQueryVariables>;
@@ -2281,7 +2434,7 @@ export const FilterPostsByTagDocument = gql`
   posts(
     orderBy: blockTimestamp
     orderDirection: desc
-    first: 6
+    first: 10
     where: {isDeleted: false, tags_: {tag_contains: $tag}}
   ) {
     id
@@ -2303,12 +2456,12 @@ export const FilterPostsByTagDocument = gql`
 }
     ` as unknown as DocumentNode<FilterPostsByTagQuery, FilterPostsByTagQueryVariables>;
 export const FilterPostsDocument = gql`
-    query FilterPosts($title: String!, $author: String!, $tag: String!) {
+    query FilterPosts($searchTerm: String!) {
   posts(
     orderBy: blockTimestamp
     orderDirection: desc
-    first: 6
-    where: {and: [{isDeleted: false}, {or: [{title_contains_nocase: $title}, {tags_: {tag_contains: $tag}}, {authorString_contains_nocase: $author}]}]}
+    first: 10
+    where: {and: [{isDeleted: false}, {or: [{title_contains_nocase: $searchTerm}, {tags_: {tag_contains: $searchTerm}}, {authorString_contains_nocase: $searchTerm}]}]}
   ) {
     id
     author
@@ -2328,12 +2481,38 @@ export const FilterPostsDocument = gql`
   }
 }
     ` as unknown as DocumentNode<FilterPostsQuery, FilterPostsQueryVariables>;
+export const FilterPostsBySearchAndTagDocument = gql`
+    query FilterPostsBySearchAndTag($title: String!, $author: String!, $tag: String!) {
+  posts(
+    orderBy: blockTimestamp
+    orderDirection: desc
+    first: 10
+    where: {and: [{isDeleted: false}, {tags_: {tag_contains: $tag}}, {or: [{title_contains_nocase: $title}, {authorString_contains_nocase: $author}]}]}
+  ) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+    ` as unknown as DocumentNode<FilterPostsBySearchAndTagQuery, FilterPostsBySearchAndTagQueryVariables>;
 export const GetCommentsByUserDocument = gql`
     query GetCommentsByUser($user: Bytes!) {
   comments(
     orderBy: blockTimestamp
     orderDirection: desc
-    first: 6
+    first: 10
     where: {commenter: $user}
   ) {
     id
@@ -2347,17 +2526,6 @@ export const GetCommentsByUserDocument = gql`
   }
 }
     ` as unknown as DocumentNode<GetCommentsByUserQuery, GetCommentsByUserQueryVariables>;
-export const GetTotalCommentsByUserDocument = gql`
-    query GetTotalCommentsByUser($user: Bytes!) {
-  comments(where: {commenter: $user}) {
-    id
-    commenter
-    post {
-      id
-    }
-  }
-}
-    ` as unknown as DocumentNode<GetTotalCommentsByUserQuery, GetTotalCommentsByUserQueryVariables>;
 export const GetFollowersDocument = gql`
     query GetFollowers($user: Bytes!) {
   followers: follows(where: {following: $user}) {
@@ -2381,29 +2549,14 @@ export const GetIsFollowingDocument = gql`
   }
 }
     ` as unknown as DocumentNode<GetIsFollowingQuery, GetIsFollowingQueryVariables>;
-export const GetPostLikedDocument = gql`
-    query GetPostLiked($id: ID!) {
+export const GetPostUserInfoDocument = gql`
+    query GetPostUserInfo($id: ID!) {
   like(id: $id) {
     user
     post {
       id
     }
   }
-}
-    ` as unknown as DocumentNode<GetPostLikedQuery, GetPostLikedQueryVariables>;
-export const GetTotalLikesByUserDocument = gql`
-    query GetTotalLikesByUser($user: Bytes!) {
-  likes(where: {user: $user}) {
-    id
-    user
-    post {
-      id
-    }
-  }
-}
-    ` as unknown as DocumentNode<GetTotalLikesByUserQuery, GetTotalLikesByUserQueryVariables>;
-export const GetPostBookmarkedDocument = gql`
-    query GetPostBookmarked($id: ID!) {
   bookmark(id: $id) {
     user
     post {
@@ -2411,23 +2564,37 @@ export const GetPostBookmarkedDocument = gql`
     }
   }
 }
-    ` as unknown as DocumentNode<GetPostBookmarkedQuery, GetPostBookmarkedQueryVariables>;
-export const GetTotalBookmarksByUserDocument = gql`
-    query GetTotalBookmarksByUser($user: Bytes!) {
+    ` as unknown as DocumentNode<GetPostUserInfoQuery, GetPostUserInfoQueryVariables>;
+export const GetTotalPostInfoByUserDocument = gql`
+    query GetTotalPostInfoByUser($user: Bytes!) {
+  likes(where: {user: $user}) {
+    id
+    user
+    post {
+      id
+    }
+  }
   bookmarks(where: {user: $user}) {
     user
     post {
       id
     }
   }
+  comments(where: {commenter: $user}) {
+    id
+    commenter
+    post {
+      id
+    }
+  }
 }
-    ` as unknown as DocumentNode<GetTotalBookmarksByUserQuery, GetTotalBookmarksByUserQueryVariables>;
+    ` as unknown as DocumentNode<GetTotalPostInfoByUserQuery, GetTotalPostInfoByUserQueryVariables>;
 export const GetPostsBookmarkedByUserDocument = gql`
     query GetPostsBookmarkedByUser($user: Bytes!) {
   bookmarks(
     orderBy: timestamp
     orderDirection: desc
-    first: 6
+    first: 10
     where: {user: $user}
   ) {
     user
@@ -2437,6 +2604,15 @@ export const GetPostsBookmarkedByUserDocument = gql`
   }
 }
     ` as unknown as DocumentNode<GetPostsBookmarkedByUserQuery, GetPostsBookmarkedByUserQueryVariables>;
+export const GetTopAuthorsDocument = gql`
+    query GetTopAuthors {
+  authors(orderBy: totalLikes, orderDirection: desc, first: 5) {
+    id
+    postCount
+    totalLikes
+  }
+}
+    ` as unknown as DocumentNode<GetTopAuthorsQuery, GetTopAuthorsQueryVariables>;
 export const GetProfileDocument = gql`
     query GetProfile($id: ID!) {
   profile(id: $id) {
@@ -2470,11 +2646,15 @@ export const GetProfileDocument = gql`
 
 
 
+
 export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
     GetPostById(variables: GetPostByIdQueryVariables, options?: C): Promise<GetPostByIdQuery> {
       return requester<GetPostByIdQuery, GetPostByIdQueryVariables>(GetPostByIdDocument, variables, options) as Promise<GetPostByIdQuery>;
+    },
+    GetAuthorFirstPost(variables: GetAuthorFirstPostQueryVariables, options?: C): Promise<GetAuthorFirstPostQuery> {
+      return requester<GetAuthorFirstPostQuery, GetAuthorFirstPostQueryVariables>(GetAuthorFirstPostDocument, variables, options) as Promise<GetAuthorFirstPostQuery>;
     },
     GetPostsByAuthor(variables: GetPostsByAuthorQueryVariables, options?: C): Promise<GetPostsByAuthorQuery> {
       return requester<GetPostsByAuthorQuery, GetPostsByAuthorQueryVariables>(GetPostsByAuthorDocument, variables, options) as Promise<GetPostsByAuthorQuery>;
@@ -2494,6 +2674,9 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     FilterMostLikedPosts(variables: FilterMostLikedPostsQueryVariables, options?: C): Promise<FilterMostLikedPostsQuery> {
       return requester<FilterMostLikedPostsQuery, FilterMostLikedPostsQueryVariables>(FilterMostLikedPostsDocument, variables, options) as Promise<FilterMostLikedPostsQuery>;
     },
+    FilterMostLikedPostsBySearchAndTag(variables: FilterMostLikedPostsBySearchAndTagQueryVariables, options?: C): Promise<FilterMostLikedPostsBySearchAndTagQuery> {
+      return requester<FilterMostLikedPostsBySearchAndTagQuery, FilterMostLikedPostsBySearchAndTagQueryVariables>(FilterMostLikedPostsBySearchAndTagDocument, variables, options) as Promise<FilterMostLikedPostsBySearchAndTagQuery>;
+    },
     GetPopularTags(variables?: GetPopularTagsQueryVariables, options?: C): Promise<GetPopularTagsQuery> {
       return requester<GetPopularTagsQuery, GetPopularTagsQueryVariables>(GetPopularTagsDocument, variables, options) as Promise<GetPopularTagsQuery>;
     },
@@ -2506,11 +2689,11 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     FilterPosts(variables: FilterPostsQueryVariables, options?: C): Promise<FilterPostsQuery> {
       return requester<FilterPostsQuery, FilterPostsQueryVariables>(FilterPostsDocument, variables, options) as Promise<FilterPostsQuery>;
     },
+    FilterPostsBySearchAndTag(variables: FilterPostsBySearchAndTagQueryVariables, options?: C): Promise<FilterPostsBySearchAndTagQuery> {
+      return requester<FilterPostsBySearchAndTagQuery, FilterPostsBySearchAndTagQueryVariables>(FilterPostsBySearchAndTagDocument, variables, options) as Promise<FilterPostsBySearchAndTagQuery>;
+    },
     GetCommentsByUser(variables: GetCommentsByUserQueryVariables, options?: C): Promise<GetCommentsByUserQuery> {
       return requester<GetCommentsByUserQuery, GetCommentsByUserQueryVariables>(GetCommentsByUserDocument, variables, options) as Promise<GetCommentsByUserQuery>;
-    },
-    GetTotalCommentsByUser(variables: GetTotalCommentsByUserQueryVariables, options?: C): Promise<GetTotalCommentsByUserQuery> {
-      return requester<GetTotalCommentsByUserQuery, GetTotalCommentsByUserQueryVariables>(GetTotalCommentsByUserDocument, variables, options) as Promise<GetTotalCommentsByUserQuery>;
     },
     GetFollowers(variables: GetFollowersQueryVariables, options?: C): Promise<GetFollowersQuery> {
       return requester<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, variables, options) as Promise<GetFollowersQuery>;
@@ -2518,20 +2701,17 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     GetIsFollowing(variables: GetIsFollowingQueryVariables, options?: C): Promise<GetIsFollowingQuery> {
       return requester<GetIsFollowingQuery, GetIsFollowingQueryVariables>(GetIsFollowingDocument, variables, options) as Promise<GetIsFollowingQuery>;
     },
-    GetPostLiked(variables: GetPostLikedQueryVariables, options?: C): Promise<GetPostLikedQuery> {
-      return requester<GetPostLikedQuery, GetPostLikedQueryVariables>(GetPostLikedDocument, variables, options) as Promise<GetPostLikedQuery>;
+    GetPostUserInfo(variables: GetPostUserInfoQueryVariables, options?: C): Promise<GetPostUserInfoQuery> {
+      return requester<GetPostUserInfoQuery, GetPostUserInfoQueryVariables>(GetPostUserInfoDocument, variables, options) as Promise<GetPostUserInfoQuery>;
     },
-    GetTotalLikesByUser(variables: GetTotalLikesByUserQueryVariables, options?: C): Promise<GetTotalLikesByUserQuery> {
-      return requester<GetTotalLikesByUserQuery, GetTotalLikesByUserQueryVariables>(GetTotalLikesByUserDocument, variables, options) as Promise<GetTotalLikesByUserQuery>;
-    },
-    GetPostBookmarked(variables: GetPostBookmarkedQueryVariables, options?: C): Promise<GetPostBookmarkedQuery> {
-      return requester<GetPostBookmarkedQuery, GetPostBookmarkedQueryVariables>(GetPostBookmarkedDocument, variables, options) as Promise<GetPostBookmarkedQuery>;
-    },
-    GetTotalBookmarksByUser(variables: GetTotalBookmarksByUserQueryVariables, options?: C): Promise<GetTotalBookmarksByUserQuery> {
-      return requester<GetTotalBookmarksByUserQuery, GetTotalBookmarksByUserQueryVariables>(GetTotalBookmarksByUserDocument, variables, options) as Promise<GetTotalBookmarksByUserQuery>;
+    GetTotalPostInfoByUser(variables: GetTotalPostInfoByUserQueryVariables, options?: C): Promise<GetTotalPostInfoByUserQuery> {
+      return requester<GetTotalPostInfoByUserQuery, GetTotalPostInfoByUserQueryVariables>(GetTotalPostInfoByUserDocument, variables, options) as Promise<GetTotalPostInfoByUserQuery>;
     },
     GetPostsBookmarkedByUser(variables: GetPostsBookmarkedByUserQueryVariables, options?: C): Promise<GetPostsBookmarkedByUserQuery> {
       return requester<GetPostsBookmarkedByUserQuery, GetPostsBookmarkedByUserQueryVariables>(GetPostsBookmarkedByUserDocument, variables, options) as Promise<GetPostsBookmarkedByUserQuery>;
+    },
+    GetTopAuthors(variables?: GetTopAuthorsQueryVariables, options?: C): Promise<GetTopAuthorsQuery> {
+      return requester<GetTopAuthorsQuery, GetTopAuthorsQueryVariables>(GetTopAuthorsDocument, variables, options) as Promise<GetTopAuthorsQuery>;
     },
     GetProfile(variables: GetProfileQueryVariables, options?: C): Promise<GetProfileQuery> {
       return requester<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, variables, options) as Promise<GetProfileQuery>;

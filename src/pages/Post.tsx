@@ -9,7 +9,7 @@ import useTagDisplayMap from "../hooks/useTagDisplayMap"
 import { useToast } from "../providers/ToastProvider"
 import { Pages, ToastType } from "../utils/enums"
 import Trash from "../icons/Trash"
-import { execute, GetPostBookmarkedDocument, GetPostByIdDocument, GetPostLikedDocument } from "../../.graphclient"
+import { execute, GetPostByIdDocument, GetPostUserInfoDocument } from "../../.graphclient"
 import { populateComments, populatePost, uploadComment } from "../utils/pinata"
 import Like from "../icons/Like"
 import Comment from "../icons/Comment"
@@ -52,8 +52,7 @@ function Post() {
   useEffect(() => {
     (async () => {
       try {
-        await isLiked()
-        await isBookmarked()
+        await isLikedOrBookmarked()
         if (loadingToastId.current) {
           removeToast(loadingToastId.current)
           loadingToastId.current = null
@@ -273,22 +272,17 @@ function Post() {
     })()
   }
 
-  const isLiked = async () => {
-    const result = await execute(GetPostLikedDocument, {
+  const isLikedOrBookmarked = async () => {
+    const result = await execute(GetPostUserInfoDocument, {
       id: `${account.address?.toLowerCase()}-${params.postId}`
     })
-    if (result && result.data) {
+    if (result.data) {
       setUserLiked(result.data.like !== null)
-    } else setUserLiked(false)
-  }
-
-  const isBookmarked = async () => {
-    const result = await execute(GetPostBookmarkedDocument, {
-      id: `${account.address?.toLowerCase()}-${params.postId}`
-    })
-    if (result && result.data) {
       setUserBookmarked(result.data.bookmark !== null)
-    } else setUserBookmarked(false)
+    } else {
+      setUserLiked(false)
+      setUserBookmarked(false)
+    }
   }
 
   const handleLikeButton = async (e: React.MouseEvent<HTMLButtonElement>) => {

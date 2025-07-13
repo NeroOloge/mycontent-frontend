@@ -13,7 +13,7 @@ import { useToast } from '../providers/ToastProvider';
 import { wagmiContractConfig } from '../utils/contracts';
 import Copy from '../icons/Copy';
 import { QueryClient } from '@tanstack/react-query';
-import { execute, GetIsFollowingDocument, GetPostBookmarkedDocument, GetPostLikedDocument } from '../../.graphclient';
+import { execute, GetIsFollowingDocument, GetPostUserInfoDocument } from '../../.graphclient';
 import { useEffect, useState } from 'react';
 import Liked from '../icons/Liked';
 import Bookmarked from '../icons/Bookmarked';
@@ -50,8 +50,7 @@ function PostItem({ post, author }: Props) {
   
   useEffect(() => {
     (async () => {
-      await isLiked()
-      await isBookmarked()
+      await isLikedOrBookmarked()
       await checkFollowing(post.author)
     })()
   }, [])
@@ -192,22 +191,17 @@ function PostItem({ post, author }: Props) {
     } else setIsFollowing(false)
   }
 
-  const isLiked = async () => {
-    const result = await execute(GetPostLikedDocument, {
+  const isLikedOrBookmarked = async () => {
+    const result = await execute(GetPostUserInfoDocument, {
       id: `${account.address?.toLowerCase()}-${post.id}`
     })
-    if (result.data && result.data.like) {
+    if (result.data) {
       setUserLiked(result.data.like !== null)
-    } else setUserLiked(false)
-  }
-
-  const isBookmarked = async () => {
-    const result = await execute(GetPostBookmarkedDocument, {
-      id: `${account.address?.toLowerCase()}-${post.id}`
-    })
-    if (result.data && result.data.bookmark) {
       setUserBookmarked(result.data.bookmark !== null)
-    } else setUserBookmarked(false)
+    } else {
+      setUserLiked(false)
+      setUserBookmarked(false)
+    }
   }
 
   const handleCopy = (e: React.MouseEvent<HTMLSpanElement>) => {

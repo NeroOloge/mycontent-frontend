@@ -45,7 +45,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path={Pages.EXPLORE} element={<Explore />} />
               <Route path={Pages.CREATE_POST} element={<CreatePost />} />
               <Route path={Pages.DRAFTS} element={<Drafts />} />
-              <Route path={Pages.EDIT_PROFILE} element={<EditProfile />} />
+              <Route path={Pages.EDIT_PROFILE+"/:authorAddress"} element={<EditProfile />} />
               <Route path={Pages.PROFILE+"/:authorAddress"} element={<Profile />} />
               <Route path={Pages.EDIT_DRAFT+"/:draftId"} element={<EditDraft />} />
               <Route path={Pages.DRAFT_DETAIL+"/:draftId"} element={<Draft />} />

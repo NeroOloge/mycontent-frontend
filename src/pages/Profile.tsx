@@ -6,14 +6,15 @@ import { useEffect, useRef, useState } from "react"
 import { useToast } from "../providers/ToastProvider"
 import { Pages, ToastType } from "../utils/enums"
 import { useAccount, useEnsName, useWriteContract } from "wagmi"
-import { displayAddress, isAuthor } from "../utils/functions"
+import { displayAddress, displayDate, isAuthor } from "../utils/functions"
 import { PopulatedComment, PopulatedPost, PostComment, IProfile, SolidityPost } from "../utils/types";
-import { populateComments, populatePosts } from "../utils/pinata";
-import { execute, GetCommentsByUserDocument, GetFollowersDocument, GetIsFollowingDocument, GetManyPostsDocument, GetPostsBookmarkedByUserDocument, GetPostsBookmarkedByUserQuery, GetPostsByAuthorDocument, GetProfileDocument } from "../../.graphclient";
+import { populateComments, populatePost, populatePosts } from "../utils/pinata";
+import { execute, GetAuthorFirstPostDocument, GetCommentsByUserDocument, GetFollowersDocument, GetIsFollowingDocument, GetManyPostsDocument, GetPostsBookmarkedByUserDocument, GetPostsBookmarkedByUserQuery, GetPostsByAuthorDocument, GetProfileDocument } from "../../.graphclient";
 import PostItem from "../components/PostItem";
 import Copy from "../icons/Copy";
 import { wagmiContractConfig } from "../utils/contracts";
 import Trash from "../icons/Trash";
+import { QueryClient } from "@tanstack/react-query";
 
 function Profile() {
   const location = useLocation()
@@ -24,8 +25,11 @@ function Profile() {
   const tabsContainerRef = useRef<HTMLDivElement>(null!)
   const [currentTab, setCurrentTab] = useState<string>("posts")
   const [isFollowing, setIsFollowing] = useState<boolean>()
+  const [isFollowingBack, setIsFollowingBack] = useState<boolean>()
   
   const [posts, setPosts] = useState<PopulatedPost[]>()
+  const [firstPost, setFirstPost] = useState<number>()
+  const [totalPosts, setTotalPosts] = useState<number>(0)
   const [replies, setReplies] = useState<PostComment>({})
   const [repliedPosts, setRepliedPosts] = useState<SolidityPost[]>()
   const [profile, setProfile] = useState<IProfile>()
@@ -42,6 +46,7 @@ function Profile() {
   })
 
   const { writeContract: deleteComment } = useWriteContract()
+  const { writeContract: follow } = useWriteContract()
 
   useEffect(() => {
     if (!account.isConnected) {
@@ -56,19 +61,34 @@ function Profile() {
 
     if (!isAuthor(params.authorAddress!, account.address)) {
       checkFollowing(params.authorAddress!).then()
+      checkFollowingBack(params.authorAddress!).then()
     }
 
     (async () => {
       try {
-        const profileResult = await execute(GetProfileDocument, { id: account.address!.toString() })
+        const profileResult = await execute(GetProfileDocument, { id: params.authorAddress!.toLowerCase() })
         if (profileResult.data && profileResult.data.profile) {
           setProfile(profileResult.data.profile)
+        }
+        const totalPostsResult = await execute(GetPostsByAuthorDocument, { author: params.authorAddress! })
+        if (totalPostsResult.data && totalPostsResult.data.posts) {
+          setTotalPosts(totalPostsResult.data.posts.length)
+        }
+        const firstPostResult = await execute(GetAuthorFirstPostDocument, {
+          author: params.authorAddress!
+        })
+        if (firstPostResult.data && firstPostResult.data.posts) {
+          const data = firstPostResult.data
+          if (data.posts.length === 1) {
+            const populatedPost = await populatePost(data.posts[0].cid)
+            setFirstPost(populatedPost.timestamp)
+          }
         }
       } catch (e) {
         console.error(e)
       }
     })()
-  }, [])
+  }, [params.authorAddress])
 
   useEffect(() => {
     (async () => {
@@ -103,7 +123,7 @@ function Profile() {
             let result
             if (currentTab === "bookmarks") {
               const bookmarkResult = await execute(GetPostsBookmarkedByUserDocument, { user: params.authorAddress! })
-              if (bookmarkResult && bookmarkResult.data) {
+              if (bookmarkResult && bookmarkResult.data && bookmarkResult.data.bookmarks) {
                 const postIds = (bookmarkResult.data as GetPostsBookmarkedByUserQuery)
                   .bookmarks.map((bookmark) => bookmark.post.id)
                 if (postIds.length > 0)
@@ -157,7 +177,16 @@ function Profile() {
     if (result.data && result.data.isFollowing) {
       setIsFollowing(result.data.isFollowing !== null)
     } else setIsFollowing(false)
-  } 
+  }
+  
+  const checkFollowingBack = async (author: string) => {
+    const result = await execute(GetIsFollowingDocument, {
+      id: `${author.toLowerCase()}-${account.address?.toLowerCase()}`
+    })
+    if (result.data && result.data.isFollowing) {
+      setIsFollowingBack(result.data.isFollowing !== null)
+    } else setIsFollowingBack(false)
+  }
 
   const handleDeleteComment = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
@@ -210,6 +239,56 @@ function Profile() {
     })
   }
 
+  const handleFollow = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    follow({
+      ...wagmiContractConfig,
+      functionName: 'follow',
+      args: [params.authorAddress! as `0x${string}`, BigInt(Date.now())]
+    }, {
+      onSuccess: () => {
+        addToast("Followed author", {
+          type: ToastType.SUCCESS,
+          duration: 3000
+        })
+      },
+      onError: (error) => {
+        console.error(error)
+        addToast(error.message.split("\n")[0], {
+          type: ToastType.ERROR,
+          duration: 3000
+        })
+      }
+    })
+    new QueryClient()
+      .invalidateQueries({ queryKey: ['readContract'] });
+  }
+
+  const handleUnfollow = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    follow({
+      ...wagmiContractConfig,
+      functionName: 'unfollow',
+      args: [params.authorAddress! as `0x${string}`]
+    }, {
+      onSuccess: () => {
+        addToast("Unfollowed author", {
+          type: ToastType.SUCCESS,
+          duration: 3000
+        })
+      },
+      onError: (error) => {
+        console.error(error)
+        addToast(error.message.split("\n")[0], {
+          type: ToastType.ERROR,
+          duration: 3000
+        })
+      }
+    })
+    new QueryClient()
+      .invalidateQueries({ queryKey: ['readContract'] });
+  }
+
   const handleAuthorClick = (author: string) => {
     navigate(`${Pages.PROFILE}/${author}`)
   }
@@ -218,11 +297,18 @@ function Profile() {
     navigate(`${Pages.POST_DETAIL}/${postId}`)
   }
 
+  const handleEditProfileClick = () => {
+    navigate(`${Pages.EDIT_PROFILE}/${params.authorAddress!}`)
+  }
+
   return (
     <>
       <Header />
       {account.isConnected && <main className="relative mt-16 flex flex-col items-center mx-auto px-4 space-y-8">
-        <p className="md:absolute relative top-0 -right-10 md:right-0">Member since [date]</p>
+        {firstPost ? <p className="md:absolute relative top-0 -right-10 md:right-0">
+          Member since {displayDate(firstPost)}
+        </p>
+        : <p></p>}
         <img src={profile?.imageCID || makeBlockie(params.authorAddress!)} className="image image-profile" />
         <div className="text-center space-y-4">
           <div className="space-y-2">
@@ -238,7 +324,7 @@ function Profile() {
         </div>
         <div className="flex justify-between w-full md:max-w-xs">
           <div className="flex flex-col items-center">
-            <span className="stats">{posts ? posts.length : 0}</span>
+            <span className="stats">{totalPosts}</span>
             <span className="stats stats-title">posts</span>
           </div>
           <div className="flex flex-col items-center">
@@ -251,9 +337,11 @@ function Profile() {
           </div>
         </div>
         {isAuthor(params.authorAddress!, account.address!) ? 
-        <button className="button button-dark text-xl">Edit profile</button> :
-        !isFollowing ? <button className="button button-dark text-xl">Follow</button> :
-        <button className="button button-dark text-xl">Following</button>}
+        <button onClick={handleEditProfileClick} className="button button-dark text-xl">Edit profile</button> :
+        !isFollowing ? <button onClick={handleFollow} className="button button-dark text-xl">
+          {isFollowingBack ? "Follow Back" : "Follow"} </button> :
+        <button onClick={handleUnfollow} 
+          className="button button-dark text-xl">Following</button>}
         <div ref={tabsContainerRef}
           className="flex justify-between w-full md:max-w-xs">
           <span onClick={switchTabs} id="posts" className={`tabs-profile tabs-active-profile`}>Posts</span>

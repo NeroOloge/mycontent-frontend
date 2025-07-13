@@ -85,6 +85,10 @@
     @apply w-[40%] md:w-[10%]
   }
 
+  .image-explore {
+    @apply w-[10%]
+  }
+
   .stats {
     @apply text-xl
   }

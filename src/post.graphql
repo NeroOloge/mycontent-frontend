@@ -18,9 +18,19 @@ query GetPostById($id: ID!) {
   }
 }
 
+query GetAuthorFirstPost($author: Bytes!) {
+  posts(orderBy: blockTimestamp, orderDirection: asc, 
+  first: 1, where: {author: $author}) {
+    id
+    author
+    cid
+    blockTimestamp
+  }
+}
+
 query GetPostsByAuthor($author: Bytes!) {
   posts(orderBy: blockTimestamp, orderDirection: desc, 
-  first: 6, where: {author: $author, isDeleted: false}) {
+  first: 10, where: {author: $author, isDeleted: false}) {
     id
     author
     cid
@@ -40,7 +50,7 @@ query GetPostsByAuthor($author: Bytes!) {
 
 query GetPosts {
   posts(orderBy: blockTimestamp, orderDirection: desc, 
-  first: 6, where: {isDeleted: false}) {
+  first: 10, where: {isDeleted: false}) {
     id
     author
     cid
@@ -60,7 +70,7 @@ query GetPosts {
 
 query GetManyPosts($ids: [ID!]) {
   posts(orderBy: blockTimestamp, orderDirection: desc, 
-  first: 6, where: {isDeleted: false, id_in: $ids}) {
+  where: {isDeleted: false, id_in: $ids}) {
     id
     author
     cid
@@ -79,7 +89,7 @@ query GetManyPosts($ids: [ID!]) {
 }
 
 query GetMostLikedPosts {
-  posts(orderBy: likes, orderDirection: desc, first: 6, 
+  posts(orderBy: likes, orderDirection: desc, first: 10, 
   where: {
     isDeleted: false
   }) {
@@ -102,7 +112,7 @@ query GetMostLikedPosts {
 }
 
 query FilterMostLikedPostsByTag($tag: String!) {
-  posts(orderBy: likes, orderDirection: desc, first: 6, 
+  posts(orderBy: likes, orderDirection: desc, first: 10, 
   where: {
     isDeleted: false
     tags_: {tag_contains: $tag}
@@ -125,13 +135,43 @@ query FilterMostLikedPostsByTag($tag: String!) {
   }
 }
 
-query FilterMostLikedPosts($title: String!, $author: String!, $tag: String!) {
-  posts(orderBy: likes, orderDirection: desc, first: 6, 
+query FilterMostLikedPosts($searchTerm: String!) {
+  posts(orderBy: likes, orderDirection: desc, first: 10, 
   where: {
     and: [
       {isDeleted: false}
       {or: [
-      	{title_contains_nocase: $title} {tags_: {tag_contains: $tag}}
+      	{title_contains_nocase: $searchTerm} {tags_: {tag_contains: $searchTerm}}
+        {authorString_contains_nocase: $searchTerm}
+      ]}
+    ]
+  }) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+
+query FilterMostLikedPostsBySearchAndTag($title: String!, $author: String!, $tag: String!) {
+  posts(orderBy: likes, orderDirection: desc, first: 10, 
+  where: {
+    and: [
+      {isDeleted: false}
+      {tags_: {tag_contains: $tag}}
+      {or: [
+      	{title_contains_nocase: $title}
         {authorString_contains_nocase: $author}
       ]}
     ]
@@ -162,14 +202,15 @@ query GetPopularTags {
 }
 
 query GetTrendingTags($time: BigInt) {
-  tags(where: { blockTimestamp_gt: $time }) {
+  tags(where: { blockTimestamp_gt: $time }, first: 10) {
     id
     tag
+    blockTimestamp
   }
 }
 
 query FilterPostsByTag($tag: String!) {
-  posts(orderBy: blockTimestamp, orderDirection: desc, first: 6, 
+  posts(orderBy: blockTimestamp, orderDirection: desc, first: 10, 
   where: {
     isDeleted: false
     tags_: {tag_contains: $tag}
@@ -192,13 +233,43 @@ query FilterPostsByTag($tag: String!) {
   }
 }
 
-query FilterPosts($title: String!, $author: String!, $tag: String!) {
-  posts(orderBy: blockTimestamp, orderDirection: desc, first: 6, 
+query FilterPosts($searchTerm: String!) {
+  posts(orderBy: blockTimestamp, orderDirection: desc, first: 10, 
   where: {
     and: [
       {isDeleted: false}
       {or: [
-      	{title_contains_nocase: $title} {tags_: {tag_contains: $tag}}
+      	{title_contains_nocase: $searchTerm} {tags_: {tag_contains: $searchTerm}}
+        {authorString_contains_nocase: $searchTerm}
+      ]}
+    ]
+  }) {
+    id
+    author
+    cid
+    title
+    likes
+    bookmarks
+    comments {
+      id
+      cid
+      commenter
+    }
+    tags {
+      id
+      tag
+    }
+  }
+}
+
+query FilterPostsBySearchAndTag($title: String!, $author: String!, $tag: String!) {
+  posts(orderBy: blockTimestamp, orderDirection: desc, first: 10, 
+  where: {
+    and: [
+      {isDeleted: false}
+      {tags_: {tag_contains: $tag}}
+      {or: [
+      	{title_contains_nocase: $title}
         {authorString_contains_nocase: $author}
       ]}
     ]
@@ -222,7 +293,7 @@ query FilterPosts($title: String!, $author: String!, $tag: String!) {
 }
 
 query GetCommentsByUser($user: Bytes!) {
-  comments(orderBy: blockTimestamp, orderDirection: desc, first: 6,
+  comments(orderBy: blockTimestamp, orderDirection: desc, first: 10,
   where: {commenter: $user}) {
     id
     cid
@@ -231,16 +302,6 @@ query GetCommentsByUser($user: Bytes!) {
       id
       author
       title
-    }
-  }
-}
-
-query GetTotalCommentsByUser($user: Bytes!) {
-  comments(where: {commenter: $user}) {
-    id
-    commenter
-    post {
-      id
     }
   }
 }
@@ -266,26 +327,13 @@ query GetIsFollowing($id: ID!) {
   }
 }
 
-query GetPostLiked($id: ID!) {
+query GetPostUserInfo($id: ID!) {
   like(id: $id) {
     user
     post {
       id
     }
   }
-}
-
-query GetTotalLikesByUser($user: Bytes!) {
-  likes(where: {user: $user}) {
-    id
-    user
-    post {
-      id
-    }
-  }
-}
-
-query GetPostBookmarked($id: ID!) {
   bookmark(id: $id) {
     user
     post {
@@ -294,9 +342,23 @@ query GetPostBookmarked($id: ID!) {
   }
 }
 
-query GetTotalBookmarksByUser($user: Bytes!) {
+query GetTotalPostInfoByUser($user: Bytes!) {
+  likes(where: {user: $user}) {
+    id
+    user
+    post {
+      id
+    }
+  }
   bookmarks(where: {user: $user}) {
     user
+    post {
+      id
+    }
+  }
+  comments(where: {commenter: $user}) {
+    id
+    commenter
     post {
       id
     }
@@ -304,12 +366,20 @@ query GetTotalBookmarksByUser($user: Bytes!) {
 }
 
 query GetPostsBookmarkedByUser($user: Bytes!) {
-  bookmarks(orderBy: timestamp, orderDirection: desc, first: 6
+  bookmarks(orderBy: timestamp, orderDirection: desc, first: 10
   where: {user: $user}) {
     user
     post {
       id
     }
+  }
+}
+
+query GetTopAuthors {
+  authors(orderBy: totalLikes, orderDirection: desc, first: 5) {
+    id
+    postCount
+    totalLikes
   }
 }
 

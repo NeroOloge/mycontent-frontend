@@ -5,7 +5,7 @@ import { useToast } from "../providers/ToastProvider"
 import { Pages, ToastType } from "../utils/enums"
 import Search from "../icons/Search"
 import { PopulatedPost } from "../utils/types"
-import { execute, FilterMostLikedPostsByTagDocument, FilterPostsByTagDocument, FilterPostsDocument, GetMostLikedPostsDocument, GetPopularTagsDocument, GetPopularTagsQuery, GetPostsDocument } from "../../.graphclient"
+import { execute, FilterMostLikedPostsBySearchAndTagDocument, FilterMostLikedPostsByTagDocument, FilterPostsBySearchAndTagDocument, FilterPostsByTagDocument, FilterPostsDocument, GetMostLikedPostsDocument, GetPopularTagsDocument, GetPopularTagsQuery, GetPostsDocument } from "../../.graphclient"
 import { populatePosts } from "../utils/pinata"
 import PostItem from "../components/PostItem"
 import { sortPosts } from "../utils/functions"
@@ -59,7 +59,7 @@ function Home() {
       const observer = new IntersectionObserver(entries => {
         console.log(entries)
       })
-      const lastPost = Array.from(postContainer.children)[postContainer.children.length]
+      const lastPost = Array.from(postContainer.children)[postContainer.children.length - 1]
       observer.observe(lastPost)
     }
   }, [])
@@ -76,6 +76,8 @@ function Home() {
           addToast("Loading posts...", { type: ToastType.INFO })
         let result;
         let byLikes = false;
+        // TODO: possibly query all filters and switch
+        // based on changes in tab and tag/search
         if (selectedTag) {
           if (currentTab === 'popular-posts') {
             result = await execute(FilterMostLikedPostsByTagDocument, { tag: selectedTag })
@@ -110,7 +112,7 @@ function Home() {
             duration: 3000 
           })
         }
-        if (tagResult && tagResult.data) {
+        if (tagResult && tagResult.data && tagResult.data.tagSummaries) {
           const popularTags = (tagResult.data as GetPopularTagsQuery)
             .tagSummaries.map((summary) => summary.id)
           setTags(popularTags)
@@ -151,31 +153,63 @@ function Home() {
     if (e.currentTarget.id === selectedTag) {
       setSelectedTag('')
       if (currentTab === 'popular-posts') {
-        result = await execute(FilterMostLikedPostsByTagDocument, {
-          tag: ''
-        })
-        byLikes = true
+        if (searchInput) {
+          result = await execute(FilterMostLikedPostsBySearchAndTagDocument, {
+            title: searchInput,
+            author: searchInput,
+            tag: ''
+          })
+          byLikes = true
+        } else {
+          result = await execute(FilterMostLikedPostsByTagDocument, {
+            tag: ''
+          })
+          byLikes = true
+        }
+      } else {
+        if (searchInput)
+          result = await execute(FilterPostsBySearchAndTagDocument, {
+            title: searchInput,
+            author: searchInput,
+            tag: ''
+          })
+        else
+          result = await execute(FilterPostsByTagDocument, {
+            tag: ''
+          })
       }
-      else
-        result = await execute(FilterPostsByTagDocument, {
-          tag: ''
-        })
           
     } else {
       e.currentTarget.className = `tags-home tags-active-home`
       setSelectedTag(e.currentTarget.id)
       if (currentTab === 'popular-posts') {
-        result = await execute(FilterMostLikedPostsByTagDocument, {
-          tag: e.currentTarget.id
-        })
-        byLikes = true
+        if (searchInput) {
+          result = await execute(FilterMostLikedPostsBySearchAndTagDocument, {
+            title: searchInput,
+            author: searchInput,
+            tag: e.currentTarget.id
+          })
+          byLikes = true
+        } else {
+          result = await execute(FilterMostLikedPostsByTagDocument, {
+            tag: e.currentTarget.id
+          })
+          byLikes = true
+        }
       }
       else  
-        result = await execute(FilterPostsByTagDocument, {
-          tag: e.currentTarget.id
-        })
+        if (searchInput)
+          result = await execute(FilterPostsBySearchAndTagDocument, {
+            title: searchInput,
+            author: searchInput,
+            tag: e.currentTarget.id
+          })
+        else
+          result = await execute(FilterPostsByTagDocument, {
+            tag: e.currentTarget.id
+          })
     }
-    if (result && result.data) {
+    if (result && result.data && result.data.posts) {
       const [populatedPosts] = await Promise.all([
         populatePosts(result.data.posts)
       ])
@@ -186,11 +220,17 @@ function Home() {
   const handleChange = async (input: string) => {
     setSearchInput(input)
     try {
-      const result = await execute(FilterPostsDocument, {
-        title: input,
-        author: input,
-        tag: selectedTag || input
-      })
+      let result
+      if (selectedTag) 
+        result = await execute(FilterPostsBySearchAndTagDocument, {
+          title: input,
+          author: input,
+          tag: selectedTag
+        })
+      else
+        result = await execute(FilterPostsDocument, {
+          searchTerm: input
+        })
       if (result.data && result.data.posts) {
         const [populatedPosts] = await Promise.all([
           populatePosts(result.data.posts)

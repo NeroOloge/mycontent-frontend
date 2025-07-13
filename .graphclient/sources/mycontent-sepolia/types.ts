@@ -29,6 +29,58 @@ export type Aggregation_interval =
   | 'hour'
   | 'day';
 
+export type Author = {
+  id: Scalars['ID']['output'];
+  postCount: Scalars['Int']['output'];
+  totalLikes: Scalars['Int']['output'];
+  totalBookmarks: Scalars['Int']['output'];
+};
+
+export type Author_filter = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  postCount?: InputMaybe<Scalars['Int']['input']>;
+  postCount_not?: InputMaybe<Scalars['Int']['input']>;
+  postCount_gt?: InputMaybe<Scalars['Int']['input']>;
+  postCount_lt?: InputMaybe<Scalars['Int']['input']>;
+  postCount_gte?: InputMaybe<Scalars['Int']['input']>;
+  postCount_lte?: InputMaybe<Scalars['Int']['input']>;
+  postCount_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  postCount_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  totalLikes?: InputMaybe<Scalars['Int']['input']>;
+  totalLikes_not?: InputMaybe<Scalars['Int']['input']>;
+  totalLikes_gt?: InputMaybe<Scalars['Int']['input']>;
+  totalLikes_lt?: InputMaybe<Scalars['Int']['input']>;
+  totalLikes_gte?: InputMaybe<Scalars['Int']['input']>;
+  totalLikes_lte?: InputMaybe<Scalars['Int']['input']>;
+  totalLikes_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  totalLikes_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  totalBookmarks?: InputMaybe<Scalars['Int']['input']>;
+  totalBookmarks_not?: InputMaybe<Scalars['Int']['input']>;
+  totalBookmarks_gt?: InputMaybe<Scalars['Int']['input']>;
+  totalBookmarks_lt?: InputMaybe<Scalars['Int']['input']>;
+  totalBookmarks_gte?: InputMaybe<Scalars['Int']['input']>;
+  totalBookmarks_lte?: InputMaybe<Scalars['Int']['input']>;
+  totalBookmarks_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  totalBookmarks_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Author_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Author_filter>>>;
+};
+
+export type Author_orderBy =
+  | 'id'
+  | 'postCount'
+  | 'totalLikes'
+  | 'totalBookmarks';
+
 export type BlockChangedFilter = {
   number_gte: Scalars['Int']['input'];
 };
@@ -742,6 +794,8 @@ export type Query = {
   follows: Array<Follow>;
   post?: Maybe<Post>;
   posts: Array<Post>;
+  author?: Maybe<Author>;
+  authors: Array<Author>;
   like?: Maybe<Like>;
   likes: Array<Like>;
   bookmark?: Maybe<Bookmark>;
@@ -808,6 +862,24 @@ export type QuerypostsArgs = {
   orderBy?: InputMaybe<Post_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   where?: InputMaybe<Post_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryauthorArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryauthorsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Author_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<Author_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -1212,6 +1284,10 @@ export type _SubgraphErrorPolicy_ =
   post: InContextSdkMethod<Query['post'], QuerypostArgs, MeshContext>,
   /** null **/
   posts: InContextSdkMethod<Query['posts'], QuerypostsArgs, MeshContext>,
+  /** null **/
+  author: InContextSdkMethod<Query['author'], QueryauthorArgs, MeshContext>,
+  /** null **/
+  authors: InContextSdkMethod<Query['authors'], QueryauthorsArgs, MeshContext>,
   /** null **/
   like: InContextSdkMethod<Query['like'], QuerylikeArgs, MeshContext>,
   /** null **/

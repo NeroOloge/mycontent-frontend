@@ -73,6 +73,25 @@ export const wagmiContractConfig = {
       stateMutability: 'nonpayable',
       inputs: [{ name: 'userToFollow', type: 'address' }, { name: 'timestamp', type: 'uint256' }],
       outputs: [],
+    },
+    {
+      type: 'function',
+      name: 'unfollow',
+      stateMutability: 'nonpayable',
+      inputs: [{ name: 'userToUnfollow', type: 'address' }],
+      outputs: [],
+    },
+    {
+      type: 'function',
+      name: 'updateProfile',
+      stateMutability: 'nonpayable',
+      inputs: [
+        { name: 'username', type: 'string' }, 
+        { name: 'bio', type: 'string' },
+        { name: 'imageCID', type: 'string' },
+        { name: 'timestamp', type: 'uint256' }
+      ],
+      outputs: [],
     }
   ]
 } as const
