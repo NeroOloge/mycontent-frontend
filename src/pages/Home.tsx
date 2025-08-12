@@ -9,6 +9,7 @@ import { execute, FilterMostLikedPostsBySearchAndTagDocument, FilterMostLikedPos
 import { populatePosts } from "../utils/pinata"
 import PostItem from "../components/PostItem"
 import { sortPosts } from "../utils/functions"
+import { POST_LIMIT } from "../utils/constants"
 
 function Home() {
   const location = useLocation()
@@ -16,6 +17,8 @@ function Home() {
   const { addToast, removeToast } = useToast()
   const [currentTab, setCurrentTab] = useState<string>("recent-posts")
   const [posts, setPosts] = useState<PopulatedPost[]>()
+  const skipRef = useRef(0)
+  const isLoadingRef = useRef(false)
   const [tags, setTags] = useState<string[]>([])
   const [selectedTag, setSelectedTag] = useState<string>()
   const [searchInput, setSearchInput] = useState('')
@@ -25,6 +28,59 @@ function Home() {
 
   const tabsContainerRef = useRef<HTMLDivElement>(null!)
   const postContainerRef = useRef<HTMLDivElement>(null!)
+  const observerRef = useRef<IntersectionObserver>()
+
+  const loadMorePosts = async (observer: IntersectionObserver) => {
+    if (isLoadingRef.current) return
+    isLoadingRef.current = true
+    if (loadingToastId.current) {
+      removeToast(loadingToastId.current)
+      loadingToastId.current = null
+    }
+    loadingToastId.current = 
+      addToast("Loading more posts...", { type: ToastType.INFO })
+    
+    const result = await execute(GetPostsDocument, { skip: skipRef.current + POST_LIMIT })
+    if (result.data && result.data.posts.length > 0) {
+      const [populatedPosts] = await Promise.all([
+        populatePosts(result.data.posts)
+      ])
+      skipRef.current += POST_LIMIT
+      setPosts(prev => prev ? [...prev, ...populatedPosts] : populatedPosts)
+      if (loadingToastId.current) {
+        removeToast(loadingToastId.current)
+        loadingToastId.current = null
+      }
+      successToastId.current = 
+        addToast("Posts loaded successfully", {
+          type: ToastType.SUCCESS, duration: 3000
+        })
+    } else {
+      observer.disconnect()
+      if (loadingToastId.current) {
+        removeToast(loadingToastId.current)
+        loadingToastId.current = null
+      }
+    }
+    isLoadingRef.current = false
+  }
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver((entries, observer) => {
+      const entry = entries[0]
+      if (entry.isIntersecting) {
+        loadMorePosts(observer)
+      }
+    }, { threshold: 1 })
+    const postContainer = postContainerRef.current
+    if (postContainer && postContainer.lastElementChild) {
+      observerRef.current.observe(postContainer.lastElementChild)
+    }
+
+    return () => {
+      if (observerRef.current) observerRef.current.disconnect()
+    }
+  }, [])
 
   useEffect(() => {
     if (location.state?.loggedIn === false) {
@@ -32,7 +88,7 @@ function Home() {
         type: ToastType.WARNING, duration: 3000
       })
       navigate(`${Pages.HOME}`, { state: {} })
-      return;
+      return
     }
   
     if (location.state?.loggedOut === true) {
@@ -40,7 +96,7 @@ function Home() {
         type: ToastType.SUCCESS, duration: 3000
       })
       navigate(`${Pages.HOME}`, { state: {} })
-      return;
+      return
     }
   
     if (location.state?.cancelled === true) {
@@ -48,21 +104,24 @@ function Home() {
         type: ToastType.WARNING, duration: 3000
       })
       navigate(`${Pages.HOME}`, { state: {} })
-      return;
+      return
     }
-
   }, [])
+
+  
+
+
   
   useEffect(() => {
-    const postContainer = postContainerRef.current
-    if (postContainer) {
-      const observer = new IntersectionObserver(entries => {
-        console.log(entries)
-      })
-      const lastPost = Array.from(postContainer.children)[postContainer.children.length - 1]
-      observer.observe(lastPost)
+    if (!postContainerRef.current || !observerRef.current) return
+    const lastPost = postContainerRef.current.lastElementChild
+    if (lastPost) {
+      observerRef.current.observe(lastPost)
     }
-  }, [])
+    return () => {
+      if (observerRef.current) observerRef.current.disconnect()
+    }
+  }, [posts])
 
   useEffect(() => {
     (async () => {
@@ -74,23 +133,7 @@ function Home() {
 
         loadingToastId.current = 
           addToast("Loading posts...", { type: ToastType.INFO })
-        let result;
-        let byLikes = false;
-        // TODO: possibly query all filters and switch
-        // based on changes in tab and tag/search
-        if (selectedTag) {
-          if (currentTab === 'popular-posts') {
-            result = await execute(FilterMostLikedPostsByTagDocument, { tag: selectedTag })
-            byLikes = true
-          } else
-            result = await execute(FilterPostsByTagDocument, { tag: selectedTag })
-        } else {
-          if (currentTab === 'popular-posts') {
-            result = await execute(GetMostLikedPostsDocument, {})
-            byLikes = true
-          } else
-            result = await execute(GetPostsDocument, {})
-        }
+        const { result, byLikes } = await getRelevantResult()
           
         const tagResult = await execute(GetPopularTagsDocument, {})
         if (result.data && result.data.posts) {
@@ -134,6 +177,27 @@ function Home() {
     })()
   }, [currentTab])
 
+  const getRelevantResult = async () => {
+    let result
+    let byLikes
+    // TODO: possibly query all filters and switch
+    // based on changes in tab and tag/search
+    if (selectedTag) {
+      if (currentTab === 'popular-posts') {
+        result = await execute(FilterMostLikedPostsByTagDocument, { tag: selectedTag })
+        byLikes = true
+      } else
+        result = await execute(FilterPostsByTagDocument, { tag: selectedTag })
+    } else {
+      if (currentTab === 'popular-posts') {
+        result = await execute(GetMostLikedPostsDocument, {})
+        byLikes = true
+      } else
+        result = await execute(GetPostsDocument, { skip: skipRef.current })
+    }
+    return { result, byLikes }
+  }
+
   const switchTabs = (e: any) => {
     const tabs = Array.from(tabsContainerRef.current.children)
     tabs.forEach(tab => {
@@ -149,7 +213,7 @@ function Home() {
       tagElement.className = 'tags-home'
     })
     let result
-    let byLikes = false;
+    let byLikes = false
     if (e.currentTarget.id === selectedTag) {
       setSelectedTag('')
       if (currentTab === 'popular-posts') {
@@ -273,10 +337,10 @@ function Home() {
             <div 
               className={currentTab === "recent-posts" ? "visible space-y-2" : "hidden"}>
               <h2 className="font-semibold text-xl">Recent Posts</h2>
-              {posts && posts.length > 0 ? <div ref={postContainerRef} 
+              {posts && posts.length > 0 ? <div ref={postContainerRef} id="post-container"
                 className="md:grid md:grid-cols-3 md:gap-3 md:items-stretch space-y-3 md:space-y-0">
                 {posts.map(post => (
-                  <PostItem author={post.author} post={post} key={post.id} />
+                  <PostItem author={post.author} post={post} key={`${post.id}`} />
                 ))}
               </div> : <div className="text-lg md:text-base text-secondary-foreground">No posts found</div>}
             </div>
@@ -285,7 +349,7 @@ function Home() {
               <h2 className="font-semibold text-xl">Popular Posts</h2>
               {posts && posts.length > 0 ? <div className="md:grid md:grid-cols-3 md:gap-3 md:items-stretch space-y-3 md:space-y-0">
                 {posts.map(post => (
-                  <PostItem author={post.author} post={post} key={post.id} />
+                  <PostItem author={post.author} post={post} key={`${post.id}`} />
                 ))}
               </div> : <div className="text-lg md:text-base text-secondary-foreground">No posts found</div>}
             </div>

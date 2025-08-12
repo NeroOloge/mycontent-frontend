@@ -48,9 +48,9 @@ query GetPostsByAuthor($author: Bytes!) {
   }
 }
 
-query GetPosts {
+query GetPosts($skip: Int!) {
   posts(orderBy: blockTimestamp, orderDirection: desc, 
-  first: 10, where: {isDeleted: false}) {
+  first: 10, skip: $skip, where: {isDeleted: false}) {
     id
     author
     cid

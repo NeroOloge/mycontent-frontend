@@ -260,7 +260,7 @@ function PostItem({ post, author }: Props) {
   }
 
   return (
-    <div onClick={handleClick} key={`${post.id}`} data-id={`${post.id}`} className="cursor-pointer flex flex-col h-full min-h-[200px] px-3 py-2 rounded-lg bg-secondary">
+    <div onClick={handleClick} key={`${post.id}`} data-id={`${post.id}`} className="cursor-pointer flex flex-col h-full min-h-[200px] px-3 py-2 rounded-lg bg-secondary post-item">
       <h1 className="text-xl font-semibold mb-1 line-clamp-2">{post.title}</h1>
       <p className="flex space-x-1 items-center text-secondary-foreground h-5 mb-1">
         <span onClick={handleAuthorClick} className="hover:underline">
