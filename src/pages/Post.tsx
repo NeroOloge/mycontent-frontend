@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import moment from "moment"
-import { PopulatedComment, PopulatedPost } from "../utils/types"
+import { v4 as uuidv4 } from 'uuid';
+import { useScrollPercentage } from 'react-scroll-percentage'
+import { PopulatedComment, PopulatedPost, View } from "../utils/types"
 import { displayAddress, isAuthor } from "../utils/functions"
 import Header from "../components/Header"
 import RenderHTML from "../components/RenderHTML"
@@ -31,6 +33,8 @@ function Post() {
   const [comment, setComment] = useState("")
   const [userLiked, setUserLiked] = useState(false)
   const [userBookmarked, setUserBookmarked] = useState(false)
+  const viewSentRef = useRef(false)
+  const timeoutRef = useRef<number | null>()
   const loadingToastId = useRef<number | null>()
   const tagDisplayMap = useTagDisplayMap()
 
@@ -42,12 +46,57 @@ function Post() {
   const { writeContract: addComment } = useWriteContract()
   const { writeContract: deleteComment } = useWriteContract()
 
+  const [ref, percentage] = useScrollPercentage({
+    threshold: 0
+  })
+
   const { data: ensName } = useEnsName({
     address: post?.author,
     query: {
       enabled: !!post?.author,
     }
   })
+
+  useEffect(() => {
+    if (percentage > 0.3) {
+      sendView({
+        postId: params.postId!,
+        viewerType: account.address ? 'wallet' : 'guest',
+        viewerKey: account.address || localStorage.getItem('guestId') 
+          || uuidv4(),
+        scrolledPct: percentage,
+      })
+    }
+  }, [percentage])
+
+  useEffect(() => {
+    if (viewSentRef.current) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [viewSentRef.current])
+
+  const sendView = (view: View) => {
+    if (!viewSentRef.current) {
+      console.log(view)
+      viewSentRef.current = true
+    }
+  }
+
+  const createViewThreshold = async () => {
+    timeoutRef.current = window.setTimeout(
+      () => sendView({
+        postId: params.postId!,
+        viewerType: account.address ? 'wallet' : 'guest',
+        viewerKey: account.address || localStorage.getItem('guestId') 
+          || uuidv4(),
+        durationMs: 8000,
+      }), 8000);
+    // setTimeout(() => {
+    //   clearTimeout(timer)
+    // }, 5000)
+  }
   
   useEffect(() => {
     (async () => {
@@ -76,6 +125,7 @@ function Post() {
           }
           addToast("Post loaded successfully", 
             { type: ToastType.SUCCESS, duration: 3000 })
+          await createViewThreshold()
         }
       } catch (error) {
         console.error(error)
@@ -309,7 +359,7 @@ function Post() {
   }
 
   return (
-    <>
+    <div ref={ref}>
       <Header />
       {post ? <main className="mt-16 flex flex-col mx-auto px-4 space-y-8">
         <div className="flex flex-col h-full">
@@ -392,7 +442,7 @@ function Post() {
           </div>
         </div>
       </main> : "Loading..."}
-    </>
+    </div>
   )
 }
 

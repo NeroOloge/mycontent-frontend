@@ -1,40 +1,62 @@
 # MyContent — Decentralised Blogging Frontend
 
-**MyContent** is a censorship-resistant, Web3 blogging platform that lets writers own their content. Drafts can be saved off-chain, while published posts are stored permanently on IPFS with content references recorded on-chain.
+**MyContent** is a censorship-resistant blogging platform designed around **content ownership** and **verifiable publishing**. Drafts are managed off-chain for usability, while published posts are stored on IPFS and referenced on-chain, enabling durable and tamper-evident content.
 
-## 🚀 Live Demo
+## Live Demo
 
-👉 [https://mycontent-frontend.vercel.app](https://mycontent-frontend.vercel.app)
-
----
-
-## ✨ Features
-
-- ✍️ Rich text editor with embedded image support (via Tiptap)
-- 🔐 Wallet connection (via wagmi and Ethers.js)
-- 💾 Draft syncing via Firebase (with offline fallback)
-- 📝 On-chain post creation with IPFS storage
-- 💬 Comments, Likes, Bookmarks (all on-chain)
-- 🧾 ENS-based identity support
-- 🔍 Explore and search by tags, titles, and authors
-- 📄 Editable user profiles (on-chain)
-- 🔄 Fully indexed via The Graph
+[https://mycontent-frontend.vercel.app](https://mycontent-frontend.vercel.app)
 
 ---
 
-## 🛠️ Stack
-
-- **React + TypeScript**
-- **Tiptap** for rich text editing
-- **wagmi + Ethers.js** for blockchain interaction
-- **Firebase (Firestore + Storage)** for draft management
-- **Cloudinary** for draft image uploads
-- **IPFS** (via web3.storage and Pinata)
-- **The Graph** for post indexing and filtering
+## Key Capabilities
+### Publishing & Identity
+- Rich text editor with embedded image support (Tiptap)
+- Wallet connection (wagmi and Ethers.js)
+- ENS resolution for author identity (name + address display)
+### Content Storage Model
+- Drafts stored off-chain (Firebase) for fast iteration and offline-friendly editing
+- Published posts persisted to IPFS (Pinata / web3.storage) with on-chain references
+- Indexed querying via The Graph for fast feed rendering and filtering
+### Discovery & Feed
+- Explore feed with lazy loading / incremental fetch
+- Search by title and author
+- Tag-based discovery and browsing
+### Engagement
+- Likes, comments, and bookmarks recorded on-chain
+- User profile with tabs for:
+  - Posts
+  - Replies
+  - Bookmarks
+### Analytics (Current)
+- Account-level engagement summary:
+  - Total likes
+  - Total replies
+  - Total bookmarks
 
 ---
 
-## 🔧 Setup
+## Tech Stack
+
+- **Frontend**: React + TypeScript
+- **Editor**: Tiptap
+- **Web3**: wagmi + Ethers.js
+- Draft Management: Firebase (Firestore + Storage) with offline fallback
+- **Media**: Cloudinary (draft image uploads)
+- **Storage**: IPFS via Pinata / web3.storage
+- **Indexing**: The Graph (post indexing and feed queries)
+
+---
+
+## Architecture Overview (High-Level)
+
+- **Draft workflow**: off-chain for speed and usability
+- **Publish workflow**: content → IPFS → on-chain reference
+- **Read workflow**: The Graph indexes on-chain data → frontend queries indexed views
+- **Engagement workflow**: like/comment/bookmark transactions on-chain, reflected via indexing
+
+---
+
+## Local Development
 
 ### 1. Clone the repo
 ```bash
@@ -66,6 +88,18 @@ VITE_FIREBASE_MEASUREMENT_ID=your_firebase_measurement_id
 ```bash
 npm run dev
 ```
+
+---
+
+## Roadmap (Next Enhancements)
+
+- Cursor-based pagination + deduplication for feed stability
+- Full-text search (content-level search, fuzzy matching)
+- Analytics upgrade: per-post metrics, view tracking, and time-window trends
+- Trending tags / popular posts scoring with time-decay
+- Notifications (off-chain) for replies and engagement
+
+---
 
 ## 🤝 Contributing
 Pull requests welcome! Feel free to fork the project and suggest improvements.

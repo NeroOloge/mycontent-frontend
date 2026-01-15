@@ -5083,7 +5083,7 @@ const schemaAST = {
       "kind": "ScalarTypeDefinition",
       "description": {
         "kind": "StringValue",
-        "value": "8 bytes signed integer\n",
+        "value": "8 bytes signed integer",
         "block": true
       },
       "name": {
@@ -15400,7 +15400,7 @@ const schemaAST = {
       "kind": "ScalarTypeDefinition",
       "description": {
         "kind": "StringValue",
-        "value": "A string representation of microseconds UNIX timestamp (16 digits)\n",
+        "value": "A string representation of microseconds UNIX timestamp (16 digits)",
         "block": true
       },
       "name": {
@@ -16813,7 +16813,7 @@ const schemaAST = {
           "kind": "FieldDefinition",
           "description": {
             "kind": "StringValue",
-            "value": "Information about a specific subgraph block. The hash of the block\nwill be null if the _meta field has a block constraint that asks for\na block number. It will be filled if the _meta field has no block constraint\nand therefore asks for the latest  block\n",
+            "value": "Information about a specific subgraph block. The hash of the block\nwill be null if the _meta field has a block constraint that asks for\na block number. It will be filled if the _meta field has no block constraint\nand therefore asks for the latest  block",
             "block": true
           },
           "name": {

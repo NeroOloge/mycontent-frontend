@@ -70,3 +70,11 @@ export type TopAuthor = {
   postCount: number;
   imageCID?: string;
 }
+
+export type View = {
+  postId: string;
+  viewerType: 'guest' | 'wallet';
+  viewerKey: string;
+  durationMs?: number;
+  scrolledPct?: number;
+}

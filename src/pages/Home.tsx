@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 import { useLocation, useNavigate } from "react-router"
+import { v4 as uuidv4 } from 'uuid';
 import Header from "../components/Header"
 import { useToast } from "../providers/ToastProvider"
 import { Pages, ToastType } from "../utils/enums"
@@ -57,6 +58,7 @@ function Home() {
         })
     } else {
       observer.disconnect()
+      addToast("End of feed", { type: ToastType.INFO, duration: 2000 })
       if (loadingToastId.current) {
         removeToast(loadingToastId.current)
         loadingToastId.current = null
@@ -83,6 +85,9 @@ function Home() {
   }, [])
 
   useEffect(() => {
+    if (!localStorage.getItem('guestId')) {
+      localStorage.setItem('guestId', `${uuidv4()}`)
+    }
     if (location.state?.loggedIn === false) {
       addToast("No wallet connected!", {
         type: ToastType.WARNING, duration: 3000
@@ -182,6 +187,7 @@ function Home() {
     let byLikes
     // TODO: possibly query all filters and switch
     // based on changes in tab and tag/search
+    // TODO: score = likes*3 + replies*2 + bookmarks*4 + views*0.
     if (selectedTag) {
       if (currentTab === 'popular-posts') {
         result = await execute(FilterMostLikedPostsByTagDocument, { tag: selectedTag })
@@ -283,6 +289,10 @@ function Home() {
 
   const handleChange = async (input: string) => {
     setSearchInput(input)
+    // TODO: full text search
+    // search inside content (body)
+    // fuzzy matching (“readablity” still finds “readability”)
+    // tag suggestions/autocomplete
     try {
       let result
       if (selectedTag) 

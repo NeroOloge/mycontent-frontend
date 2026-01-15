@@ -22,6 +22,12 @@ function Dashboard() {
   const [posts, setPosts] = useState<PopulatedPost[]>()
   const [postAnalytics, setPostAnalytics] = useState<PostAnalytics>()
 
+  // TODO: Post analytics
+  //  Views (total + unique) per post
+  //  Per-post breakdown (top posts, worst performing posts)
+  //  Time window filters (7d / 30d / all-time)
+  //  Trends over time (likes over time, replies over time)
+
   const loadingToastId = useRef<number | null>(null)
 
   useEffect(() => {
