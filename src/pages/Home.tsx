@@ -32,6 +32,7 @@ function Home() {
   const observerRef = useRef<IntersectionObserver>()
 
   const loadMorePosts = async (observer: IntersectionObserver) => {
+    console.log('Loading more posts')
     if (isLoadingRef.current) return
     isLoadingRef.current = true
     if (loadingToastId.current) {
@@ -41,13 +42,14 @@ function Home() {
     loadingToastId.current = 
       addToast("Loading more posts...", { type: ToastType.INFO })
     
-    const result = await execute(GetPostsDocument, { skip: skipRef.current + POST_LIMIT })
+    // const result = await execute(GetPostsDocument, { skip: skipRef.current + POST_LIMIT })
+    const { result, byLikes } = await getRelevantResult(true);
     if (result.data && result.data.posts.length > 0) {
       const [populatedPosts] = await Promise.all([
         populatePosts(result.data.posts)
       ])
       skipRef.current += POST_LIMIT
-      setPosts(prev => prev ? [...prev, ...populatedPosts] : populatedPosts)
+      setPosts(prev => prev ? [...prev, ...sortPosts(populatedPosts, byLikes)] : sortPosts(populatedPosts, byLikes))
       if (loadingToastId.current) {
         removeToast(loadingToastId.current)
         loadingToastId.current = null
@@ -76,13 +78,14 @@ function Home() {
     }, { threshold: 1 })
     const postContainer = postContainerRef.current
     if (postContainer && postContainer.lastElementChild) {
+      console.log('observing last post')
       observerRef.current.observe(postContainer.lastElementChild)
     }
 
     return () => {
       if (observerRef.current) observerRef.current.disconnect()
     }
-  }, [])
+  }, [currentTab])
 
   useEffect(() => {
     if (!localStorage.getItem('guestId')) {
@@ -182,7 +185,7 @@ function Home() {
     })()
   }, [currentTab])
 
-  const getRelevantResult = async () => {
+  const getRelevantResult = async (skip?: boolean) => {
     let result
     let byLikes
     // TODO: possibly query all filters and switch
@@ -196,10 +199,10 @@ function Home() {
         result = await execute(FilterPostsByTagDocument, { tag: selectedTag })
     } else {
       if (currentTab === 'popular-posts') {
-        result = await execute(GetMostLikedPostsDocument, {})
+        result = await execute(GetMostLikedPostsDocument, { skip: skip ? skipRef.current + POST_LIMIT : skipRef.current })
         byLikes = true
       } else
-        result = await execute(GetPostsDocument, { skip: skipRef.current })
+        result = await execute(GetPostsDocument, { skip: skip ? skipRef.current + POST_LIMIT : skipRef.current })
     }
     return { result, byLikes }
   }
@@ -211,6 +214,7 @@ function Home() {
     })
     e.target.className = `tabs-home tabs-active-home`
     setCurrentTab(e.target.id)
+    skipRef.current = 0
   }
 
   const selectTag = async (e: React.MouseEvent<HTMLSpanElement>) => {

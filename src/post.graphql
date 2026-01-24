@@ -88,9 +88,9 @@ query GetManyPosts($ids: [ID!]) {
   }
 }
 
-query GetMostLikedPosts {
+query GetMostLikedPosts($skip: Int!) {
   posts(orderBy: likes, orderDirection: desc, first: 10, 
-  where: {
+  skip: $skip, where: {
     isDeleted: false
   }) {
     id
